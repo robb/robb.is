@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Robb Böhnke</title>
+    <meta content="Robb Böhnke" property="og:site_name">
+    <meta content="Robb Böhnke" name="twitter:title">
+
+    <meta content="Robb Böhnke's CV." name="description">
+    <meta content="website" property="og:type">
+
+    <link rel="profile" href="http://microformats.org/profile/hcard">
+    <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --fontSize: 14.5px;
+  --secondaryFontSize: 13px;
+  --lineHeight: 22.5px;
+  --hairlineThickness: 1px;
+}
+
+@media screen and (min-resolution: 2x) {
+  :root {
+    --hairlineThickness: 0.5px;
+  }
+}
+
+:root {
+--backgroundColor: #1A2124;
+--secondaryBackgroundColor: #223336;
+
+--primaryText: #FAFBFF;
+--secondaryText: #A6B9BA;
+--tertiaryText: #A2ACAA;
+
+--accentColor: rgb(224, 44, 146);
+}
+
+::selection {
+  background-color: var(--accentColor);
+  background-color: color(from var(--accentColor) srgb r g b / 0.5);
+}
+
+@media (prefers-contrast: more) {
+  :root {
+  --primaryText: #FFF;
+  --secondaryText: #CCC;
+  --tertiaryText: #AAA;
+
+  --hairlineThickness: 1px;
+  }
+
+  ::selection {
+    background-color: color(from var(--accentColor) srgb r g b / 0.9);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --backgroundColor: #FAFAFA;
+    --secondaryBackgroundColor: #EAEAEA;
+
+    --primaryText: #02040a;
+    --secondaryText: #343840;
+    --tertiaryText: #4D595B;
+
+    --accentColor: rgb(225, 139, 9);
+  }
+}
+
+@media (prefers-color-scheme: light) and (prefers-contrast: more) {
+  :root {
+    --primaryText: #000;
+    --secondaryText: #222;
+    --tertiaryText: #444;
+
+  }
+}
+
+html {
+  overflow-x: hidden !important;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: var(--fontSize);
+  line-height: var(--lineHeight);
+  color: var(--secondaryText);
+
+  accent-color: var(--accentColor);
+  background-color: var(--backgroundColor);
+
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+
+  max-width: calc(var(--lineHeight) * 32);
+  margin: 0 auto;
+  padding: 0 var(--lineHeight);
+}
+
+
+@media (prefers-color-scheme: light) {
+  body {
+    font-weight: 450;
+  }
+}
+
+header {
+  padding: calc(var(--lineHeight) * 3) 0 calc(var(--lineHeight) * 1);
+}
+
+section {
+  display: grid;
+  grid-template-columns: [start] 25% 1fr [end];
+  gap: var(--lineHeight);
+}
+
+section h2, section nav {
+  grid-column: start / end;
+}
+
+section h2:first-child {
+  padding-top: calc(var(--lineHeight) * 2);
+}
+
+footer {
+  padding: calc(var(--lineHeight) * 1) 0 calc(var(--lineHeight) * 3);
+}
+
+@keyframes appear {
+0.000% {
+  opacity: 0.000;
+  filter: blur(4.000px);
+  transform: translateY(10.000px);
+}
+6.667% {
+  opacity: 0.618;
+  filter: blur(1.528px);
+  transform: translateY(4.932px);
+}
+13.333% {
+  opacity: 0.921;
+  filter: blur(0.317px);
+  transform: translateY(-0.524px);
+}
+20.000% {
+  opacity: 0.986;
+  filter: blur(0.055px);
+  transform: translateY(-1.568px);
+}
+26.667% {
+  opacity: 0.998;
+  filter: blur(0.009px);
+  transform: translateY(-0.552px);
+}
+33.333% {
+  opacity: 1.000;
+  filter: blur(0.001px);
+  transform: translateY(0.180px);
+}
+40.000% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(0.229px);
+}
+46.667% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(0.053px);
+}
+53.333% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(-0.039px);
+}
+60.000% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(-0.031px);
+}
+66.667% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(-0.003px);
+}
+73.333% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(0.007px);
+}
+80.000% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(0.004px);
+}
+86.667% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(-0.000px);
+}
+93.333% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(-0.001px);
+}
+100.000% {
+  opacity: 1.000;
+  filter: blur(0.000px);
+  transform: translateY(-0.000px);
+}
+}
+
+@keyframes appear-img {
+  0% {
+    filter: blur(5px) saturate(0.25);
+  }
+  100% {
+
+  }
+}
+
+@media not (prefers-reduced-motion: reduce) {
+  body.animate-appear:not(:has(:target)) {
+    --appearDuration: 2.495139694737313s;
+  }
+}
+
+[data-delay] {
+  --delay: 7;
+
+  animation: appear var(--appearDuration) linear both;
+  animation-delay: calc(0.2s + calc(var(--delay) * 0.2s));
+  will-change: transform, opacity;
+}
+
+[data-delay] img, [data-delay] .video-container {
+  animation: appear-img calc(var(--appearDuration) / 5) linear both;
+  animation-delay: calc(0.2s + calc(var(--delay) * 0.2s));
+  will-change: transform, opacity;
+}
+
+h1, h2, h3, h4 {
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+h1, h2 {
+  color: var(--primaryText);
+}
+
+h4 {
+  padding-top: calc(var(--lineHeight) * 0.5);
+  padding-bottom: calc(var(--lineHeight) * 0.5);
+  font-weight: 500;
+}
+
+@keyframes highlight {
+  0% {  }
+  40% {
+    filter: blur(0.5px) brightness(2);
+    text-shadow: var(--accentColor) 0 0 2px, var(--accentColor) 0 0 10px;
+  }
+  60% {
+    filter: blur(0.5px) brightness(2);
+    text-shadow: var(--accentColor) 0 0 2px, var(--accentColor) 0 0 10px;
+  }
+  100% {  }
+}
+
+h1:target, h2:target, h3:target {
+  animation: highlight 1s linear both;
+  animation-delay: 0.6s;
+}
+
+a, summary {
+  color: var(--primaryText);
+  text-decoration: underline;
+  text-decoration-skip: objects;
+  text-decoration-skip-ink: objects;
+  text-decoration-thickness: var(--hairlineThickness);
+  text-underline-offset: 1px;
+  text-decoration-color: var(--accentColor);
+  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+a:focus, summary:focus {
+  text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+}
+
+@media (hover: hover) {
+  a:hover, summary:hover {
+    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  a {
+    font-weight: 500;
+  }
+}
+
+a[href^="http"]:not(:has(img))::after {
+  content: "↗";
+  padding-left: 0.2ch;
+  font-size: 80%;
+  font-weight: 600;
+  color: var(--secondaryText);
+
+  text-decoration: underline;
+  text-decoration-color: var(--backgroundColor);
+}
+
+a[href^="http"]:not(:has(img)):hover::after {
+  color: var(--accentColor);
+}
+
+hr {
+  display: block;
+  margin-top: calc(var(--lineHeight) - var(--hairlineThickness));
+  margin-bottom: calc(var(--lineHeight));
+
+  height: var(--hairlineThickness);
+  background-color: var(--tertiaryText);
+
+  border: none;
+}
+
+aside nav {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+aside nav a {
+  display: inline;
+  color: var(--secondaryText);
+}
+
+@media screen and (max-width: 1023px) {
+  aside {
+    display: none;
+  }
+}
+
+@media screen and not (max-width: 1023px) {
+  aside {
+    width: calc(var(--lineHeight) * 4);
+
+    position: fixed;
+    top: calc(var(--lineHeight) * 4);
+    left: calc(var(--lineHeight) * 2);
+  }
+
+  main nav {
+    display: none;
+  }
+}
+
+.content > p + p, .content > h3:not(:first-child) {
+  margin-top: calc(var(--lineHeight) / 4);
+}
+
+img.preview {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+
+img.preview.small {
+  max-width: 50%;
+}
+
+img.preview, .video-container {
+  width: auto;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+
+  background-color: var(--secondaryBackgroundColor);
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-container h3 {
+  padding: calc(1.5 * var(--lineHeight)) var(--lineHeight) var(--lineHeight);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  color: white;
+  text-shadow: black 0px 1px 1px;
+  font-weight: 500;
+
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.000) 0.0%,
+    rgba(0, 0, 0, 0.024) 10.0%,
+    rgba(0, 0, 0, 0.098) 20.0%,
+    rgba(0, 0, 0, 0.221) 30.0%,
+    rgba(0, 0, 0, 0.374) 40.0%,
+    rgba(0, 0, 0, 0.521) 50.0%,
+    rgba(0, 0, 0, 0.630) 60.0%,
+    rgba(0, 0, 0, 0.689) 70.0%,
+    rgba(0, 0, 0, 0.700) 80.0%,
+    rgba(0, 0, 0, 0.700) 90.0%,
+    rgba(0, 0, 0, 0.700) 100.0%
+    );
+}
+
+@supports (mask-border-width: 25px) {
+  img.preview, .video-container {
+    border-radius: unset;
+    mask-border-source: url("/img/mask.png");
+    mask-border-width: 25px;
+    mask-border-slice: 25% fill;
+  }
+}
+
+.label {
+  grid-column: start / 1;
+  justify-self: start;
+  align-self: start;
+
+  color: var(--tertiaryText);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--secondaryFontSize);
+  letter-spacing: 0.03ch;
+  min-width: 25%;
+  line-height: var(--lineHeight);
+}
+
+.label time {
+  letter-spacing: 0 !important;
+  font-feature-settings: "ss01" 1;
+}
+
+.location, .subtitle {
+  color: var(--tertiaryText);
+  font-size: var(--secondaryFontSize);
+  letter-spacing: 0.03ch;
+  margin-top: 0 !important;
+  transform: translateX(-0.5px);
+  font-feature-settings: "ss06" 1;
+
+  text-wrap: balance;
+}
+
+.content {
+  grid-column: 2 / end;
+
+  display: flex;
+  flex-direction: column;
+
+  hyphens: auto;
+  text-wrap: pretty;
+}
+
+summary {
+  display: inline;
+  list-style-type: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::after {
+  content: "⏵";
+
+  padding-left: 0.5ch;
+  font-weight: 600;
+  color: var(--secondaryText);
+
+  text-decoration: underline;
+  text-decoration-color: var(--backgroundColor);
+}
+
+details[open] summary::after {
+  content: "⏷";
+}
+
+li {
+  margin-left: var(--lineHeight);
+}
+
+dfn {
+  display: inline;
+  font-style: normal;
+}
+
+@media (hover: hover) {
+  dfn {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    cursor: help;
+  }
+}
+
+@media screen and (max-width: 799px) {
+  section {
+    gap: 0;
+  }
+  .label {
+    grid-column: start / end;
+    line-height: calc(var(--lineHeight) * 1.5);
+    padding-top: calc(var(--lineHeight) * 1.5);
+  }
+  h2 + .label {
+    padding-top: calc(var(--lineHeight) * 0.5);
+  }
+
+  .content {
+    grid-column: start / end;
+  }
+}
+
+.oh-button {
+  background-color: var(--secondaryBackgroundColor);
+  border: 1px solid var(--tertiaryText);
+  padding: 0 calc(var(--lineHeight) * 0.75);
+  color: var(--primaryText);
+
+
+  height: calc(var(--lineHeight) * 1.5);
+  border-radius: var(--lineHeight);
+
+  margin: calc(var(--lineHeight) * 0.5) 0;
+  margin-right: 4px;
+  margin-left: -3px;
+
+  cursor: pointer;
+}
+
+.oh-button:target {
+  opacity: 0.5;
+}
+
+.oh-button:focus-visible {
+  outline: none
+}
+
+.oh-button .icon {
+  padding: 0 2px 0 0;
+}
+
+.oh-button:not(:target) + #oh-like-button-feedback {
+  display: none;
+}
+
+.oh-button:not(:target) .target {
+  display: none;
+}
+
+.buttons-88x31 {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: calc(var(--lineHeight) / 2);
+  image-rendering: pixelated;
+}
+    </style>
+  </head>
+  <body>
+    <script>
+      if (performance?.navigation?.type == performance?.navigation?.TYPE_NAVIGATE) {
+        document.body.classList.add('animate-appear');
+      }
+    </script>
+    <header class="vcard">
+      <h1 class="fn" data-delay style="--delay: 0.0;">Robb Böhnke</h1>
+      <p data-delay style="--delay: 1.0;"><span class="title">Developer &
+          Designer</span> based in
+        <span class="locality">Berlin</span>, <span
+          class="country-name">Germany</span>.</p>
+    </header>
+    <aside>
+      <nav class="local-nav">
+        <a data-delay style="--delay: 1.0;" href="#projects">Projects</a>
+        <a data-delay style="--delay: 1.2;" href="#work-experience">Work</a>
+        <!-- <a data-delay style="--delay: 1.4;" href="#experiments">Experiments</a> -->
+        <a data-delay style="--delay: 1.6;" href="#side-projects">Side
+          Projects</a>
+        <a data-delay style="--delay: 1.8;" href="#writing">Writing</a>
+        <a data-delay style="--delay: 2.0;" href="#patents">Patents</a>
+        <a data-delay style="--delay: 2.2;" href="#education">Education</a>
+        <a data-delay style="--delay: 2.2;" href="#etc">etc.</a>
+      </nav>
+      <hr data-delay style="--delay: 2.6;">
+      <nav aria-label="Social">
+        <a data-delay style="--delay: 2.8;" href="https://mastodon.social/@DLX">
+          Mastodon</a>
+        <a data-delay style="--delay: 3.0;" href="https://github.com/robb"
+          class="social-link github">GitHub</a>
+      </nav>
+    </aside>
+    <main>
+      <section class="nav">
+        <nav class="local-nav" data-delay style="--delay: 1.5;">
+          Here:
+          <a href="#projects">Projects</a>,
+          <a href="#work-experience">Work Experience</a>,
+          <!-- <a href="#experiments">Experiments</a>, -->
+          <a href="#side-projects">Side Projects</a>,
+          <a href="#writing">Writing</a>,
+          <a href="#patents">Patents</a>,
+          <a href="#education">Education</a>,
+          <a href="#etc">etc.</a>
+        </nav>
+        <nav aria-label="Social" data-delay style="--delay: 1.8;">
+          Elsewhere:
+          <a href="https://mastodon.social/@DLX"> Mastodon</a>
+          or
+          <a href="https://github.com/robb"
+            class="social-link github">GitHub</a>.
+        </nav>
+      </section>
+
+      <section>
+        <h2 id="projects" data-delay style="--delay: 2.0;">Projects</h2>
+        <div class="label" data-delay style="--delay: 2.4;">
+          <time datetime="2024">2024</time>
+        </div>
+        <div class="content">
+          <a
+            href="https://developer.apple.com/videos/play/wwdc2024/10151/"
+            data-delay style="--delay: 2.4;"
+            aria-labelledby="wwdc2024-session-title">
+            <img
+              src="/img/f4a62fa5-8e59-4e18-b41c-e288f1739892.jpg"
+              alt class="preview" width="484"
+              height="273">
+          </a>
+          <h3 data-delay style="--delay: 2.6;" id="wwdc2024-session-title">
+            <a
+              href="https://developer.apple.com/videos/play/wwdc2024/10151/">Create
+              custom visual effects with SwiftUI</a>
+          </h3>
+          <p class="subtitle" data-delay style="--delay: 2.8;">
+            Session for WWDC24
+          </p>
+          <p data-delay style="--delay: 3.0;">
+            Discover how to create stunning visual effects in
+            SwiftUI. Learn to build unique scroll effects, rich
+            color treatments, and custom transitions. We'll also
+            explore advanced graphic effects using Metal shaders
+            and custom text rendering.
+          </p>
+          <p class="collaborators" data-delay style="--delay: 3.4;">
+            I was honored to give this talk with <a
+              href="https://philipcdavis.com">Philip</a>.
+          </p>
+        </div>
+
+        <div class="label" data-delay style="--delay: 3.6;">
+          <time datetime="2024">2024</time>
+        </div>
+        <div class="content" data-delay style="--delay: 3.6;">
+          <div class="video-container">
+            <video autoplay muted loop playsinline width="484"
+              height="273">
+              <source src="/video/explode.mov">
+            </video>
+          </div>
+          <h3><a
+              href="https://www.apple.com/newsroom/2024/06/ios-18-makes-iphone-more-personal-capable-and-intelligent-than-ever/">Explode
+              Text Effect</a></h3>
+          <p class="subtitle">Messages on iOS 18</p>
+          <p>
+            I contributed to the Explode text effect in Messages
+            on iOS&nbsp;18.
+          </p>
+        </div>
+        <div class="label">
+          <time datetime="2023">2023</time>
+        </div>
+        <div class="content">
+          <p>
+            <a
+              href="https://github.com/EmergeTools/Pow">Pow</a>
+            for <a href="https://movingparts.io">Moving
+              Parts</a>
+          </p>
+          <p class="subtitle">
+            Delightful SwiftUI transitions for your app.
+          </p>
+          <p>
+            With Pow, you can add a variety of SwiftUI
+            transitions to your iOS or macOS app, from over
+            the top ones like <code>.anvil</code> to more
+            the more subtle <code>.pop</code>.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2 id="work-experience" data-delay style="--delay: 5;">Work
+          Experience</h2>
+
+        <div class="label">
+          <time datetime="2023">2023</time> – Now
+        </div>
+        <div class="content">
+          <h3>
+            <a class="role"
+              href="https://developer.apple.com/xcode/swiftui/">SwiftUI
+              Engineer</a> at <a class="company"
+              href="https://apple.com">Apple</a>
+          </h3>
+          <p class="location">Berlin, Germany</p>
+        </div>
+
+        <div class="label">
+          <time datetime="2021">2021</time> – <time
+            datetime="2023">2023</time>
+        </div>
+        <div class="content">
+          <h3>Co-Founder & CEO at <a
+              href="https://movingparts.io">Moving
+              Parts</a></h3>
+          <p class="location">Fully remotely</p>
+          <p>YC S21</p>
+        </div>
+
+        <div class="label">
+          <time datetime="2019">2019</time> – <time
+            datetime="2021">2021</time>
+        </div>
+        <div class="content">
+          <h3>Software Engineer at <a class="company"
+              href="http://research.google/">Google
+              Research</a></h3>
+          <p class="location">Berlin, Germany</p>
+          <p>
+            In Kernel, Google's product incubation space within
+            the Google Research organization, my work focused on
+            fast-paced iteration on highly polished prototypes.
+          </p>
+        </div>
+
+        <div class="label">
+          <time datetime="2018">2018</time> – <time
+            datetime="2019">2019</time>
+        </div>
+        <div class="content">
+          <h3>Software Engineer, Health at <a class="company"
+              href="https://apple.com">Apple</a></h3>
+          <p class="location">Berlin, Germany</p>
+          <p>In the Health team at Apple, I developed a scalable
+            unidirectional data flow architecture to drive our
+            Apple-internal application.</p>
+        </div>
+
+        <div class="label">
+          <time datetime="2016">2016</time> – <time
+            datetime="2018">2018</time>
+        </div>
+        <div class="content">
+          <h3><a
+              href="https://developer.apple.com/documentation/uikit">Frameworks
+              Engineer, UIKit</a> at <a
+              class="company"
+              href="https://apple.com">Apple</a></h3>
+          <p class="location">Cupertino, California</p>
+          <p>
+            In the UIKit team, I helped ship Drag and Drop on
+            iPad for iOS 11 and prototyped upcoming APIs.
+          </p>
+        </div>
+
+        <div class="label">
+          <time datetime="2013">2013</time> – <time
+            datetime="2016">2016</time>
+        </div>
+        <div class="content">
+          <h3>Freelance iOS Developer</h3>
+          <p class="location">Berlin, Germany</p>
+          <p>Clients include Artsy, Automatic & Xamarin.</p>
+        </div>
+
+        <div class="label">
+          <time datetime="2010">2010</time> – <time
+            datetime="2013">2013</time>
+        </div>
+        <div class="content">
+          <h3>iOS Engineer at <a class="company"
+              href="https://soundcloud.com">SoundCloud</a></h3>
+          <p class="location">Berlin, Germany</p>
+        </div>
+      </section>
+
+      <section data-delay>
+        <h2 id="side-projects">Side Projects</h2>
+        <div class="label">
+          <time datetime="2022">2022</time> – Now
+        </div>
+        <div class="content">
+          <h3>
+            <a href="https://openstories.fyi/">OpenStories</a>
+            by
+            <a
+              href="https://dddddddddzzzz.org">dddddddddzzzz</a>
+          </h3>
+          <p>
+            A syndication format for distributing stories to
+            friends and families – built on top of JSON Feed.
+          </p>
+          <p class="collaborators">
+            A project with <a href="https://muan.co">Mu-An</a>.
+          </p>
+        </div>
+
+        <div class="label">
+          <time datetime="2022">2022</time> – Now
+        </div>
+        <div class="content">
+          <h3>
+            <a href="https://openheart.fyi/">OpenHeart</a>
+            by <a href="https://dddddddddzzzz.org">dddddddddzzzz</a>
+          </h3>
+          <p>
+            The Open Heart protocol lets an anonymous user send an emoji
+            reaction to a URL – enabling JavaScript-free Like&nbsp;Buttons
+            like this one:
+          </p>
+          <form
+            action="https://api.oh.dddddddddzzzz.org/robb.cv/dde878f4-1b71-44fb-a072-d8997b53e65e?redirect=http://lark.local.:8080/#oh-like-button"
+            method="POST" enctype="text/plain">
+            <button class="oh-button" id="oh-like-button"
+              aria-describedby="oh-like-button-feedback"
+              name="🖤">
+              <span class="icon">&#9829;</span> Like
+            </button>
+            <span id="oh-like-button-feedback">
+              Thanks!
+            </span>
+          </form>
+          <div class="collaborators">
+            A project with <a href="https://muan.co">Mu-An</a>.
+          </div>
+        </div>
+
+        <div class="label">
+          <time datetime="2021">2021</time>
+        </div>
+        <div class="content">
+          <h3>
+            <a href="https://github.com/robb/RBBJSON">RBBJSON</a>
+          </h3>
+          <p>
+            RBBJSON enables flexible JSON traversal at runtime
+            and JSONPath-like querying for rapid prototyping in
+            Swift.
+          </p>
+        </div>
+
+        <div class="label">
+          <time datetime="2015">2015</time>
+        </div>
+        <div class="content">
+          <h3>
+            <a href="https://github.com/robb/NES.swift">NES.swift</a>
+          </h3>
+          <p>
+            An NES emulator written in Swift.
+          </p>
+        </div>
+      </section>
+
+      <section data-delay>
+        <h2 id="writing">Writing</h2>
+
+        <div class="label">
+          <time datetime="2022">2022</time>
+        </div>
+        <div class="content">
+          <a
+            href="https://movingparts.io/variadic-views-in-swiftui">
+            <img class="preview"
+              src="/img/1fdfe436-7aa1-4612-be57-273aed60e90d.png"
+              alt="An abstract graphic showing multiple colorful capsules.">
+          </a>
+          <h3>
+            <a
+              href="https://movingparts.io/variadic-views-in-swiftui">SwiftUI
+              under the Hood: Variadic Views</a>
+          </h3>
+          <p class="subtitle">for Moving Parts</p>
+          <p>
+            Matching SwiftUI’s view APIs in their ergonomics is
+            hard to get right. In this post we’ll learn how to
+            write view APIs that feel truly native to the
+            platform.
+          </p>
+        </div>
+
+        <div class="label">
+          <time datetime="2021">2021</time>
+        </div>
+        <div class="content">
+          <h3>
+            <a
+              href="https://movingparts.io/fonts-in-swiftui">SwiftUI
+              under the Hood: Fonts</a>
+          </h3>
+          <p class="subtitle">for Moving Parts</p>
+          <p>
+            Rich and expressive typography is a cornerstone of
+            Apple's UI design yet with the current version of
+            SwiftUI, some of the most powerful APIs are hidden
+            from us. Let's see what it would take to get them
+            back.
+          </p>
+        </div>
+
+        <div class="label">
+          <time datetime="2021">2021</time>
+        </div>
+        <div class="content">
+          <h3>
+            <a
+              href="https://movingparts.io/gradient-meshes">Gradient
+              Meshes in SceneKit</a>
+          </h3>
+          <p class="subtitle">for Moving Parts</p>
+          <p>
+            Our job at Moving Parts is to make your app the best
+            it can be. Beyond being highly usable and
+            accessible, this also means good looking.
+          </p>
+        </div>
+
+        <div class="label">
+          <time datetime="2014">2014</time>
+        </div>
+        <div class="content">
+          <h3>
+            <a
+              href="https://www.objc.io/issues/12-animations/animations-explained/">Animations
+              Explained</a></h3>
+          <p class="subtitle">for <a href="https://objc.io">objc.io</a></p>
+          <p>
+            Animations are a great way to tell the story of your
+            application, and by understanding the basic
+            principles behind animation, designing them will be
+            a lot easier.
+          </p>
+        </div>
+
+      </section>
+
+      <section data-delay>
+        <h2 id="patents">Patents</h2>
+
+        <div class="label">
+          <time datetime="2021">2021</time>
+        </div>
+        <div class="content">
+          <h3>
+            <a href="https://patents.google.com/patent/US10444976B2">US
+              Patent 10444976B2</a>
+          </h3>
+          <p class="subtitle">
+            Drag and Drop for Touchscreen Devices.
+          </p>
+          <p>
+            <img class="preview small"
+              src="/img/US10444976-20191015-D00000-2.png"
+              alt="A patent drawing of a finger touching an iPad.">
+          </p>
+
+        </div>
+      </section>
+
+      <section data-delay>
+        <h2 id="education">Education</h2>
+        <div class="content"><p>None</p></div>
+      </section>
+    </main>
+
+    <footer data-delay>
+      <section>
+        <h2 id="etc">etc.</h2>
+        <dfn class="label"
+          title="88×31 buttons are tiny web banners for branding, popular in the 1990s-2000s.">88×31</dfn>
+        <div class="content buttons-88x31">
+          <a href="https://muan.co"><img loading="lazy"
+              src="https://muan.co/images/banner.svg"
+              width="88" height="31"
+              alt="An animated banner with one short line, one medium line, one long line, a symbol resembling the tilde, each being drawn in order."></a>
+          <img src="/img/best1024.gif" alt="Best viewed at 1024×768 pixels."
+            width="88" height="31">
+        </div>
+
+        <details style="display: contents;">
+          <summary class="label">Accessibility Statement</summary>
+          <div class="content">
+            <h3>Accessibility Statement for <a href="/">robb.is</a></h3>
+            <p class="subtitle">
+              This is an accessibility statement from Robb Böhnke.
+            </p>
+            <h4>Measures to support accessibility</h4>
+            <p>
+              Robb Böhnke takes the following measures to ensure accessibility
+              of <a href="/">robb.is</a>:
+            </p>
+            <ul>
+              <li>Include accessibility as part of my mission statement.</li>
+              <li>Include accessibility throughout my internal policies.</li>
+              <li>Provide continual accessibility training for myself.</li>
+            </ul>
+            <h4>Conformance status</h4>
+            <p>
+              The <a
+                href="https://www.w3.org/WAI/standards-guidelines/wcag/">Web
+                Content Accessibility Guidelines (<abbr>WCAG</abbr>)</a> defines
+              requirements
+              for designers and developers to improve accessibility for people
+              with disabilities. It defines three levels of conformance: Level
+              A, Level AA, and Level AAA.
+              <a href="/">robb.is</a> is partially conformant with WCAG 2.1
+              level AA. Partially conformant means that some parts of the
+              content do not
+              fully conform to the accessibility standard.
+            </p>
+            <ul>
+              <li>I am aware that there are color contrast violations for users
+                without the High Contrast setting.</li>
+            </ul>
+            <h4>Feedback</h4>
+            <p>
+              We welcome your feedback on the accessibility of
+              <a href="/">robb.is</a>.
+              Please let us know if you encounter accessibility barriers on
+              <a href="/">robb.is</a>:
+            </p>
+            <ul class="basic-information feedback h-card">
+              <li class="contact-other p-note">I welcome all feedback on the
+                accessibility of robb.is. Please let me know if you encounter
+                accessibility barriers on the site.<br>To report, open an
+                issue on GitHub or message me on Mastodon, and I will try to
+                respond within 1 week.</li>
+            </ul>
+            <hr>
+            <h4>Date</h4>
+            <p>
+              This statement was created on <time datetime="2024-11-03">3
+                November 2024</time> using the <a
+                href="https://www.w3.org/WAI/planning/statements/">W3C
+                Accessibility Statement Generator Tool</a>.
+            </p>
+          </div>
+        </details>
+
+        <div class="label">
+          etc.
+        </div>
+        <div class="content">
+          <p><a href="https://github.com/robb/robb.is">View Source</a></p>
+        </div>
+      </section>
+    </footer>
+  </body>
+</html>
