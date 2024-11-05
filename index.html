@@ -372,10 +372,6 @@ aside nav a {
   }
 }
 
-.content > p + p, .content > h3:not(:first-child) {
-  margin-top: calc(var(--lineHeight) / 4);
-}
-
 img.preview {
   max-width: 100%;
   height: auto;
@@ -455,7 +451,7 @@ img.preview, .video-container {
   font-feature-settings: "ss01" 1;
 }
 
-.location, .subtitle {
+hgroup p {
   color: var(--tertiaryText);
   font-size: var(--secondaryFontSize);
   letter-spacing: 0.03ch;
@@ -471,6 +467,7 @@ img.preview, .video-container {
 
   display: flex;
   flex-direction: column;
+  gap: calc(var(--lineHeight) / 4);
 
   hyphens: auto;
   text-wrap: pretty;
@@ -651,14 +648,16 @@ dfn {
               alt class="preview" width="484"
               height="273">
           </a>
-          <h3 data-delay style="--delay: 2.6;" id="wwdc2024-session-title">
-            <a
-              href="https://developer.apple.com/videos/play/wwdc2024/10151/">Create
-              custom visual effects with SwiftUI</a>
-          </h3>
-          <p class="subtitle" data-delay style="--delay: 2.8;">
-            Session for WWDC24
-          </p>
+          <hgroup>
+            <h3 data-delay style="--delay: 2.6;" id="wwdc2024-session-title">
+              <a
+                href="https://developer.apple.com/videos/play/wwdc2024/10151/">Create
+                custom visual effects with SwiftUI</a>
+            </h3>
+            <p data-delay style="--delay: 2.8;">
+              Session for WWDC24
+            </p>
+          </hgroup>
           <p data-delay style="--delay: 3.0;">
             Discover how to create stunning visual effects in
             SwiftUI. Learn to build unique scroll effects, rich
@@ -682,10 +681,12 @@ dfn {
               <source src="/video/explode.mov">
             </video>
           </div>
-          <h3><a
-              href="https://www.apple.com/newsroom/2024/06/ios-18-makes-iphone-more-personal-capable-and-intelligent-than-ever/">Explode
-              Text Effect</a></h3>
-          <p class="subtitle">Messages on iOS 18</p>
+          <hgroup>
+            <h3><a
+                href="https://www.apple.com/newsroom/2024/06/ios-18-makes-iphone-more-personal-capable-and-intelligent-than-ever/">Explode
+                Text Effect</a></h3>
+            <p>Messages on iOS 18</p>
+          </hgroup>
           <p>
             I contributed to the Explode text effect in Messages
             on iOS&nbsp;18.
@@ -695,15 +696,17 @@ dfn {
           <time datetime="2023">2023</time>
         </div>
         <div class="content">
-          <p>
-            <a
-              href="https://github.com/EmergeTools/Pow">Pow</a>
-            for <a href="https://movingparts.io">Moving
-              Parts</a>
-          </p>
-          <p class="subtitle">
-            Delightful SwiftUI transitions for your app.
-          </p>
+          <hgroup>
+            <h3>
+              <a
+                href="https://github.com/EmergeTools/Pow">Pow</a>
+              for <a href="https://movingparts.io">Moving
+                Parts</a>
+            </h3>
+            <p>
+              Delightful SwiftUI transitions for your app.
+            </p>
+          </hgroup>
           <p>
             With Pow, you can add a variety of SwiftUI
             transitions to your iOS or macOS app, from over
@@ -721,13 +724,15 @@ dfn {
           <time datetime="2023">2023</time> – Now
         </div>
         <div class="content">
-          <h3>
-            <a class="role"
-              href="https://developer.apple.com/xcode/swiftui/">SwiftUI
-              Engineer</a> at <a class="company"
-              href="https://apple.com">Apple</a>
-          </h3>
-          <p class="location">Berlin, Germany</p>
+          <hgroup>
+            <h3>
+              <a class="role"
+                href="https://developer.apple.com/xcode/swiftui/">SwiftUI
+                Engineer</a> at <a class="company"
+                href="https://apple.com">Apple</a>
+            </h3>
+            <p>Berlin, Germany</p>
+          </hgroup>
         </div>
 
         <div class="label">
@@ -735,10 +740,12 @@ dfn {
             datetime="2023">2023</time>
         </div>
         <div class="content">
-          <h3>Co-Founder & CEO at <a
-              href="https://movingparts.io">Moving
-              Parts</a></h3>
-          <p class="location">Fully remotely</p>
+          <hgroup>
+            <h3>Co-Founder & CEO at <a
+                href="https://movingparts.io">Moving
+                Parts</a></h3>
+            <p>Fully remotely</p>
+          </hgroup>
           <p>YC S21</p>
         </div>
 
@@ -747,10 +754,12 @@ dfn {
             datetime="2021">2021</time>
         </div>
         <div class="content">
-          <h3>Software Engineer at <a class="company"
-              href="http://research.google/">Google
-              Research</a></h3>
-          <p class="location">Berlin, Germany</p>
+          <hgroup>
+            <h3>Software Engineer at <a class="company"
+                href="http://research.google/">Google
+                Research</a></h3>
+            <p>Berlin, Germany</p>
+          </hgroup>
           <p>
             In Kernel, Google's product incubation space within
             the Google Research organization, my work focused on
@@ -763,9 +772,11 @@ dfn {
             datetime="2019">2019</time>
         </div>
         <div class="content">
-          <h3>Software Engineer, Health at <a class="company"
-              href="https://apple.com">Apple</a></h3>
-          <p class="location">Berlin, Germany</p>
+          <hgroup>
+            <h3>Software Engineer, Health at <a class="company"
+                href="https://apple.com">Apple</a></h3>
+            <p>Berlin, Germany</p>
+          </hgroup>
           <p>In the Health team at Apple, I developed a scalable
             unidirectional data flow architecture to drive our
             Apple-internal application.</p>
@@ -776,12 +787,14 @@ dfn {
             datetime="2018">2018</time>
         </div>
         <div class="content">
-          <h3><a
-              href="https://developer.apple.com/documentation/uikit">Frameworks
-              Engineer, UIKit</a> at <a
-              class="company"
-              href="https://apple.com">Apple</a></h3>
-          <p class="location">Cupertino, California</p>
+          <hgroup>
+            <h3><a
+                href="https://developer.apple.com/documentation/uikit">Frameworks
+                Engineer, UIKit</a> at <a
+                class="company"
+                href="https://apple.com">Apple</a></h3>
+            <p>Cupertino, California</p>
+          </hgroup>
           <p>
             In the UIKit team, I helped ship Drag and Drop on
             iPad for iOS 11 and prototyped upcoming APIs.
@@ -793,8 +806,10 @@ dfn {
             datetime="2016">2016</time>
         </div>
         <div class="content">
-          <h3>Freelance iOS Developer</h3>
-          <p class="location">Berlin, Germany</p>
+          <hgroup>
+            <h3>Freelance iOS Developer</h3>
+            <p>Berlin, Germany</p>
+          </hgroup>
           <p>Clients include Artsy, Automatic & Xamarin.</p>
         </div>
 
@@ -803,9 +818,11 @@ dfn {
             datetime="2013">2013</time>
         </div>
         <div class="content">
-          <h3>iOS Engineer at <a class="company"
-              href="https://soundcloud.com">SoundCloud</a></h3>
-          <p class="location">Berlin, Germany</p>
+          <hgroup>
+            <h3>iOS Engineer at <a class="company"
+                href="https://soundcloud.com">SoundCloud</a></h3>
+            <p>Berlin, Germany</p>
+          </hgroup>
         </div>
       </section>
 
@@ -900,12 +917,14 @@ dfn {
               src="/img/1fdfe436-7aa1-4612-be57-273aed60e90d.png"
               alt="An abstract graphic showing multiple colorful capsules.">
           </a>
-          <h3>
-            <a
-              href="https://movingparts.io/variadic-views-in-swiftui">SwiftUI
-              under the Hood: Variadic Views</a>
-          </h3>
-          <p class="subtitle">for Moving Parts</p>
+          <hgroup>
+            <h3>
+              <a
+                href="https://movingparts.io/variadic-views-in-swiftui">SwiftUI
+                under the Hood: Variadic Views</a>
+            </h3>
+            <p>for Moving Parts</p>
+          </hgroup>
           <p>
             Matching SwiftUI’s view APIs in their ergonomics is
             hard to get right. In this post we’ll learn how to
@@ -918,12 +937,14 @@ dfn {
           <time datetime="2021">2021</time>
         </div>
         <div class="content">
-          <h3>
-            <a
-              href="https://movingparts.io/fonts-in-swiftui">SwiftUI
-              under the Hood: Fonts</a>
-          </h3>
-          <p class="subtitle">for Moving Parts</p>
+          <hgroup>
+            <h3>
+              <a
+                href="https://movingparts.io/fonts-in-swiftui">SwiftUI
+                under the Hood: Fonts</a>
+            </h3>
+            <p>for Moving Parts</p>
+          </hgroup>
           <p>
             Rich and expressive typography is a cornerstone of
             Apple's UI design yet with the current version of
@@ -937,12 +958,14 @@ dfn {
           <time datetime="2021">2021</time>
         </div>
         <div class="content">
-          <h3>
-            <a
-              href="https://movingparts.io/gradient-meshes">Gradient
-              Meshes in SceneKit</a>
-          </h3>
-          <p class="subtitle">for Moving Parts</p>
+          <hgroup>
+            <h3>
+              <a
+                href="https://movingparts.io/gradient-meshes">Gradient
+                Meshes in SceneKit</a>
+            </h3>
+            <p>for Moving Parts</p>
+          </hgroup>
           <p>
             Our job at Moving Parts is to make your app the best
             it can be. Beyond being highly usable and
@@ -954,11 +977,13 @@ dfn {
           <time datetime="2014">2014</time>
         </div>
         <div class="content">
-          <h3>
-            <a
-              href="https://www.objc.io/issues/12-animations/animations-explained/">Animations
-              Explained</a></h3>
-          <p class="subtitle">for <a href="https://objc.io">objc.io</a></p>
+          <hgroup>
+            <h3>
+              <a
+                href="https://www.objc.io/issues/12-animations/animations-explained/">Animations
+                Explained</a></h3>
+            <p>for <a href="https://objc.io">objc.io</a></p>
+          </hgroup>
           <p>
             Animations are a great way to tell the story of your
             application, and by understanding the basic
@@ -976,13 +1001,15 @@ dfn {
           <time datetime="2021">2021</time>
         </div>
         <div class="content">
-          <h3>
-            <a href="https://patents.google.com/patent/US10444976B2">US
-              Patent 10444976B2</a>
-          </h3>
-          <p class="subtitle">
-            Drag and Drop for Touchscreen Devices.
-          </p>
+          <hgroup>
+            <h3>
+              <a href="https://patents.google.com/patent/US10444976B2">US
+                Patent 10444976B2</a>
+            </h3>
+            <p>
+              Drag and Drop for Touchscreen Devices.
+            </p>
+          </hgroup>
           <p>
             <img class="preview small"
               src="/img/US10444976-20191015-D00000-2.png"
@@ -1015,10 +1042,12 @@ dfn {
         <details style="display: contents;">
           <summary class="label">Accessibility Statement</summary>
           <div class="content">
-            <h3>Accessibility Statement for <a href="/">robb.is</a></h3>
-            <p class="subtitle">
-              This is an accessibility statement from Robb Böhnke.
-            </p>
+            <hgroup>
+              <h3>Accessibility Statement for <a href="/">robb.is</a></h3>
+              <p>
+                This is an accessibility statement from Robb Böhnke.
+              </p>
+            </hgroup>
             <h4>Measures to support accessibility</h4>
             <p>
               Robb Böhnke takes the following measures to ensure accessibility
