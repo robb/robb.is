@@ -131,6 +131,11 @@ section h2, section nav {
   grid-column: start / end;
 }
 
+section#experiments-section {
+  grid-template-columns: [start] 1fr 1fr [end];
+  gap: calc(var(--lineHeight) * 1);
+}
+
 section h2:first-child {
   padding-top: calc(var(--lineHeight) * 2);
 }
@@ -245,7 +250,7 @@ footer {
   will-change: transform, opacity;
 }
 
-[data-delay] img, [data-delay] .video-container {
+[data-delay] .image-container, [data-delay] .video-container {
   animation: appear-img calc(var(--appearDuration) / 5) linear both;
   animation-delay: calc(0.2s + calc(var(--delay) * 0.2s));
   will-change: transform, opacity;
@@ -372,40 +377,73 @@ aside nav a {
   }
 }
 
-img.preview {
+.image-container img {
   max-width: 100%;
   height: auto;
   vertical-align: bottom;
 }
 
-img.preview.small {
+.image-container.small {
   max-width: 50%;
 }
 
-img.preview, .video-container {
+.image-container, .video-container {
   width: auto;
   height: auto;
   border-radius: 20px;
   overflow: hidden;
   position: relative;
 
+  isolation: isolate;
   background-color: var(--secondaryBackgroundColor);
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.image-container::after, .video-container::after {
+  content: " ";
+  display: block;
+  border-radius: inherit;
+  border: 1.5px solid rgba(255, 255, 255, 1);
+  mix-blend-mode: plus-lighter;
+  position: absolute;
+  top: -0.5px;
+  right: -0.5px;
+  bottom: -0.5px;
+  left: -0.5px;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+.video-container.wide {
+  grid-column: start / end;
 }
 
 .video-container video {
-  width: 100%;
-  height: 100%;
+  /* position: absolute; */
+  /* top: 0; right: 0; bottom: 0; left: 0; */
+  width: 101%;
+  height: 101%;
   object-fit: cover;
+  background-color: #000;
 }
 
-.video-container h3 {
-  padding: calc(1.5 * var(--lineHeight)) var(--lineHeight) var(--lineHeight);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.video-container figcaption {
+  display: flex;
+  flex-direction: row;
+  gap: var(--lineHeight);
+  justify-content: space-between;
+  align-items: last baseline;
 
-  color: white;
+  text-wrap: balance;
+
+  padding: calc(3 * var(--lineHeight)) var(--lineHeight) var(--lineHeight);
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+
+  color: rgba(255, 255, 255, 0.85);
   text-shadow: black 0px 1px 1px;
   font-weight: 500;
 
@@ -422,14 +460,48 @@ img.preview, .video-container {
     rgba(0, 0, 0, 0.700) 90.0%,
     rgba(0, 0, 0, 0.700) 100.0%
     );
+
+    isolation: isolate;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.video-container:hover {
+  transform: scale(1.01);
+}
+
+.video-container:hover figcaption {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.video-container figcaption * {
+  transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.video-container:hover figcaption * {
+  filter: blur(8px);
+}
+
+.video-container figcaption time {
+  color: rgba(255, 255, 255, 0.6);
+  font-feature-settings: "ss01" 1;
+  font-weight: 600;
 }
 
 @supports (mask-border-width: 25px) {
-  img.preview, .video-container {
+  .image-container, .video-container {
     border-radius: unset;
-    mask-border-source: url("/img/mask.png");
+    mask-border-source: url("/img/mask@2x.png");
     mask-border-width: 25px;
-    mask-border-slice: 25% fill;
+    mask-border-slice: 49% fill;
+  }
+
+  .image-container::after, .video-container::after {
+    border-image: url("/img/border@2x.png");
+    border-image-width: 25px;
+    border-image-slice: 49% fill;
+
+    outline: 10px solid red;
   }
 }
 
@@ -442,7 +514,6 @@ img.preview, .video-container {
   font-variant-numeric: tabular-nums;
   font-size: var(--secondaryFontSize);
   letter-spacing: 0.03ch;
-  min-width: 25%;
   line-height: var(--lineHeight);
 }
 
@@ -518,17 +589,22 @@ dfn {
   section {
     gap: 0;
   }
+
+  section > * {
+    grid-column: start / end !important;
+  }
+
   .label {
-    grid-column: start / end;
     line-height: calc(var(--lineHeight) * 1.5);
     padding-top: calc(var(--lineHeight) * 1.5);
   }
+
   h2 + .label {
     padding-top: calc(var(--lineHeight) * 0.5);
   }
 
-  .content {
-    grid-column: start / end;
+  .video-container {
+    margin-top:  calc(var(--lineHeight) * 1);
   }
 }
 
@@ -635,16 +711,17 @@ dfn {
         <a data-delay style="--delay: 1.2;" href="#work-experience">Work</a>
         <a data-delay style="--delay: 1.6;" href="#side-projects">Side
           Projects</a>
-        <a data-delay style="--delay: 1.8;" href="#writing">Writing</a>
-        <a data-delay style="--delay: 2.0;" href="#patents">Patents</a>
-        <a data-delay style="--delay: 2.2;" href="#education">Education</a>
-        <a data-delay style="--delay: 2.2;" href="#etc">etc.</a>
+        <a data-delay style="--delay: 1.8;" href="#experiments">Experiments</a>
+        <a data-delay style="--delay: 2.0;" href="#writing">Writing</a>
+        <a data-delay style="--delay: 2.2;" href="#patents">Patents</a>
+        <a data-delay style="--delay: 2.4;" href="#education">Education</a>
+        <a data-delay style="--delay: 2.6;" href="#etc">etc.</a>
       </nav>
-      <hr data-delay style="--delay: 2.6;">
+      <hr data-delay style="--delay: 2.8;">
       <nav aria-label="Social">
-        <a data-delay style="--delay: 2.8;" href="https://mastodon.social/@DLX">
+        <a data-delay style="--delay: 3.0;" href="https://mastodon.social/@DLX">
           Mastodon</a>
-        <a data-delay style="--delay: 3.0;" href="https://github.com/robb"
+        <a data-delay style="--delay: 3.2;" href="https://github.com/robb"
           class="social-link github">GitHub</a>
       </nav>
     </aside>
@@ -655,6 +732,7 @@ dfn {
           <a href="#projects">Projects</a>,
           <a href="#work-experience">Work Experience</a>,
           <a href="#side-projects">Side Projects</a>,
+          <a href="#experiments">Experiments</a>,
           <a href="#writing">Writing</a>,
           <a href="#patents">Patents</a>,
           <a href="#education">Education</a>,
@@ -675,15 +753,17 @@ dfn {
           <time datetime="2024">2024</time>
         </div>
         <div class="content">
-          <a
-            href="https://developer.apple.com/videos/play/wwdc2024/10151/"
-            data-delay style="--delay: 2.4;"
-            aria-labelledby="wwdc2024-session-title">
-            <img
-              src="/img/f4a62fa5-8e59-4e18-b41c-e288f1739892.jpg"
-              alt class="preview" width="484"
-              height="273">
-          </a>
+          <figure class="image-container">
+            <a
+              href="https://developer.apple.com/videos/play/wwdc2024/10151/"
+              data-delay style="--delay: 2.4;"
+              aria-labelledby="wwdc2024-session-title">
+              <img
+                src="/img/f4a62fa5-8e59-4e18-b41c-e288f1739892.jpg"
+                alt class="preview" width="484"
+                height="273">
+            </a>
+          </figure>
           <hgroup>
             <h3 data-delay style="--delay: 2.6;" id="wwdc2024-session-title">
               <a
@@ -711,12 +791,12 @@ dfn {
           <time datetime="2024">2024</time>
         </div>
         <div class="content" data-delay style="--delay: 3.6;">
-          <div class="video-container">
+          <figure class="video-container">
             <video autoplay muted loop playsinline width="484"
               height="273">
               <source src="/video/explode.mov">
             </video>
-          </div>
+          </figure>
           <hgroup>
             <h3><a
                 href="https://www.apple.com/newsroom/2024/06/ios-18-makes-iphone-more-personal-capable-and-intelligent-than-ever/">Explode
@@ -862,6 +942,71 @@ dfn {
         </div>
       </section>
 
+      <section id="experiments-section">
+        <h2 id="experiments">Experiments</h2>
+        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+          <video autoplay muted loop playsinline poster="/video/linear.jpg">
+            <source src="/video/linear.mp4">
+          </video>
+          <figcaption>
+            <h3>Linear Reveal Animation</h3>
+            <time datetime="2023-10-28">2023</time>
+          </figcaption>
+        </figure>
+
+        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+          <video autoplay muted loop playsinline poster="/video/curtain.jpg">
+            <source src="/video/curtain.mp4">
+          </video>
+          <figcaption>
+            <h3>Shader-based Curtain Effect</h3>
+            <time datetime="2023-08-01">2023</time>
+          </figcaption>
+        </figure>
+        <!--
+          <figure class="video-container wide" style="aspect-ratio: 1538 / 1024;">
+            <video autoplay muted loop playsinline poster="/video/loupe.jpg">
+              <source src="/video/loupe.mp4">
+            </video>
+            <figcaption>
+              <h3>Ray-Marched Loupe in a SwiftUI Shader</h3>
+              <time datetime="2023-06-09">2023</time>
+            </figcaption>
+          </figure>
+          -->
+
+        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+          <video autoplay muted loop playsinline poster="/video/reeded.jpg">
+            <source src="/video/reeded.mp4">
+          </video>
+          <figcaption>
+            <h3>Reeded Glass Navigation Bar</h3>
+            <time datetime="2023-06-06">2023</time>
+          </figcaption>
+        </figure>
+
+        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+          <video autoplay muted loop playsinline poster="/video/kubelka.jpg">
+            <source src="/video/kubelka.mp4">
+          </video>
+          <figcaption>
+            <h3>Kubelka-Munk Color Picker</h3>
+            <time datetime="2023-01-29">2023</time>
+          </figcaption>
+        </figure>
+
+        <figure class="video-container wide"
+          style="aspect-ratio: 16 / 9;">
+          <video autoplay muted loop playsinline poster="/video/damacy.jpg">
+            <source src="/video/damacy.mp4">
+          </video>
+          <figcaption>
+            <h3>Katamari Damacy Sprinboard Deletion</h3>
+            <time datetime="2022">2022</time>
+          </figcaption>
+        </figure>
+      </section>
+
       <section data-delay>
         <h2 id="side-projects">Side Projects</h2>
         <div class="label">
@@ -914,7 +1059,7 @@ dfn {
         </div>
 
         <div class="label">
-          <time datetime="2021">2021</time>
+          <time datetime="2020">2020</time>
         </div>
         <div class="content">
           <h3>
@@ -947,12 +1092,14 @@ dfn {
           <time datetime="2022">2022</time>
         </div>
         <div class="content">
-          <a
-            href="https://movingparts.io/variadic-views-in-swiftui">
-            <img class="preview"
-              src="/img/1fdfe436-7aa1-4612-be57-273aed60e90d.png"
-              alt="An abstract graphic showing multiple colorful capsules.">
-          </a>
+          <figure class="image-container">
+            <a
+              href="https://movingparts.io/variadic-views-in-swiftui">
+              <img class="preview"
+                src="/img/1fdfe436-7aa1-4612-be57-273aed60e90d.png"
+                alt="An abstract graphic showing multiple colorful capsules.">
+            </a>
+          </figure>
           <hgroup>
             <h3>
               <a
@@ -1047,9 +1194,11 @@ dfn {
             </p>
           </hgroup>
           <p>
-            <img class="preview small"
-              src="/img/US10444976-20191015-D00000-2.png"
-              alt="A patent drawing of a finger touching an iPad.">
+            <figure class="image-container">
+              <img class="preview small"
+                src="/img/US10444976-20191015-D00000-2.png"
+                alt="A patent drawing of a finger touching an iPad.">
+            </figure>
           </p>
 
         </div>
