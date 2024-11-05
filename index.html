@@ -618,7 +618,7 @@ dfn {
   </head>
   <body>
     <script>
-      if (performance?.navigation?.type == performance?.navigation?.TYPE_NAVIGATE) {
+      if (performance?.getEntriesByType("navigation")?.[0]?.type == "navigate") {
         document.body.classList.add('animate-appear');
       }
     </script>
