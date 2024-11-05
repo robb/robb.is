@@ -576,6 +576,44 @@ dfn {
   gap: calc(var(--lineHeight) / 2);
   image-rendering: pixelated;
 }
+
+@media print {
+  footer, main nav, aside, a:has(img.preview), a:has(video), img.preview, .video-container {
+    display: none;
+  }
+
+  section h2:first-child {
+    padding-top: var(--lineHeight);
+  }
+
+  .content {
+    break-inside: avoid;
+  }
+
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+  }
+
+  h2 + .label {
+    page-break-before: avoid;
+  }
+
+  body {
+    max-width: 70ch;
+  }
+
+  section {
+    grid-template-columns: [start] 12ch 1fr [end];
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a[href^="http"]:not(:has(img))::after {
+    content: unset;
+  }
+}
     </style>
   </head>
   <body>
