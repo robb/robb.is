@@ -316,7 +316,7 @@ a:focus, summary:focus {
 }
 
 a[href^="http"]:not(:has(img))::after {
-  content: "↗";
+  content: "↗" / "";
   padding-left: 0.2ch;
   font-size: 80%;
   font-weight: 600;
@@ -486,7 +486,7 @@ summary::-webkit-details-marker {
 }
 
 summary::after {
-  content: "⏵";
+  content: "⏵" / "";
 
   padding-left: 0.5ch;
   font-weight: 600;
@@ -497,7 +497,7 @@ summary::after {
 }
 
 details[open] summary::after {
-  content: "⏷";
+  content: "⏷" / "";
 }
 
 li {
