@@ -250,7 +250,7 @@ footer {
   will-change: transform, opacity;
 }
 
-[data-delay] .image-container, [data-delay] .video-container {
+[data-delay] figure, [data-delay] figure {
   animation: appear-img calc(var(--appearDuration) / 5) linear both;
   animation-delay: calc(0.2s + calc(var(--delay) * 0.2s));
   will-change: transform, opacity;
@@ -377,17 +377,7 @@ aside nav a {
   }
 }
 
-.image-container img {
-  max-width: 100%;
-  height: auto;
-  vertical-align: bottom;
-}
-
-.image-container.small {
-  max-width: 50%;
-}
-
-.image-container, .video-container {
+figure {
   width: auto;
   height: auto;
   border-radius: 20px;
@@ -400,7 +390,11 @@ aside nav a {
   transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.image-container::after, .video-container::after {
+figure.small {
+  max-width: 50%;
+}
+
+figure::after {
   content: " ";
   display: block;
   border-radius: inherit;
@@ -415,20 +409,24 @@ aside nav a {
   opacity: 0.15;
 }
 
-.video-container.wide {
+figure.wide {
   grid-column: start / end;
 }
 
-.video-container video {
-  /* position: absolute; */
-  /* top: 0; right: 0; bottom: 0; left: 0; */
+figure img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+
+figure video {
   width: 101%;
   height: 101%;
   object-fit: cover;
-  background-color: #000;
+  background-color: var(--secondaryBackgroundColor);
 }
 
-.video-container figcaption {
+figure figcaption {
   display: flex;
   flex-direction: row;
   gap: var(--lineHeight);
@@ -465,38 +463,40 @@ aside nav a {
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.video-container:hover {
-  transform: scale(1.01);
+@media (hover: hover) {
+  figure:hover {
+    transform: scale(1.01);
+  }
+
+  figure:hover figcaption {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  figure figcaption * {
+    transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  figure:hover figcaption * {
+    filter: blur(8px);
+  }
 }
 
-.video-container:hover figcaption {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.video-container figcaption * {
-  transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.video-container:hover figcaption * {
-  filter: blur(8px);
-}
-
-.video-container figcaption time {
+figure figcaption time {
   color: rgba(255, 255, 255, 0.6);
   font-feature-settings: "ss01" 1;
   font-weight: 600;
 }
 
 @supports (mask-border-width: 25px) {
-  .image-container, .video-container {
+  figure {
     border-radius: unset;
     mask-border-source: url("/img/mask@2x.png");
     mask-border-width: 25px;
     mask-border-slice: 49% fill;
   }
 
-  .image-container::after, .video-container::after {
+  figure::after {
     border-image: url("/img/border@2x.png");
     border-image-width: 25px;
     border-image-slice: 49% fill;
@@ -603,7 +603,7 @@ dfn {
     padding-top: calc(var(--lineHeight) * 0.5);
   }
 
-  .video-container {
+  figure {
     margin-top:  calc(var(--lineHeight) * 1);
   }
 }
@@ -654,7 +654,7 @@ dfn {
 }
 
 @media print {
-  footer, main nav, aside, a:has(img.preview), a:has(video), img.preview, .video-container {
+  footer, main nav, aside, a:has(img.preview), a:has(video), img.preview, figure {
     display: none;
   }
 
@@ -753,15 +753,14 @@ dfn {
           <time datetime="2024">2024</time>
         </div>
         <div class="content">
-          <figure class="image-container">
+          <figure data-delay style="--delay: 2.4;">
             <a
               href="https://developer.apple.com/videos/play/wwdc2024/10151/"
-              data-delay style="--delay: 2.4;"
               aria-labelledby="wwdc2024-session-title">
               <img
                 src="/img/f4a62fa5-8e59-4e18-b41c-e288f1739892.jpg"
                 alt class="preview" width="484"
-                height="273">
+                height="273" fetchpriority="high">
             </a>
           </figure>
           <hgroup>
@@ -791,7 +790,7 @@ dfn {
           <time datetime="2024">2024</time>
         </div>
         <div class="content" data-delay style="--delay: 3.6;">
-          <figure class="video-container">
+          <figure>
             <video autoplay muted loop playsinline width="484"
               height="273">
               <source src="/video/explode.mov">
@@ -944,7 +943,7 @@ dfn {
 
       <section id="experiments-section">
         <h2 id="experiments">Experiments</h2>
-        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+        <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/linear.jpg">
             <source src="/video/linear.mp4">
           </video>
@@ -954,7 +953,7 @@ dfn {
           </figcaption>
         </figure>
 
-        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+        <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/curtain.jpg">
             <source src="/video/curtain.mp4">
           </video>
@@ -963,8 +962,9 @@ dfn {
             <time datetime="2023-08-01">2023</time>
           </figcaption>
         </figure>
+
         <!--
-          <figure class="video-container wide" style="aspect-ratio: 1538 / 1024;">
+          <figure class="wide" style="aspect-ratio: 1538 / 1024;">
             <video autoplay muted loop playsinline poster="/video/loupe.jpg">
               <source src="/video/loupe.mp4">
             </video>
@@ -975,7 +975,7 @@ dfn {
           </figure>
           -->
 
-        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+        <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/reeded.jpg">
             <source src="/video/reeded.mp4">
           </video>
@@ -985,7 +985,7 @@ dfn {
           </figcaption>
         </figure>
 
-        <figure class="video-container" style="aspect-ratio: 1 / 1;">
+        <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/kubelka.jpg">
             <source src="/video/kubelka.mp4">
           </video>
@@ -995,7 +995,7 @@ dfn {
           </figcaption>
         </figure>
 
-        <figure class="video-container wide"
+        <figure class="wide"
           style="aspect-ratio: 16 / 9;">
           <video autoplay muted loop playsinline poster="/video/damacy.jpg">
             <source src="/video/damacy.mp4">
@@ -1092,7 +1092,7 @@ dfn {
           <time datetime="2022">2022</time>
         </div>
         <div class="content">
-          <figure class="image-container">
+          <figure>
             <a
               href="https://movingparts.io/variadic-views-in-swiftui">
               <img class="preview"
@@ -1194,7 +1194,7 @@ dfn {
             </p>
           </hgroup>
           <p>
-            <figure class="image-container">
+            <figure>
               <img class="preview small"
                 src="/img/US10444976-20191015-D00000-2.png"
                 alt="A patent drawing of a finger touching an iPad.">
