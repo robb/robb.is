@@ -290,7 +290,7 @@ h1:target, h2:target, h3:target {
   animation-delay: 0.6s;
 }
 
-a, summary {
+a, footer summary {
   color: var(--primaryText);
   text-decoration: underline;
   text-decoration-skip: objects;
@@ -387,7 +387,6 @@ figure {
   isolation: isolate;
   background-color: var(--secondaryBackgroundColor);
   box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 figure.small {
@@ -407,6 +406,7 @@ figure::after {
   left: -0.5px;
   pointer-events: none;
   opacity: 0.15;
+  z-index: 10;
 }
 
 figure.wide {
@@ -414,6 +414,7 @@ figure.wide {
 }
 
 figure img {
+  width: auto;
   max-width: 100%;
   height: auto;
   vertical-align: bottom;
@@ -424,68 +425,6 @@ figure video {
   height: 101%;
   object-fit: cover;
   background-color: var(--secondaryBackgroundColor);
-}
-
-figure figcaption {
-  display: flex;
-  flex-direction: row;
-  gap: var(--lineHeight);
-  justify-content: space-between;
-  align-items: last baseline;
-
-  text-wrap: balance;
-
-  padding: calc(3 * var(--lineHeight)) var(--lineHeight) var(--lineHeight);
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-
-  color: rgba(255, 255, 255, 0.85);
-  text-shadow: black 0px 1px 1px;
-  font-weight: 500;
-
-  background: linear-gradient(
-    rgba(0, 0, 0, 0.000) 0.0%,
-    rgba(0, 0, 0, 0.024) 10.0%,
-    rgba(0, 0, 0, 0.098) 20.0%,
-    rgba(0, 0, 0, 0.221) 30.0%,
-    rgba(0, 0, 0, 0.374) 40.0%,
-    rgba(0, 0, 0, 0.521) 50.0%,
-    rgba(0, 0, 0, 0.630) 60.0%,
-    rgba(0, 0, 0, 0.689) 70.0%,
-    rgba(0, 0, 0, 0.700) 80.0%,
-    rgba(0, 0, 0, 0.700) 90.0%,
-    rgba(0, 0, 0, 0.700) 100.0%
-    );
-
-    isolation: isolate;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-@media (hover: hover) {
-  figure:hover {
-    transform: scale(1.01);
-  }
-
-  figure:hover figcaption {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  figure figcaption * {
-    transition: all 0.9s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-
-  figure:hover figcaption * {
-    filter: blur(8px);
-  }
-}
-
-figure figcaption time {
-  color: rgba(255, 255, 255, 0.6);
-  font-feature-settings: "ss01" 1;
-  font-weight: 600;
 }
 
 @supports (mask-border-width: 25px) {
@@ -503,6 +442,115 @@ figure figcaption time {
 
     outline: 10px solid red;
   }
+}
+
+figure details {
+  display: contents;
+}
+
+figure details summary {
+  position: absolute;
+  top: calc(var(--lineHeight) * 0.66666);
+  right: calc(var(--lineHeight) * 0.66666);
+  width: calc(var(--lineHeight) * 1.6666);
+  height: calc(var(--lineHeight) * 1.6666);
+
+  z-index: 2;
+
+  background-color: rgba(255, 255, 255, 0.7);
+
+  -webkit-backdrop-filter: blur(20px) saturate(120%) brightness(25%);
+  backdrop-filter: blur(20px) saturate(120%) brightness(25%);
+
+  mask-image: url(/img/xmark.png);
+  mask-size: 100%;
+  mask-repeat: no-repeat;
+  mask-position: 50%;
+
+  list-style-type: none;
+  cursor: pointer;
+
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              filter 0.5s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+figure details[open] summary {
+  background-color: rgba(255, 255, 255, 0.8);
+  transform: rotate(45deg);
+}
+
+@supports selector(figure:has(details)) {
+  figure:has(details)::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(10, 10, 20, 0.0);
+    -webkit-backdrop-filter: blur(0px) saturate(100%) brightness(100%);
+    backdrop-filter: blur(0px) saturate(100%) brightness(100%);
+
+    transition: backdrop-filter 0.5s cubic-bezier(0.215, 0.610, 0.355, 1),
+                background-color 0.5s cubic-bezier(0.215, 0.610, 0.355, 1);
+
+    pointer-events: none;
+  }
+
+  figure:has(details[open])::before {
+    background-color: rgba(10, 10, 20, 0.55);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    backdrop-filter: blur(20px) saturate(120%);
+  }
+}
+
+@supports not (selector(figure:has(details[open]) video)) {
+  figure details[open] figcaption {
+    background-color: rgba(10, 10, 20, 0.75);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    backdrop-filter: blur(20px) saturate(120%);
+  }
+}
+
+figure details summary img {
+  visibility: hidden;
+}
+
+figure details summary::-webkit-details-marker {
+  display: none;
+}
+
+figure details figcaption {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--lineHeight) / 4);
+  align-items: center;
+  justify-content: center;
+
+  padding: calc(var(--lineHeight) * 1);
+
+  color: white;
+
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: rgba(0,0,0,0.4) 0 1px 2px;
+}
+
+figure details figcaption a {
+  color: inherit;
+}
+
+figure details figcaption a[href^="http"]:not(:has(img))::after {
+  content: unset;
+  padding: 0;
+}
+
+figure details figcaption time {
+  order: -1;
+  font-feature-settings: "ss01" 1;
 }
 
 .label {
@@ -544,16 +592,16 @@ hgroup p {
   text-wrap: pretty;
 }
 
-summary {
+footer summary {
   display: inline;
   list-style-type: none;
 }
 
-summary::-webkit-details-marker {
+footer summary::-webkit-details-marker {
   display: none;
 }
 
-summary::after {
+footer summary::after {
   content: "⏵" / "";
 
   padding-left: 0.5ch;
@@ -564,7 +612,7 @@ summary::after {
   text-decoration-color: var(--backgroundColor);
 }
 
-details[open] summary::after {
+footer details[open] summary::after {
   content: "⏷" / "";
 }
 
@@ -753,7 +801,7 @@ dfn {
           <time datetime="2024">2024</time>
         </div>
         <div class="content">
-          <figure data-delay style="--delay: 2.4;">
+          <figure style="aspect-ratio: 484 / 273; --delay: 2.4;" data-delay>
             <a
               href="https://developer.apple.com/videos/play/wwdc2024/10151/"
               aria-labelledby="wwdc2024-session-title">
@@ -943,24 +991,51 @@ dfn {
 
       <section id="experiments-section">
         <h2 id="experiments">Experiments</h2>
+        <figure class="wide" style="aspect-ratio: 16 / 9;">
+          <video autoplay muted loop playsinline poster="/video/family.png">
+            <source src="/video/family.mp4">
+          </video>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
+            <figcaption>
+              <time datetime="2024">2024</time>
+
+              <p>
+                I reimplemented the iconic label transition used in the <a
+                  href="https://benji.org/family-values">Family App</a> with
+                SwiftUI's <code>TextRenderer</code> API.
+              </p>
+            </figcaption>
+          </details>
+        </figure>
+
         <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/linear.jpg">
             <source src="/video/linear.mp4">
           </video>
-          <figcaption>
-            <h3>Linear Reveal Animation</h3>
-            <time datetime="2023-10-28">2023</time>
-          </figcaption>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
+            <figcaption>
+              <h3>Linear Reveal Animation</h3>
+              <time datetime="2023-10-28">2023</time>
+            </figcaption>
+          </details>
         </figure>
 
         <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/curtain.jpg">
             <source src="/video/curtain.mp4">
           </video>
-          <figcaption>
-            <h3>Shader-based Curtain Effect</h3>
-            <time datetime="2023-08-01">2023</time>
-          </figcaption>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
+            <figcaption>
+              <h3>Shader-based Curtain Effect</h3>
+              <time datetime="2023-08-01">2023</time>
+            </figcaption>
+          </details>
         </figure>
 
         <!--
@@ -979,31 +1054,42 @@ dfn {
           <video autoplay muted loop playsinline poster="/video/reeded.jpg">
             <source src="/video/reeded.mp4">
           </video>
-          <figcaption>
-            <h3>Reeded Glass Navigation Bar</h3>
-            <time datetime="2023-06-06">2023</time>
-          </figcaption>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
+            <figcaption>
+              <h3>Reeded Glass Navigation Bar</h3>
+              <time datetime="2023-06-06">2023</time>
+            </figcaption>
+          </details>
         </figure>
 
         <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/kubelka.jpg">
             <source src="/video/kubelka.mp4">
           </video>
-          <figcaption>
-            <h3>Kubelka-Munk Color Picker</h3>
-            <time datetime="2023-01-29">2023</time>
-          </figcaption>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
+            <figcaption>
+              <h3>Kubelka-Munk Color Picker</h3>
+              <time datetime="2023-01-29">2023</time>
+            </figcaption>
+          </details>
         </figure>
 
-        <figure class="wide"
-          style="aspect-ratio: 16 / 9;">
+        <figure class="wide" style="aspect-ratio: 16 / 9;">
           <video autoplay muted loop playsinline poster="/video/damacy.jpg">
             <source src="/video/damacy.mp4">
           </video>
-          <figcaption>
-            <h3>Katamari Damacy Sprinboard Deletion</h3>
-            <time datetime="2022">2022</time>
-          </figcaption>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
+            <figcaption>
+              <h3>Katamari Damacy Sprinboard Deletion</h3>
+              <time datetime="2022">2022</time>
+            </figcaption>
+          </details>
         </figure>
       </section>
 
@@ -1222,6 +1308,10 @@ dfn {
               alt="Mu-An Chiou"></a>
           <img src="/img/best1024.gif" alt="Best viewed at 1024×768 pixels."
             width="88" height="31">
+          <a href="https://muan.co/posts/javascript">
+            <img src="/img/antijs.gif" alt="Anti-JavaScript-JavaScript-Club"
+              width="88" height="31">
+          </a>
         </div>
 
         <details style="display: contents;">
