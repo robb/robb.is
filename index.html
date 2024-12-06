@@ -80,14 +80,7 @@
     --primaryText: #000;
     --secondaryText: #222;
     --tertiaryText: #444;
-  }
-}
 
-@media print {
-  :root {
-    --primaryText: #000;
-    --secondaryText: #000;
-    --tertiaryText: #000;
   }
 }
 
@@ -125,16 +118,6 @@ body {
 }
 
 header {
-  padding: calc(var(--lineHeight) * 3) 0 calc(var(--lineHeight) * 1);
-}
-
-@media print {
-  header {
-    padding: unset;
-  }
-}
-
-@page {
   padding: calc(var(--lineHeight) * 3) 0 calc(var(--lineHeight) * 1);
 }
 
@@ -253,7 +236,7 @@ footer {
   }
 }
 
-@media screen and not (prefers-reduced-motion: reduce) {
+@media not (prefers-reduced-motion: reduce) {
   body.animate-appear:not(:has(:target)) {
     --appearDuration: 2.495139694737313s;
   }
@@ -718,16 +701,6 @@ dfn {
   image-rendering: pixelated;
 }
 
-.screen-only {
-  display: none;
-}
-
-@media screen {
-  .screen-only {
-    display: unset;
-  }
-}
-
 @media print {
   footer, main nav, aside, a:has(img.preview), a:has(video), img.preview, figure {
     display: none;
@@ -738,10 +711,6 @@ dfn {
   }
 
   .content {
-    break-inside: avoid;
-  }
-
-  p {
     break-inside: avoid;
   }
 
@@ -1020,7 +989,7 @@ dfn {
         </div>
       </section>
 
-      <section id="experiments-section" class="screen-only"">
+      <section id="experiments-section">
         <h2 id="experiments">Experiments</h2>
         <figure class="wide" style="aspect-ratio: 16 / 9;">
           <video autoplay muted loop playsinline poster="/video/family.png">
@@ -1140,7 +1109,7 @@ dfn {
             A syndication format for distributing stories to
             friends and families – built on top of JSON Feed.
           </p>
-          <p class="collaborators screen-only">
+          <p class="collaborators">
             A project with <a href="https://muan.co">Mu-An</a>.
           </p>
         </div>
@@ -1156,12 +1125,11 @@ dfn {
           <p>
             The Open Heart protocol lets an anonymous user send an emoji
             reaction to a URL – enabling JavaScript-free Like&nbsp;Buttons
-            like this one. <span class="screen-only">Check out this
-              example:</span>
+            like this one:
           </p>
           <form
             action="https://api.oh.dddddddddzzzz.org/robb.is/dde878f4-1b71-44fb-a072-d8997b53e65e?redirect=http://robb.is/#oh-like-button"
-            method="POST" enctype="text/plain" class="screen-only">
+            method="POST" enctype="text/plain">
             <button class="oh-button" id="oh-like-button"
               aria-describedby="oh-like-button-feedback"
               name="🖤">
@@ -1171,7 +1139,7 @@ dfn {
               Thanks!
             </span>
           </form>
-          <div class="collaborators screen-only">
+          <div class="collaborators">
             A project with <a href="https://muan.co">Mu-An</a>.
           </div>
         </div>
