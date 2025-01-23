@@ -121,6 +121,16 @@ header {
   padding: calc(var(--lineHeight) * 3) 0 calc(var(--lineHeight) * 1);
 }
 
+@media print {
+  header {
+    padding: unset;
+  }
+}
+
+@page {
+  padding: calc(var(--lineHeight) * 3) 0 calc(var(--lineHeight) * 1);
+}
+
 section {
   display: grid;
   grid-template-columns: [start] 25% 1fr [end];
@@ -320,7 +330,7 @@ a:focus, summary:focus {
   }
 }
 
-a[href^="http"]:not(:has(img))::after {
+a[href^="http"]:not(:has(img))::after, a[href^="mailto"]:not(:has(img))::after {
   content: "↗" / "";
   padding-left: 0.2ch;
   font-size: 80%;
@@ -331,7 +341,7 @@ a[href^="http"]:not(:has(img))::after {
   text-decoration-color: var(--backgroundColor);
 }
 
-a[href^="http"]:not(:has(img)):hover::after {
+a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
   color: var(--accentColor);
 }
 
@@ -734,9 +744,14 @@ dfn {
     text-decoration: none;
   }
 
-  a[href^="http"]:not(:has(img))::after {
-    content: unset;
+  a[href^="http"]:not(:has(img))::after, a[href^="mailto"]:not(:has(img))::after {
+    /* content: unset; */
   }
+
+  #experiments, .screen-only {
+    display: none;
+  }
+
 }
     </style>
   </head>
@@ -769,8 +784,12 @@ dfn {
       <nav aria-label="Social">
         <a data-delay style="--delay: 3.0;" href="https://mastodon.social/@DLX">
           Mastodon</a>
-        <a data-delay style="--delay: 3.2;" href="https://github.com/robb"
-          class="social-link github">GitHub</a>
+        <a data-delay style="--delay: 3.2;"
+          href="https://bsky.app/profile/robb.is">Bluesky</a>
+        <a data-delay style="--delay: 3.4;"
+          href="https://github.com/robb">GitHub</a>
+        <a data-delay style="--delay: 3.6;"
+          href="mailto:robb@robb.is">E-Mail</a>
       </nav>
     </aside>
     <main>
@@ -788,10 +807,10 @@ dfn {
         </nav>
         <nav aria-label="Social" data-delay style="--delay: 1.8;">
           Elsewhere:
-          <a href="https://mastodon.social/@DLX"> Mastodon</a>
-          or
-          <a href="https://github.com/robb"
-            class="social-link github">GitHub</a>.
+          <a href="https://mastodon.social/@DLX">Mastodon</a>,
+          <a href="https://bsky.app/profile/robb.is">Bluesky</a>,
+          <a href="https://github.com/robb">GitHub</a>, or
+          <a href="mailto:robb@robb.is">E-Mail</a>.
         </nav>
       </section>
 
@@ -1109,7 +1128,7 @@ dfn {
             A syndication format for distributing stories to
             friends and families – built on top of JSON Feed.
           </p>
-          <p class="collaborators">
+          <p class="collaborators screen-only">
             A project with <a href="https://muan.co">Mu-An</a>.
           </p>
         </div>
@@ -1124,12 +1143,11 @@ dfn {
           </h3>
           <p>
             The Open Heart protocol lets an anonymous user send an emoji
-            reaction to a URL – enabling JavaScript-free Like&nbsp;Buttons
-            like this one:
+            reaction to a URL – enabling JavaScript-free Like&nbsp;Buttons.
           </p>
           <form
             action="https://api.oh.dddddddddzzzz.org/robb.is/dde878f4-1b71-44fb-a072-d8997b53e65e?redirect=http://robb.is/#oh-like-button"
-            method="POST" enctype="text/plain">
+            method="POST" enctype="text/plain" class="screen-only">
             <button class="oh-button" id="oh-like-button"
               aria-describedby="oh-like-button-feedback"
               name="🖤">
@@ -1139,7 +1157,7 @@ dfn {
               Thanks!
             </span>
           </form>
-          <div class="collaborators">
+          <div class="collaborators screen-only">
             A project with <a href="https://muan.co">Mu-An</a>.
           </div>
         </div>
