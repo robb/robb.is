@@ -266,6 +266,11 @@ footer {
   will-change: transform, opacity;
 }
 
+body.did-appear [data-delay] {
+  animation: none !important;
+  animation-delay: 0;
+}
+
 h1, h2, h3, h4 {
   line-height: inherit;
   font-size: inherit;
@@ -759,6 +764,10 @@ dfn {
     <script>
       if (performance?.getEntriesByType("navigation")?.[0]?.type == "navigate") {
         document.body.classList.add('animate-appear');
+
+        setTimeout(() => {
+          document.body.classList.add('did-appear');
+        }, 5000);
       }
     </script>
     <header class="vcard">
@@ -874,10 +883,10 @@ dfn {
             on iOS&nbsp;18.
           </p>
         </div>
-        <div class="label">
+        <div class="label" data-delay style="--delay: 3.8;">
           <time datetime="2023">2023</time>
         </div>
-        <div class="content">
+        <div class="content" data-delay style="--delay: 3.8;">
           <hgroup>
             <h3>
               <a
@@ -898,8 +907,8 @@ dfn {
         </div>
       </section>
 
-      <section>
-        <h2 id="work-experience" data-delay style="--delay: 5;">Work
+      <section data-delay style="--delay: 4;">
+        <h2 id="work-experience">Work
           Experience</h2>
 
         <div class="label">
@@ -1008,7 +1017,7 @@ dfn {
         </div>
       </section>
 
-      <section id="experiments-section">
+      <section id="experiments-section" data-delay style="--delay: 4;">
         <h2 id="experiments">Experiments</h2>
         <figure class="wide" style="aspect-ratio: 16 / 9;">
           <video autoplay muted loop playsinline poster="/video/family.png">
@@ -1112,7 +1121,7 @@ dfn {
         </figure>
       </section>
 
-      <section data-delay>
+      <section data-delay style="--delay: 4;">
         <h2 id="side-projects">Side Projects</h2>
         <div class="label">
           <time datetime="2022">2022</time> – Now
