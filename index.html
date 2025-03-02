@@ -41,11 +41,12 @@
 --tertiaryText: #A2ACAA;
 
 --accentColor: rgb(224, 44, 146);
+--selectionOpacity: 0.5;
 }
 
 ::selection {
   background-color: var(--accentColor);
-  background-color: color(from var(--accentColor) srgb r g b / 0.5);
+  background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
 }
 
 @media (prefers-contrast: more) {
@@ -55,10 +56,8 @@
   --tertiaryText: #AAA;
 
   --hairlineThickness: 1px;
-  }
 
-  ::selection {
-    background-color: color(from var(--accentColor) srgb r g b / 0.9);
+  --selectionOpacity: 0.9;
   }
 }
 
@@ -152,6 +151,11 @@ section h2:first-child {
 
 footer {
   padding: calc(var(--lineHeight) * 1) 0 calc(var(--lineHeight) * 3);
+}
+
+.vcard {
+  font-feature-settings: "ss06" 1, "ss07" 1;
+  font-weight: 450;
 }
 
 @keyframes appear {
@@ -378,6 +382,18 @@ aside nav a {
   }
 }
 
+
+.collaborators .avatar {
+  display: inline-block;
+  border-radius: 100%;
+  height: 1.3em;
+  transform: translateY(0.12em);
+  vertical-align: text-bottom;
+  /* margin-left: 0.6ch; */
+  margin-right: 0.4ch;
+  margin-top: -1em;
+}
+
 @media screen and not (max-width: 1023px) {
   aside {
     width: calc(var(--lineHeight) * 4);
@@ -424,7 +440,7 @@ figure::after {
   z-index: 10;
 }
 
-figure.wide {
+.wide {
   grid-column: start / end;
 }
 
@@ -568,7 +584,7 @@ figure details figcaption time {
   font-feature-settings: "ss01" 1;
 }
 
-.label {
+.label, .small {
   grid-column: start / 1;
   justify-self: start;
   align-self: start;
@@ -578,6 +594,10 @@ figure details figcaption time {
   font-size: var(--secondaryFontSize);
   letter-spacing: 0.03ch;
   line-height: var(--lineHeight);
+}
+
+.low-contrast {
+  color: color(from var(--tertiaryText) srgb r g b / 0.7);
 }
 
 .label time {
@@ -594,6 +614,10 @@ hgroup p {
   font-feature-settings: "ss06" 1;
 
   text-wrap: balance;
+}
+
+.ss06-off {
+  font-feature-settings: "ss06" 0;
 }
 
 .content {
@@ -706,6 +730,10 @@ dfn {
 
 .oh-button:not(:target) .target {
   display: none;
+}
+
+#oh-like-button {
+  scroll-margin-top: var(--lineHeight);
 }
 
 .buttons-88x31 {
@@ -894,7 +922,8 @@ dfn {
                 Parts</a>
             </h3>
             <p>
-              Delightful SwiftUI transitions for your app.
+              Delightful <span class="ss06-off">SwiftUI</span> transitions for
+              your app.
             </p>
           </hgroup>
           <p>
@@ -911,7 +940,24 @@ dfn {
           Experience</h2>
 
         <div class="label">
-          <time datetime="2023">2023</time> – Now
+          <time datetime="2025">2025</time> – Now
+        </div>
+        <div class="content" style="--accentColor: #5E6AD2;">
+          <hgroup>
+            <h3>
+              <a class="role"
+                href="https://linear.app/mobile">iOS Engineer</a> at <a
+                class="company"
+                href="https://linear.app">Linear</a>
+            </h3>
+            <p>Berlin, Germany</p>
+          </hgroup>
+          <p>As an engineer on the mobile team, I look after the <a
+              href="https://linear.app/mobile">Linear App</a> for iPhone.</p>
+        </div>
+
+        <div class="label">
+          <time datetime="2023">2023</time> – <time datetime="2023">2025</time>
         </div>
         <div class="content">
           <hgroup>
@@ -934,16 +980,16 @@ dfn {
             <h3>Co-Founder & CEO at <a
                 href="https://movingparts.io">Moving
                 Parts</a></h3>
-            <p>Fully remotely</p>
+            <p>Berlin, Germany</p>
           </hgroup>
-          <p>YC S21</p>
+          <p>YCombinator Batch S21</p>
         </div>
 
         <div class="label">
           <time datetime="2019">2019</time> – <time
             datetime="2021">2021</time>
         </div>
-        <div class="content">
+        <div class="content" style="--accentColor: #4285F4;">
           <hgroup>
             <h3>Software Engineer at <a class="company"
                 href="http://research.google/">Google
@@ -1007,7 +1053,7 @@ dfn {
           <time datetime="2010">2010</time> – <time
             datetime="2013">2013</time>
         </div>
-        <div class="content">
+        <div class="content" style="--accentColor: #FF5400;">
           <hgroup>
             <h3>iOS Engineer at <a class="company"
                 href="https://soundcloud.com">SoundCloud</a></h3>
@@ -1038,6 +1084,21 @@ dfn {
         </figure>
 
         <figure style="aspect-ratio: 1 / 1;">
+          <video autoplay muted loop playsinline
+            poster="/video/stiching-tutorial.jpg">
+            <source src="/video/stiching-tutorial.mp4">
+          </video>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
+            <figcaption>
+              <h3>Stiched Fabric Effect</h3>
+              <time datetime="2024-12-05">2024</time>
+            </figcaption>
+          </details>
+        </figure>
+
+        <!-- <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/linear.jpg">
             <source src="/video/linear.mp4">
           </video>
@@ -1049,7 +1110,7 @@ dfn {
               <time datetime="2023-10-28">2023</time>
             </figcaption>
           </details>
-        </figure>
+        </figure> -->
 
         <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/curtain.jpg">
@@ -1065,17 +1126,19 @@ dfn {
           </details>
         </figure>
 
-        <!--
-          <figure class="wide" style="aspect-ratio: 1538 / 1024;">
-            <video autoplay muted loop playsinline poster="/video/loupe.jpg">
-              <source src="/video/loupe.mp4">
-            </video>
+        <figure class="wide" style="aspect-ratio: 1538 / 1024;">
+          <video autoplay muted loop playsinline poster="/video/loupe.jpg">
+            <source src="/video/loupe.mp4">
+          </video>
+          <details name="video-details">
+            <summary aria-label="Video Details"><img src="/img/xmark.png"
+                alt="Video Details"></summary>
             <figcaption>
               <h3>Ray-Marched Loupe in a SwiftUI Shader</h3>
               <time datetime="2023-06-09">2023</time>
             </figcaption>
-          </figure>
-          -->
+          </details>
+        </figure>
 
         <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/reeded.jpg">
@@ -1407,6 +1470,10 @@ dfn {
         </div>
         <div class="content">
           <p><a href="https://github.com/robb/robb.is">View Source</a></p>
+
+          <p class="small low-contrast">You reached the end of the page.<br>It
+            is now safe to turn off your
+            computer.</p>
         </div>
       </section>
     </footer>
