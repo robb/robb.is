@@ -4,12 +4,15 @@
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+    <link rel="icon" href="/img/electrode.svg" type="image/svg+xml">
+
     <title>Robb Böhnke</title>
     <meta content="Robb Böhnke" property="og:site_name">
-    <meta content="Robb Böhnke" name="twitter:title">
-
     <meta content="Robb Böhnke's CV." name="description">
     <meta content="website" property="og:type">
+    <meta name="author" content="Robb Böhnke"/>
+
+    <link rel="canonical" href="https://robb.is/"/>
 
     <link rel="profile" href="http://microformats.org/profile/hcard">
     <style>
@@ -655,6 +658,10 @@ footer details[open] summary::after {
   content: "⏷" / "";
 }
 
+footer details {
+  display: contents;
+}
+
 li {
   margin-left: var(--lineHeight);
 }
@@ -679,6 +686,10 @@ dfn {
 
   section > *, details > * {
     grid-column: start / end !important;
+  }
+
+  footer details {
+    display: unset;
   }
 
   .label {
@@ -1403,7 +1414,7 @@ dfn {
           </a>
         </div>
 
-        <details style="display: contents;">
+        <details>
           <summary class="label">Accessibility Statement</summary>
           <div class="content">
             <hgroup>
