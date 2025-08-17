@@ -427,7 +427,7 @@ figure.small {
   max-width: 50%;
 }
 
-figure::after {
+figure::after, iframe::after {
   content: " ";
   display: block;
   border-radius: inherit;
@@ -462,14 +462,14 @@ figure video {
 }
 
 @supports (mask-border-width: 25px) {
-  figure {
+  figure, iframe {
     border-radius: unset;
     mask-border-source: url("/img/mask@2x.png");
     mask-border-width: 25px;
     mask-border-slice: 49% fill;
   }
 
-  figure::after {
+  figure::after, iframe::after {
     border-image: url("/img/border@2x.png");
     border-image-width: 25px;
     border-image-slice: 49% fill;
