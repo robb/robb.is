@@ -755,6 +755,99 @@ dfn {
   image-rendering: pixelated;
 }
 
+section#playlists-section {
+  display: none;
+}
+
+.has-wall section#playlists-section {
+  display: grid;
+}
+
+.has-wall-only {
+  display: none;
+}
+
+.has-wall .has-wall-only {
+  display: unset;
+}
+
+#spotify-wall {
+  position: relative;
+  display: contents;
+  
+}
+
+.spotify-dummy, #spotify-wall iframe {
+  border-radius: 20px;
+  background: color(from var(--primaryText) srgb r g b / 0.2);
+  width: 100%;
+  height: 152px;
+}
+
+.spotify-dummy {
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+#spotify-wall .label {
+  transition: filter 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.spotify-dummy.large, #spotify-wall iframe.large {
+  height: 352px !important;
+}
+
+#spotify-wall:has(.spotify-overlay) .label {
+  user-select: none;
+  filter: blur(5px);
+}
+
+.spotify-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.spotify-overlay-label {
+  background: rgba(255, 255, 255, 0.15);
+  padding: calc(var(--lineHeight) / 2) var(--lineHeight);
+
+  border-radius: calc(var(--lineHeight) / 2)  ;
+  transition: background 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.spotify-overlay:hover .spotify-overlay-label {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.spotify-overlay:focus-visible {
+  outline: 2px solid var(--accentColor);
+  outline-offset: 2px;
+}
+
+@media screen and (max-width: 799px) {
+  section {
+    gap: 0;
+  }
+
+  #spotify-wall * {
+    grid-column: start / end !important;
+  }
+}
+
 @media print {
   footer, main nav, aside, a:has(img.preview), a:has(video), img.preview, figure {
     display: none;
@@ -825,17 +918,20 @@ dfn {
         <a data-delay style="--delay: 2.0;" href="#writing">Writing</a>
         <a data-delay style="--delay: 2.2;" href="#patents">Patents</a>
         <a data-delay style="--delay: 2.4;" href="#education">Education</a>
-        <a data-delay style="--delay: 2.6;" href="#etc">etc.</a>
+        <a data-delay style="--delay: 2.6;" href="#playlists" class="has-wall-only">Playlists</a>
+        <a data-delay style="--delay: 2.8;" href="#etc">etc.</a>
       </nav>
       <hr data-delay style="--delay: 2.8;">
       <nav aria-label="Social">
         <a data-delay style="--delay: 3.0;" href="https://mastodon.social/@DLX">
           Mastodon</a>
         <a data-delay style="--delay: 3.2;"
-          href="https://bsky.app/profile/robb.is">Bluesky</a>
+          href="https://patreon.com/swiftui_snippets">Patreon</a>
         <a data-delay style="--delay: 3.4;"
-          href="https://github.com/robb">GitHub</a>
+          href="https://bsky.app/profile/robb.is">Bluesky</a>
         <a data-delay style="--delay: 3.6;"
+          href="https://github.com/robb">GitHub</a>
+        <a data-delay style="--delay: 3.8;"
           href="mailto:robb@robb.is">E-Mail</a>
       </nav>
     </aside>
@@ -850,11 +946,13 @@ dfn {
           <a href="#writing">Writing</a>,
           <a href="#patents">Patents</a>,
           <a href="#education">Education</a>,
+          <span class="has-wall-only"><a href="#playlists">Playlists</a>,</span>
           <a href="#etc">etc.</a>
         </nav>
         <nav aria-label="Social" data-delay style="--delay: 1.8;">
           Elsewhere:
           <a href="https://mastodon.social/@DLX">Mastodon</a>,
+          <a href="https://patreon.com/swiftui_snippets">Patreon</a>,
           <a href="https://bsky.app/profile/robb.is">Bluesky</a>,
           <a href="https://github.com/robb">GitHub</a>, or
           <a href="mailto:robb@robb.is">E-Mail</a>.
@@ -1196,6 +1294,22 @@ dfn {
 
       <section data-delay style="--delay: 4;">
         <h2 id="side-projects">Side Projects</h2>
+        
+        <div class="label">
+          <time datetime="2022">2023</time> – Now
+        </div>
+        <div class="content">
+          <h3>
+            <a href="https://www.patreon.com/swiftui_snippets">SwiftUI Snippets</a>
+          </h3>
+          <p>
+            My Patreon features regular posts on animation techniques in SwiftUI. Previous posts include how to build a <a href="https://www.patreon.com/posts/mitosis-132133817">Mitosis effect</a>, implement custom, shader-based <a href="https://www.patreon.com/posts/custom-with-91666663">ShapeStyles</a>, or write a <a href="https://www.patreon.com/posts/curtain-effect-91293805">Curtain Effect</a>.
+          </p>
+          <p>
+            My thanks to everyone who's subscribed, it really means a lot to me.
+          </p>
+        </div>
+
         <div class="label">
           <time datetime="2022">2022</time> – Now
         </div>
@@ -1390,6 +1504,81 @@ dfn {
         </div>
       </section>
 
+      <section id="playlists-section" data-delay class="screen-only">
+        <h2 id="playlists">Playlists</h2>
+          <div id="spotify-wall">
+            <button class="spotify-overlay" type="button" aria-label="Load Spotify embeds">
+              <span class="spotify-overlay-label">Allow Spotify embeds</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      <script>
+        let playlistsData = null;
+        
+        fetch('https://api.robb.is/playlist.min.json')
+          .then(response => response.json())
+          .then(playlists => {
+            playlistsData = playlists;
+            
+            const spotifyWall = document.getElementById('spotify-wall');
+            
+            playlists.forEach((playlist, index) => {
+              const label = document.createElement('div');
+              label.className = 'label';
+              label.innerHTML = `<time datetime="${playlist.name}">${playlist.name}</time>`;
+              spotifyWall.appendChild(label);
+              
+              const dummy = document.createElement('div');
+              dummy.className = index === 0 ? 'spotify-dummy content large' : 'spotify-dummy content';
+              spotifyWall.appendChild(dummy);
+            });
+            
+            document.body.classList.add('has-wall');
+          })
+          .catch(error => {
+            console.log('Failed to load Spotify playlists:', error);
+          });
+      
+
+        const spotifyOverlay = document.querySelector('.spotify-overlay');
+        
+        function loadSpotifyPlaylists() {
+          if (playlistsData && playlistsData.length > 0) {
+            const playlistsSection = document.getElementById('playlists-section');
+            const spotifyWall = document.getElementById('spotify-wall');
+            
+            while (spotifyWall.firstChild) {
+              spotifyWall.removeChild(spotifyWall.firstChild);
+            }
+            
+            playlistsData.forEach((playlist, index) => {
+              const label = document.createElement('div');
+              label.className = 'label';
+              label.innerHTML = `<time datetime="${playlist.name}">${playlist.name}</time>`;
+              spotifyWall.appendChild(label);
+              
+              const iframe = document.createElement('iframe');
+              iframe.className = index === 0 ? 'content large' : 'content';
+              iframe.style.borderRadius = '20px';
+              iframe.src = `https://open.spotify.com/embed/playlist/${playlist.id}?utm_source=generator&theme=1`;
+              iframe.frameBorder = '0';
+              iframe.allowFullscreen = '';
+              iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+              spotifyWall.appendChild(iframe);
+            });
+          }
+        }
+        
+        spotifyOverlay.addEventListener('click', loadSpotifyPlaylists);
+        spotifyOverlay.addEventListener('keydown', function(event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            loadSpotifyPlaylists();
+          }
+        });
+      </script>
+      
       <section data-delay>
         <h2 id="education">Education</h2>
         <div class="content"><p>None</p></div>
