@@ -157,8 +157,32 @@ footer {
 }
 
 .vcard {
+  display: grid;
+  grid-template-columns: [start] 44px 1fr [end];
+  gap: calc(var(--lineHeight) / 2);
+
   font-feature-settings: "ss06" 1, "ss07" 1;
   font-weight: 450;
+
+  margin-left: -2px;
+}
+
+.vcard > *:first-child {
+  grid-column: start / 1;
+}
+
+.vcard > * {
+  grid-column: 2 / end;
+}
+
+#avatar {
+  width: 44px;
+  height: 44px;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.vcard:hover #avatar {
+  transform: scale(1.05);
 }
 
 @keyframes appear {
@@ -918,11 +942,14 @@ section#playlists-section {
       }
     </script>
     <header class="vcard">
-      <h1 class="fn" data-delay style="--delay: 0.0;">Robb Böhnke</h1>
-      <p data-delay style="--delay: 1.0;"><span class="title">Developer &
+      <img id="avatar" data-delay style="--delay: 2.4;" src="/img/avatar.png">
+      <div>
+        <h1 class="fn" data-delay style="--delay: 0.0;">Robb Böhnke</h1>
+        <p data-delay style="--delay: 1.0;"><span class="title">Developer &
           Designer</span> based in
         <span class="locality">Berlin</span>, <span
           class="country-name">Germany</span>.</p>
+      </div>
     </header>
     <aside>
       <nav class="local-nav">
