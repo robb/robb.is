@@ -485,20 +485,33 @@ figure video {
   background-color: var(--secondaryBackgroundColor);
 }
 
+:root {
+  --svgMask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M 100 50 L 100 75.5414 C 100 82.5842 100 86.1055 98.8014 89.8961 C 97.295 94.0348 94.0348 97.295 89.8961 98.8014 C 86.1055 100 82.5842 100 75.5414 100 L 24.4586 100 C 17.4158 100 13.8945 100 10.1039 98.8014 C 5.96518 97.295 2.70496 94.0348 1.19858 89.8961 C 0 86.1055 0 82.5842 0 75.5414 L 0 24.4586 C 0 17.4158 0 13.8945 1.19858 10.1039 C 2.70496 5.96518 5.96518 2.70496 10.1039 1.19858 C 13.8945 0 17.4158 0 24.4586 0 L 75.5414 0 C 82.5842 0 86.1055 0 89.8961 1.19858 C 94.0348 2.70496 97.295 5.96518 98.8014 10.1039 C 100 13.8945 100 17.4158 100 24.4586 Z" fill="black"/></svg>');
+  --svgBorder: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M 100 50 L 100 75.5414 C 100 82.5842 100 86.1055 98.8014 89.8961 C 97.295 94.0348 94.0348 97.295 89.8961 98.8014 C 86.1055 100 82.5842 100 75.5414 100 L 24.4586 100 C 17.4158 100 13.8945 100 10.1039 98.8014 C 5.96518 97.295 2.70496 94.0348 1.19858 89.8961 C 0 86.1055 0 82.5842 0 75.5414 L 0 24.4586 C 0 17.4158 0 13.8945 1.19858 10.1039 C 2.70496 5.96518 5.96518 2.70496 10.1039 1.19858 C 13.8945 0 17.4158 0 24.4586 0 L 75.5414 0 C 82.5842 0 86.1055 0 89.8961 1.19858 C 94.0348 2.70496 97.295 5.96518 98.8014 10.1039 C 100 13.8945 100 17.4158 100 24.4586 Z" stroke="white" stroke-width="2" fill="none" /></svg>');
+}
+
 @supports (mask-border-width: 25px) {
   figure, iframe {
     border-radius: unset;
-    mask-border-source: url("/img/mask@2x.png");
-    mask-border-width: 25px;
-    mask-border-slice: 49% fill;
+    mask-border-source: var(--svgMask);
+    mask-border-slice: 49.5% fill;
   }
 
   figure::after, iframe::after {
-    border-image: url("/img/border@2x.png");
-    border-image-width: 25px;
-    border-image-slice: 49% fill;
+    border-image-source: var(--svgBorder);
 
-    outline: 10px solid red;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      content: "";
+
+      border-image-slice: 49.5% fill;
+      border-image-width: 50px;
+      border-image-outset: 0;
+      mix-blend-mode: plus-lighter;
+      opacity: 0.15;
   }
 }
 
@@ -799,7 +812,7 @@ section#playlists-section {
 #spotify-wall {
   position: relative;
   display: contents;
-  
+
 }
 
 .playlist-container, #spotify-wall iframe {
@@ -859,7 +872,7 @@ section#playlists-section {
 
 
   cursor: pointer;
-  
+
   border: none;
   color: inherit;
   font: inherit;
@@ -1337,7 +1350,7 @@ section#playlists-section {
 
       <section data-delay style="--delay: 4;">
         <h2 id="side-projects">Side Projects</h2>
-        
+
         <div class="label">
           <time datetime="2022">2023</time> – Now
         </div>
@@ -1557,44 +1570,44 @@ section#playlists-section {
       </section>
       <script>
         let playlistsData = null;
-        
+
         fetch('https://api.robb.is/playlist.min.json')
           .then(response => response.json())
           .then(playlists => {
             playlistsData = playlists;
-            
+
             const spotifyWall = document.getElementById('spotify-wall');
-            
+
             playlists.forEach((playlist, index) => {
               const label = document.createElement('div');
               label.className = 'label';
               label.innerHTML = `<time datetime="${playlist.name}">${playlist.name}</time>`;
               spotifyWall.appendChild(label);
-              
+
               const container = document.createElement('div');
               container.className = index === 0 ? 'playlist-container content large' : 'playlist-container content';
               spotifyWall.appendChild(container);
             });
-            
+
             document.body.classList.add('has-wall');
           })
           .catch(error => {
             console.log('Failed to load Spotify playlists:', error);
           });
-      
+
 
         const spotifyOverlay = document.querySelector('.spotify-overlay');
         const spotifyOverlayButton = document.querySelector('.spotify-overlay-button');
-        
+
         function loadSpotifyPlaylists() {
           if (playlistsData && playlistsData.length > 0) {
             const containers = document.querySelectorAll('.playlist-container');
-            
+
             const overlay = document.querySelector('.spotify-overlay');
             if (overlay) {
               overlay.remove();
             }
-            
+
             playlistsData.forEach((playlist, index) => {
               if (containers[index]) {
                 const iframe = document.createElement('iframe');
@@ -1604,17 +1617,17 @@ section#playlists-section {
                 iframe.frameBorder = '0';
                 iframe.allowFullscreen = '';
                 iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-                
+
                 iframe.onload = function() {
                   this.classList.add('loaded');
                 };
-                
+
                 containers[index].appendChild(iframe);
               }
             });
           }
         }
-        
+
         spotifyOverlayButton.addEventListener('click', loadSpotifyPlaylists);
         spotifyOverlayButton.addEventListener('keydown', function(event) {
           if (event.key === 'Enter' || event.key === ' ') {
@@ -1623,7 +1636,7 @@ section#playlists-section {
           }
         });
       </script>
-      
+
       <section data-delay>
         <h2 id="education">Education</h2>
         <div class="content"><p>None</p></div>
