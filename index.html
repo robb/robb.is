@@ -551,6 +551,10 @@ figure details[open] summary {
 }
 
 @supports selector(figure:has(details)) {
+  figure:has(details[open]) {
+    border: 0.01px solid rgba(255, 255, 255, 0.01);
+  }
+
   figure:has(details)::before {
     content: "";
     position: absolute;
