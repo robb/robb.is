@@ -635,7 +635,7 @@ figure details figcaption time {
 }
 
 .low-contrast {
-  color: color(from var(--tertiaryText) srgb r g b / 0.7);
+  color: color(from var(--tertiaryText) srgb r g b / 0.85);
 }
 
 .label time {
@@ -698,10 +698,25 @@ footer details {
 }
 
 ul {
-  list-style-position: inside;
+  list-style-type: none;
+
+  li {
+    position: relative;
+    padding-left: calc(var(--lineHeight) / 2);
+  }
+
+  li::before {
+    position: absolute;
+
+    content: "•" / "";
+    left: 0;
+    width: calc(var(--lineHeight));
+  }
 }
 
 ul.columns {
+  columns: 2;
+
   @media screen and (min-width: 799px) {
     columns: 3;
   }
@@ -1684,10 +1699,11 @@ section#playlists-section {
         </div>
         <div class="content">
           <ul class="columns">
+            <li><a href="https://fishshell.com">fish</a></li>
             <li><a href="https://ghostty.org">ghostty</a></li>
             <li><a href="https://git-scm.com">git</a></li>
             <li><a href="https://handbrake.fr">Handbrake</a></li>
-                        <li><a href="https://www.apple.com/macos/macos-sequoia/">macOS Sequoia</a></li>
+            <li><a href="https://www.apple.com/macos/macos-sequoia/">macOS Sequoia</a></li>
             <li><a href="https://www.pixelmator.com/pro/">Pixelmator Pro</a></li>
             <li><a href="https://www.sublimetext.com">Sublime Text</a></li>
             <li><a href="https://panic.com/transmit/">Transmit</a></li>
