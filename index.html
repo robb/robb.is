@@ -8,7 +8,7 @@
 
     <title>Robb Böhnke</title>
     <meta content="Robb Böhnke" property="og:site_name">
-    <meta content="Robb Böhnke's CV." name="description">
+    <meta content="Robb Böhnke&apos;s personal website." name="description">
     <meta content="website" property="og:type">
     <meta name="author" content="Robb Böhnke"/>
 
@@ -112,6 +112,10 @@ body {
   padding: 0 var(--lineHeight);
 }
 
+code, pre, tt, kbd, samp {
+  font-family: ui-monospace, monospace;
+  font-size-adjust: 0.505;
+}
 
 @media (prefers-color-scheme: light) {
   body {
@@ -369,7 +373,8 @@ a, footer summary {
 a[href^="http"]:not(:has(img))::after, a[href^="mailto"]:not(:has(img))::after {
   content: "↗" / "";
   padding-left: 0.2ch;
-  font-size: 80%;
+  padding-right: -0.1ch;
+  font-size-adjust: 0.4;
   font-weight: 600;
   color: var(--secondaryText);
 
@@ -692,8 +697,16 @@ footer details {
   }
 }
 
-li {
-  margin-left: var(--lineHeight);
+ul {
+  list-style-position: inside;
+}
+
+ul.columns {
+  @media screen and (min-width: 799px) {
+    columns: 3;
+  }
+  
+  gap: calc(var(--lineHeight));
 }
 
 dfn {
@@ -705,6 +718,11 @@ dfn {
     text-decoration-style: dotted;
     cursor: help;
   }
+}
+
+sup {
+  vertical-align: top;
+  line-height: calc(var(--lineHeight) * 0.8);
 }
 
 @media screen and (max-width: 799px) {
@@ -722,7 +740,7 @@ dfn {
 
   .label {
     line-height: calc(var(--lineHeight) * 1.5);
-    padding-top: calc(var(--lineHeight) * 1.5);
+    padding-top: calc(var(--lineHeight) * 1);
   }
 
   h2 + .label {
@@ -731,6 +749,10 @@ dfn {
 
   figure {
     margin-top:  calc(var(--lineHeight) * 1);
+  }
+
+  details {
+    padding-top: calc(var(--lineHeight) * 1);
   }
 }
 
@@ -965,7 +987,7 @@ section#playlists-section {
         <a data-delay style="--delay: 2.2;" href="#patents">Patents</a>
         <span data-delay style="--delay: 2.4;"><a href="#playlists" class="has-wall-only">Playlists</a></span>
         <a data-delay style="--delay: 2.6;" href="#education">Education</a>
-        <a data-delay style="--delay: 2.8;" href="#etc">etc.</a>
+        <a data-delay style="--delay: 2.8;" href="#colophon">Colophon</a>
       </nav>
       <hr data-delay style="--delay: 3.0;">
       <nav aria-label="Social">
@@ -993,7 +1015,7 @@ section#playlists-section {
           <a href="#patents">Patents</a>,
           <span class="has-wall-only"><a href="#playlists">Monthly Playlists</a>,</span>
           <a href="#education">Education</a>,
-          <a href="#etc">etc.</a>
+          <a href="#colophon">Colophon</a>
         </nav>
         <nav aria-label="Social" data-delay style="--delay: 1.8;">
           Elsewhere:
@@ -1152,7 +1174,7 @@ section#playlists-section {
             <p>Berlin, Germany</p>
           </hgroup>
           <p>
-            In Kernel, Google's product incubation space within
+            In Kernel, Google&apos; product incubation space within
             the Google Research organization, my work focused on
             fast-paced iteration on highly polished prototypes.
           </p>
@@ -1232,7 +1254,7 @@ section#playlists-section {
               <p>
                 I reimplemented the iconic label transition used in the <a
                   href="https://benji.org/family-values">Family App</a> with
-                SwiftUI's <code>TextRenderer</code> API.
+                SwiftUI&apos;s <code>TextRenderer</code> API.
               </p>
             </figcaption>
           </details>
@@ -1352,7 +1374,7 @@ section#playlists-section {
             My Patreon features regular posts on animation techniques in SwiftUI. Previous posts include how to build a <a href="https://www.patreon.com/posts/mitosis-132133817">Mitosis effect</a>, implement custom, shader-based <a href="https://www.patreon.com/posts/custom-with-91666663">ShapeStyles</a>, or write a <a href="https://www.patreon.com/posts/curtain-effect-91293805">Curtain Effect</a>.
           </p>
           <p>
-            My thanks to everyone who's subscribed, it really means a lot to me.
+            My thanks to everyone who&apos;s subscribed, it really means a lot to me.
           </p>
         </div>
 
@@ -1476,9 +1498,9 @@ section#playlists-section {
           </hgroup>
           <p>
             Rich and expressive typography is a cornerstone of
-            Apple's UI design yet with the current version of
+            Apple&apos;s UI design yet with the current version of
             SwiftUI, some of the most powerful APIs are hidden
-            from us. Let's see what it would take to get them
+            from us. Let&apos;s see what it would take to get them
             back.
           </p>
         </div>
@@ -1635,24 +1657,50 @@ section#playlists-section {
 
     <footer data-delay>
       <section>
-        <h2 id="etc">etc.</h2>
-        <dfn class="label"
-          title="88×31 buttons are tiny web banners for branding, popular in the 1990s-2000s.">88×31</dfn>
-        <div class="content buttons-88x31">
-          <a href="https://muan.co"><img loading="lazy"
-              src="https://muan.co/images/banner.svg"
-              width="88" height="31"
-              alt="Mu-An Chiou"></a>
-          <img src="/img/best1024.gif" alt="Best viewed at 1024×768 pixels."
-            width="88" height="31">
-          <a href="https://muan.co/posts/javascript">
-            <img src="/img/antijs.gif" alt="Anti-JavaScript-JavaScript-Club"
-              width="88" height="31">
-          </a>
-          <a href="https://patreon.com/swiftui_snippets">
-            <img src="/img/patreon.gif" alt="Support me on Patreon"
-              width="88" height="31">
-          </a>
+        <h2 id="colophon">Colophon</h2>
+        <div class="label">
+          Frontend/Backend
+        </div>
+        <div class="content">
+          <p>https://robb.is is built by editing its <code>index.html</code> file directly – no JavaScript frameworks, static site generators, content management systems or other 3<sup>rd</sup> party dependencies are used.</p>
+          <p><a href="https://github.com/robb/robb.is">View Source</a></p>
+        </div>
+        <div class="label">
+          Hosting
+        </div>
+        <div class="content">
+          <p><a href="https://aws.amazon.com/s3/">S3</a> behind a <a href="https://aws.amazon.com/cloudfront/">CloudFront</a> <abbr title="Content Delivery Network">CDN</abbr>.</p>
+        </div>
+        <div class="label">
+          Typography
+        </div>
+        <div class="content">
+          <p>
+            Your user-agent&apos;s <a href="https://www.w3.org/TR/css-fonts-4/#ui-rounded-def"><code>ui-rounded</code></a> – optimized for <a href="https://developer.apple.com/fonts/#:~:text=San%20Francisco">SF Pro Rounded</a>.
+          </p>
+        </div>
+        <div class="label">
+          Software
+        </div>
+        <div class="content">
+          <ul class="columns">
+            <li><a href="https://ghostty.org">ghostty</a></li>
+            <li><a href="https://git-scm.com">git</a></li>
+            <li><a href="https://handbrake.fr">Handbrake</a></li>
+                        <li><a href="https://www.apple.com/macos/macos-sequoia/">macOS Sequoia</a></li>
+            <li><a href="https://www.pixelmator.com/pro/">Pixelmator Pro</a></li>
+            <li><a href="https://www.sublimetext.com">Sublime Text</a></li>
+            <li><a href="https://panic.com/transmit/">Transmit</a></li>
+          </ul>
+        </div>
+        <div class="label">
+          Hardware
+        </div>
+        <div class="content">
+          <ul>
+            <li>MacBook Pro (14-inch, Nov 2024, Apple M4 Max, 64 GB)</li>
+            <li>iPhone 16 Pro (128 GB)</li>
+          </ul>
         </div>
 
         <details>
@@ -1717,12 +1765,26 @@ section#playlists-section {
           </div>
         </details>
 
-        <div class="label">
-          etc.
+        <dfn class="label"
+          title="88×31 buttons are tiny web banners for branding, popular in the 1990s-2000s.">88×31</dfn>
+        <div class="content buttons-88x31">
+          <a href="https://muan.co"><img loading="lazy"
+              src="https://muan.co/images/banner.svg"
+              width="88" height="31"
+              alt="Mu-An Chiou"></a>
+          <img src="/img/best1024.gif" alt="Best viewed at 1024×768 pixels."
+            width="88" height="31">
+          <a href="https://muan.co/posts/javascript">
+            <img src="/img/antijs.gif" alt="Anti-JavaScript-JavaScript-Club"
+              width="88" height="31">
+          </a>
+          <a href="https://patreon.com/swiftui_snippets">
+            <img src="/img/patreon.gif" alt="Support me on Patreon"
+              width="88" height="31">
+          </a>
         </div>
-        <div class="content">
-          <p><a href="https://github.com/robb/robb.is">View Source</a></p>
 
+        <div class="content">
           <p class="small low-contrast">You reached the end of the page.<br>It
             is now safe to turn off your
             computer.</p>
