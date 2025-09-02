@@ -137,19 +137,19 @@ section {
   display: grid;
   grid-template-columns: [start] 25% 1fr [end];
   gap: var(--lineHeight);
-}
 
-section h2, section nav {
-  grid-column: start / end;
+  h2, nav {
+    grid-column: start / end;
+  }
+
+  h2:first-child {
+    padding-top: calc(var(--lineHeight) * 2);
+  }
 }
 
 section#experiments-section {
   grid-template-columns: [start] 1fr 1fr [end];
   gap: calc(var(--lineHeight) * 1);
-}
-
-section h2:first-child {
-  padding-top: calc(var(--lineHeight) * 2);
 }
 
 footer {
@@ -165,24 +165,24 @@ footer {
   font-weight: 450;
 
   margin-left: -2px;
-}
 
-.vcard > *:first-child {
-  grid-column: start / 1;
-}
+  & > * {
+    grid-column: 2 / end;
 
-.vcard > * {
-  grid-column: 2 / end;
-}
+    &:first-child {
+      grid-column: start / 1;
+    }
+  }
 
-#avatar {
-  width: 44px;
-  height: 44px;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+  #avatar {
+    width: 44px;
+    height: 44px;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
 
-.vcard:hover #avatar {
-  transform: scale(1.05);
+  &:hover #avatar {
+    transform: scale(1.1);
+  }
 }
 
 @keyframes appear {
@@ -289,12 +289,12 @@ footer {
   animation: appear var(--appearDuration) linear both;
   animation-delay: calc(0.2s + calc(var(--delay) * 0.2s));
   will-change: transform, opacity;
-}
 
-[data-delay] figure, [data-delay] figure {
-  animation: appear-img calc(var(--appearDuration) / 5) linear both;
-  animation-delay: calc(0.2s + calc(var(--delay) * 0.2s));
-  will-change: transform, opacity;
+  & figure {
+    animation: appear-img calc(var(--appearDuration) / 5) linear both;
+    animation-delay: calc(0.2s + calc(var(--delay) * 0.2s));
+    will-change: transform, opacity;
+  }
 }
 
 body.did-appear [data-delay] {
@@ -348,15 +348,15 @@ a, footer summary {
 
   white-space: nowrap;
   cursor: pointer;
-}
 
-a:focus, summary:focus {
-  text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
-}
-
-@media (hover: hover) {
-  a:hover, summary:hover {
+  &:focus {
     text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+    }
   }
 }
 
@@ -396,29 +396,17 @@ aside nav {
   display: flex;
   flex-direction: column;
   align-items: start;
-}
 
-aside nav a {
-  display: inline;
-  color: var(--secondaryText);
+  a {
+    display: inline;
+    color: var(--secondaryText);
+  }
 }
 
 @media screen and (max-width: 1023px) {
   aside {
     display: none;
   }
-}
-
-
-.collaborators .avatar {
-  display: inline-block;
-  border-radius: 100%;
-  height: 1.3em;
-  transform: translateY(0.12em);
-  vertical-align: text-bottom;
-  /* margin-left: 0.6ch; */
-  margin-right: 0.4ch;
-  margin-top: -1em;
 }
 
 @media screen and not (max-width: 1023px) {
@@ -445,11 +433,26 @@ figure {
   isolation: isolate;
   background-color: var(--secondaryBackgroundColor);
   box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+
+  &.small {
+    max-width: 50%;
+  }
+
+    img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    vertical-align: bottom;
+  }
+
+  video {
+    width: 101%;
+    height: 101%;
+    object-fit: cover;
+    background-color: var(--secondaryBackgroundColor);
+  }
 }
 
-figure.small {
-  max-width: 50%;
-}
 
 figure::after, iframe::after {
   content: " ";
@@ -469,20 +472,6 @@ figure::after, iframe::after {
 
 .wide {
   grid-column: start / end;
-}
-
-figure img {
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  vertical-align: bottom;
-}
-
-figure video {
-  width: 101%;
-  height: 101%;
-  object-fit: cover;
-  background-color: var(--secondaryBackgroundColor);
 }
 
 :root {
@@ -678,29 +667,29 @@ hgroup p {
 footer summary {
   display: inline;
   list-style-type: none;
-}
 
-footer summary::-webkit-details-marker {
-  display: none;
-}
+  &::-webkit-details-marker {
+    display: none;
+  }
 
-footer summary::after {
-  content: "⏵" / "";
+  &::after {
+    content: "⏵" / "";
 
-  padding-left: 0.5ch;
-  font-weight: 600;
-  color: var(--secondaryText);
+    padding-left: 0.5ch;
+    font-weight: 600;
+    color: var(--secondaryText);
 
-  text-decoration: underline;
-  text-decoration-color: var(--backgroundColor);
-}
-
-footer details[open] summary::after {
-  content: "⏷" / "";
+    text-decoration: underline;
+    text-decoration-color: var(--backgroundColor);
+  }
 }
 
 footer details {
   display: contents;
+
+  &[open] summary::after {
+    content: "⏷" / "";
+  }
 }
 
 li {
@@ -710,10 +699,8 @@ li {
 dfn {
   display: inline;
   font-style: normal;
-}
 
-@media (hover: hover) {
-  dfn {
+  @media (hover: hover) {
     text-decoration-line: underline;
     text-decoration-style: dotted;
     cursor: help;
@@ -762,19 +749,20 @@ dfn {
   margin-left: -3px;
 
   cursor: pointer;
+
+  &:target {
+    opacity: 0.5;
+  }
+
+  &:focus-visible {
+    outline: none
+  }
+
+  .icon {
+    padding: 0 2px 0 0;
+  }
 }
 
-.oh-button:target {
-  opacity: 0.5;
-}
-
-.oh-button:focus-visible {
-  outline: none
-}
-
-.oh-button .icon {
-  padding: 0 2px 0 0;
-}
 
 .oh-button:not(:target) + #oh-like-button-feedback {
   display: none;
@@ -816,7 +804,6 @@ section#playlists-section {
 #spotify-wall {
   position: relative;
   display: contents;
-
 }
 
 .playlist-container, #spotify-wall iframe {
@@ -873,7 +860,6 @@ section#playlists-section {
 .spotify-overlay-button {
   background: rgba(255, 255, 255, 0.15);
   padding: calc(var(--lineHeight) / 2) var(--lineHeight);
-
 
   cursor: pointer;
 
@@ -959,7 +945,7 @@ section#playlists-section {
       }
     </script>
     <header class="vcard">
-      <img id="avatar" data-delay style="--delay: 2.4;" src="/img/avatar.png">
+      <img id="avatar" data-delay style="--delay: 2.4;" src="/img/avatar.png" alt="My Avatar">
       <div>
         <h1 class="fn" data-delay style="--delay: 0.0;">Robb Böhnke</h1>
         <p data-delay style="--delay: 1.0;"><span class="title">Developer &
