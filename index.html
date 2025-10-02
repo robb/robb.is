@@ -15,6 +15,8 @@
     <link rel="canonical" href="https://robb.is/"/>
 
     <link rel="profile" href="http://microformats.org/profile/hcard">
+    <link rel="preload" as="image" href="/img/f4a62fa5-8e59-4e18-b41c-e288f1739892.jpg">
+    <link rel="preconnect" href="https://api.robb.is">
     <style>
 * {
   margin: 0;
@@ -982,7 +984,7 @@ section#playlists-section {
       }
     </script>
     <header class="vcard">
-      <img id="avatar" data-delay style="--delay: 2.4;" src="/img/avatar.png" alt="My Avatar">
+      <img id="avatar" data-delay style="--delay: 2.4;" src="/img/avatar.png" width="44px" height="44px" alt="My Avatar">
       <div>
         <h1 class="fn" data-delay style="--delay: 0.0;">Robb Böhnke</h1>
         <p data-delay style="--delay: 1.0;"><span class="title">Developer &
@@ -1262,7 +1264,7 @@ section#playlists-section {
           </video>
           <details name="video-details">
             <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
+                alt="Video Details" loading="lazy"></summary>
             <figcaption>
               <time datetime="2024">2024</time>
 
@@ -1282,7 +1284,7 @@ section#playlists-section {
           </video>
           <details name="video-details">
             <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
+                alt="Video Details" loading="lazy"></summary>
             <figcaption>
               <h3>Stiched Fabric Effect</h3>
               <time datetime="2024-12-05">2024</time>
@@ -1290,27 +1292,13 @@ section#playlists-section {
           </details>
         </figure>
 
-        <!-- <figure style="aspect-ratio: 1 / 1;">
-          <video autoplay muted loop playsinline poster="/video/linear.jpg">
-            <source src="/video/linear.mp4">
-          </video>
-          <details name="video-details">
-            <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
-            <figcaption>
-              <h3>Linear Reveal Animation</h3>
-              <time datetime="2023-10-28">2023</time>
-            </figcaption>
-          </details>
-        </figure> -->
-
         <figure style="aspect-ratio: 1 / 1;">
           <video autoplay muted loop playsinline poster="/video/curtain.jpg">
             <source src="/video/curtain.mp4">
           </video>
           <details name="video-details">
             <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
+                alt="Video Details" loading="lazy"></summary>
             <figcaption>
               <h3>Shader-based Curtain Effect</h3>
               <time datetime="2023-08-01">2023</time>
@@ -1324,7 +1312,7 @@ section#playlists-section {
           </video>
           <details name="video-details">
             <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
+                alt="Video Details" loading="lazy"></summary>
             <figcaption>
               <h3>Ray-Marched Loupe in a SwiftUI Shader</h3>
               <time datetime="2023-06-09">2023</time>
@@ -1338,7 +1326,7 @@ section#playlists-section {
           </video>
           <details name="video-details">
             <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
+                alt="Video Details" loading="lazy"></summary>
             <figcaption>
               <h3>Reeded Glass Navigation Bar</h3>
               <time datetime="2023-06-06">2023</time>
@@ -1352,7 +1340,7 @@ section#playlists-section {
           </video>
           <details name="video-details">
             <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
+                alt="Video Details" loading="lazy"></summary>
             <figcaption>
               <h3>Kubelka-Munk Color Picker</h3>
               <time datetime="2023-01-29">2023</time>
@@ -1366,7 +1354,7 @@ section#playlists-section {
           </video>
           <details name="video-details">
             <summary aria-label="Video Details"><img src="/img/xmark.png"
-                alt="Video Details"></summary>
+                alt="Video Details" loading="lazy"></summary>
             <figcaption>
               <h3>Katamari Damacy Sprinboard Deletion</h3>
               <time datetime="2022">2022</time>
@@ -1480,7 +1468,8 @@ section#playlists-section {
               href="https://movingparts.io/variadic-views-in-swiftui">
               <img class="preview"
                 src="/img/1fdfe436-7aa1-4612-be57-273aed60e90d.png"
-                alt="An abstract graphic showing multiple colorful capsules.">
+                alt="An abstract graphic showing multiple colorful capsules."
+                loading="lazy">
             </a>
           </figure>
           <hgroup>
@@ -1580,7 +1569,8 @@ section#playlists-section {
             <figure>
               <img class="preview small"
                 src="/img/US10444976-20191015-D00000-2.png"
-                alt="A patent drawing of a finger touching an iPad.">
+                alt="A patent drawing of a finger touching an iPad."
+                loading="lazy">
             </figure>
           </p>
 
@@ -1788,14 +1778,14 @@ section#playlists-section {
               src="https://muan.co/images/banner.svg"
               width="88" height="31"
               alt="Mu-An Chiou"></a>
-          <img src="/img/best1024.gif" alt="Best viewed at 1024×768 pixels."
+          <img loading="lazy" src="/img/best1024.gif" alt="Best viewed at 1024×768 pixels."
             width="88" height="31">
           <a href="https://muan.co/posts/javascript">
-            <img src="/img/antijs.gif" alt="Anti-JavaScript-JavaScript-Club"
+            <img loading="lazy" src="/img/antijs.gif" alt="Anti-JavaScript-JavaScript-Club"
               width="88" height="31">
           </a>
           <a href="https://patreon.com/swiftui_snippets">
-            <img src="/img/patreon.gif" alt="Support me on Patreon"
+            <img loading="lazy" src="/img/patreon.gif" alt="Support me on Patreon"
               width="88" height="31">
           </a>
         </div>
