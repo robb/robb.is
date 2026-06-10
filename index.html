@@ -112,12 +112,12 @@
 }
 
 :root {
---backgroundColor: #1A2124;
---secondaryBackgroundColor: #223336;
+--backgroundColor: rgb(30 40 55);
+--secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
 
---primaryText: #FAFBFF;
---secondaryText: #A6B9BA;
---tertiaryText: #A2ACAA;
+--primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
+--secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
+--tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
 
 --accentColor: rgb(224, 44, 146);
 --selectionOpacity: 0.5;
