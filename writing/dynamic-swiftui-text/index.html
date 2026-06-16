@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link rel="icon" href="/img/favicon.png" type="image/png">
+
+    <title>Dynamic Text in SwiftUI – Robb Böhnke</title>
+    <meta content="Robb Böhnke" property="og:site_name">
+    <meta content="How to use SwiftUI's FormatStyle and BCP 47 private locale subtags to make dynamic user name formatting automatic across the entire app." name="description">
+    <meta content="article" property="og:type">
+    <meta content="Dynamic Text in SwiftUI" property="og:title">
+    <meta content="How to use SwiftUI's FormatStyle and BCP 47 private locale subtags to make dynamic user name formatting automatic across the entire app." property="og:description">
+    <meta content="https://robb.is/img/avatar.png" property="og:image">
+    <meta content="https://robb.is/writing/dynamic-swiftui-text/" property="og:url">
+    <meta name="author" content="Robb Böhnke"/>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@DLX">
+    <meta name="twitter:title" content="Dynamic Text in SwiftUI">
+    <meta name="twitter:description" content="How to use SwiftUI's FormatStyle and BCP 47 private locale subtags to make dynamic user name formatting automatic across the entire app.">
+    <meta property="article:published_time" content="2026-06-16">
+    <meta property="article:author" content="Robb Böhnke">
+
+    <link rel="canonical" href="https://robb.is/writing/dynamic-swiftui-text/"/>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "Dynamic Text in SwiftUI",
+      "description": "How to use SwiftUI's FormatStyle and BCP 47 private locale subtags to make dynamic user name formatting automatic across the entire app.",
+      "url": "https://robb.is/writing/dynamic-swiftui-text/",
+      "mainEntityOfPage": "https://robb.is/writing/dynamic-swiftui-text/",
+      "datePublished": "2026-06-16",
+      "author": {
+        "@type": "Person",
+        "name": "Robb Böhnke",
+        "url": "https://robb.is/"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Robb Böhnke",
+        "url": "https://robb.is/"
+      },
+      "keywords": ["SwiftUI", "Swift", "iOS", "FormatStyle", "BCP 47"]
+    }
+    </script>
+  </head>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --fontSize: 19px;
+  --secondaryFontSize: 16px;
+  --lineHeight: 26.5px;
+  --hairlineThickness: 1px;
+}
+
+@media screen and (min-resolution: 2x) {
+  :root {
+    --hairlineThickness: 0.5px;
+  }
+}
+
+:root {
+--backgroundColor: #232634;
+--secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
+
+--primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
+--secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
+--tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
+
+--accentColor: rgb(224, 44, 146);
+--selectionOpacity: 0.5;
+}
+
+::selection {
+  background-color: var(--accentColor);
+  background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
+}
+
+@media (prefers-contrast: more) {
+  :root {
+  --primaryText: #FFF;
+  --secondaryText: #CCC;
+  --tertiaryText: #AAA;
+
+  --hairlineThickness: 1px;
+
+  --selectionOpacity: 0.9;
+  }
+}
+
+html {
+  overflow-x: hidden !important;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: var(--fontSize);
+  line-height: var(--lineHeight);
+  color: var(--secondaryText);
+
+  accent-color: var(--accentColor);
+  background-color: var(--backgroundColor);
+
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+p {
+  text-wrap-style: pretty;
+  hyphens: auto;
+}
+
+code, pre, tt, kbd, samp {
+  font-family: ui-monospace, monospace;
+  font-size-adjust: 0.505;
+}
+
+h1, h2, h3, h4 {
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-wrap: pretty;
+}
+
+h1, h2 {
+  color: var(--primaryText);
+}
+
+h1 {
+  font-size: calc(var(--fontSize) * 2);
+  line-height: calc(var(--lineHeight) * 2);
+  font-weight: 650;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    font-weight: 450;
+  }
+}
+
+article {
+
+  width: 56ch;
+  max-width: 100vw;
+
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--lineHeight));
+
+  header, footer, section {
+    display: contents;  
+  }
+
+  header time {
+    color: var(--tertiaryText);
+  }
+
+  padding: calc(var(--lineHeight) * 1);
+  padding-bottom: calc(var(--lineHeight) * 3);
+
+  margin: calc(4 * var(--lineHeight));
+}
+
+a, footer summary {
+  color: var(--primaryText);
+  text-decoration: underline;
+  text-decoration-skip: objects;
+  text-decoration-skip-ink: objects;
+  text-decoration-thickness: var(--hairlineThickness);
+  text-underline-offset: 2px;
+  text-decoration-color: var(--accentColor);
+  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus {
+    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+    }
+  }
+}
+
+a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
+  color: var(--accentColor);
+}
+
+pre {
+  position: relative;
+  font-size: calc(var(--fontSize) * 0.92);
+  background: #1A2733;
+  border: var(--hairlineThickness) solid color-mix(in oklch, #1A2733, white 20%);
+  border-radius: var(--lineHeight);
+
+  padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
+  padding-left: calc(var(--lineHeight) * 1 - var(--hairlineThickness) + 3ch);
+  overflow-x: scroll;
+  margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
+}
+
+pre {
+  counter-reset: line;
+}
+
+pre > code::before {
+  content: "";
+
+  position: absolute;
+  width: 4.5ch;
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  background-color: color-mix(in oklch, #1A2733, white 10%);
+}
+
+pre > code > span {
+  counter-increment: line;
+}
+
+pre > code > span::before {
+  position: absolute;
+  left: 1.5ch;
+
+  content: counter(line) / "";
+  display: block;
+  width: 2ch;
+  margin-right: calc(var(--lineHeight) * 0.5);
+  color: color-mix(in oklch, #1A2733, white 50%);
+  font-weight: 300;
+  text-align: right;
+  user-select: none;
+}
+  </style>
+</head>
+<body>
+<main>
+<article>
+<header>
+  <h1 id="dynamic-text-in-swiftui">Dynamic <code>Text</code> in SwiftUI</h1>
+  <p>
+    <time datetime="2026-06-16">Tuesday, June 16 2026</time>
+    – <a href="/" rel="author">Robb Böhnke</a>
+  </p>
+</header>
+<section>
+<p>In the Linear app, users can choose whether names appear as a full name or a display name — depending on your preference, you&#39;d see either <b>@robb</b> or <b>@Robb Böhnke</b> throughout the UI. This is an application-wide preference that is set on <a href="https://linear.app">linear.app</a> and also affects things like push notifications. As such, the iOS app needs to load the user&#39;s preference and take it into account every time a name is displayed.</p>
+<p>The obvious approach would be to check the preference wherever a name is displayed. That works, but every new call site is an opportunity to forget this step. I wanted the correct behavior to be the default — the same way SwiftUI&#39;s <code>Text</code> automatically picks the right locale, or the way <code>Color</code> adapts to Dark Mode automatically.</p>
+<p>SwiftUI achieves this through late binding — <code>Text</code>, <code>Color</code>, and <code>Image</code> defer resolution through the environment until the time the view is rendered instead of when the view is created.</p>
+<p>However, while SwiftUI has <a href="https://developer.apple.com/documentation/swiftui/image/init(size:label:opaque:colormode:renderer:)">an API</a> to generate a dynamic <code>Image</code> based on the current state of the environment, there is no equivalent <code>Text.init(content: (EnvironmentValues) -&gt; String)</code> that I could use to derive the name to display based on the user&#39;s preference.</p>
+<p>Instead, it supports <code>FormatStyle</code>: a protocol that receives the current <code>Locale</code> and converts any value to a <code>String</code>. If I can come up with a way to derive the user preference from the locale, I can make the right behavior automatic after all.</p>
+<p>First, I define the type:</p>
+
+<pre aria-label="Swift code"><code class="lang-swift"><span style="color: #cd7cfe;"><span style="color: #fc69a4"><b>public</b></span><span style="color: #f8edf0"> </span><span style="color: #fc69a4"><b>struct</b></span><span style="color: #f8edf0"> </span><span style="color: #18bef9">UserName</span><span style="color: #f8edf0">: </span>Hashable<span style="color: #f8edf0">, </span>Sendable<span style="color: #f8edf0"> {</span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>var</b></span><span style="color: #f8edf0"> </span>fullName<span style="color: #f8edf0">: </span><span style="color: #cd7cfe">String</span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>var</b></span><span style="color: #f8edf0"> </span>displayName<span style="color: #f8edf0">: </span><span style="color: #cd7cfe">String</span></span>
+<span style="color: #f8edf0;">}</span></code></pre>
+
+<p>Next, I define a nested <code>FormatStyle</code> that conforms to the Foundation protocol of the same name. This type has access to the users current <code>Locale</code> and can turn the <code>UserName</code> into a <code>String</code>:</p>
+
+<pre aria-label="Swift code"><code class="lang-swift"><span style="color: #fc69a4;"><b>extension</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">UserName</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #f8edf0;"><span>  </span><span style="color: #fc69a4"><b>public</b></span> <span style="color: #fc69a4"><b>struct</b></span> <span style="color: #18bef9">FormatStyle</span>: Foundation.<span style="color: #1bd4a3">FormatStyle</span> {</span>
+<span style="color: #fc69a4;"><span style="color: #f8edf0"><span>    </span></span><b>public</b><span style="color: #f8edf0"> </span><b>typealias</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">FormatInput</span><span style="color: #f8edf0"> = </span><span style="color: #1bd4a3">UserName</span></span>
+<span style="color: #fc69a4;"><span style="color: #f8edf0"><span>    </span></span><b>public</b><span style="color: #f8edf0"> </span><b>typealias</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">FormatOutput</span><span style="color: #f8edf0"> = </span><span style="color: #cd7cfe">String</span></span>
+<span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>var</b></span> <span style="color: #2396b3">locale</span>: <span style="color: #cd7cfe">Locale</span>?</span>
+<span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>public</b></span> <span style="color: #fc69a4"><b>init</b></span>(<span style="color: #2396b3">locale</span>: <span style="color: #cd7cfe">Locale</span>? = <span style="color: #fc69a4"><b>nil</b></span>) {</span>
+<span style="color: #f8edf0;"><span>      </span><span style="color: #fc69a4"><b>self</b></span>.<span style="color: #219e8a">locale</span> = locale</span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>public</b></span> <span style="color: #fc69a4"><b>func</b></span> <span style="color: #2396b3">locale</span>(<span style="color: #2396b3">_</span> locale: <span style="color: #cd7cfe">Locale</span>) -&gt; <span style="color: #1bd4a3">UserName</span>.<span style="color: #1bd4a3">FormatStyle</span> {</span>
+<span style="color: #f8edf0;"><span>      </span><span style="color: #fc69a4"><b>var</b></span> copy = <span style="color: #fc69a4"><b>self</b><b></b></span></span>
+<span style="color: #f8edf0;"><span>      </span>copy.<span style="color: #219e8a">locale</span> = locale</span>
+<span style="color: #f8edf0;"><span>      </span><span style="color: #fc69a4"><b>return</b></span> copy</span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>public</b></span> <span style="color: #fc69a4"><b>func</b></span> <span style="color: #2396b3">format</span>(<span style="color: #2396b3">_</span> value: <span style="color: #1bd4a3">UserName</span>) -&gt; <span style="color: #cd7cfe">String</span> {</span>
+<span style="color: #219e8a;"><span style="color: #f8edf0"><span>      </span></span><span style="color: #fc69a4"><b>if</b></span><span style="color: #f8edf0"> </span>locale<span style="color: #f8edf0">?.</span>prefersFullNames<span style="color: #f8edf0"> == </span><span style="color: #fc69a4"><b>true</b></span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #f8edf0;"><span>        </span>value.<span style="color: #219e8a">fullName</span></span>
+<span style="color: #f8edf0;"><span>      </span>} <span style="color: #fc69a4"><b>else</b></span> {</span>
+<span style="color: #f8edf0;"><span>        </span>value.<span style="color: #219e8a">displayName</span></span>
+<span style="color: #f8edf0;"><span>      </span>}</span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span style="color: #f8edf0;">}</span></code></pre>
+
+<p>But how do I determine the user&#39;s preference from the locale alone?</p>
+
+<h2 id="a-locale-of-our-own">A locale of our own</h2>
+
+<p>
+  Luckily, Locales in Foundation can be defined in terms of the BCP 47 identifier. For example, <code>fr-CA</code> identifies Canadian French wheres <code>fr-CH</code> identifies French as it&#39;s spoken in Switzerland. BCP 47 identifiers can encode a variety of locale preferences including different scripts, but they can also encode <a href="https://www.rfc-editor.org/info/rfc5646/#section-2.2.7">Private Use Subtags</a> that can be used within a private context (like the Linear app!).</p>
+<p>Using the private <code>x-linearf</code> subtag, I can encode the user&#39;s preference for full names over display names. All I need to do is to transform the system locale by adding the private subtag if necessary.</p>
+<p>First I define the necessary methods to update the <code>Locale</code>:</p>
+
+<pre aria-label="Swift code"><code class="lang-swift"><span style="color: #fc69a4;"><b>extension</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">Locale</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>static</b></span><span style="color: #f8edf0"> </span><span style="color: #fc69a4"><b>let</b></span><span style="color: #f8edf0"> </span>fullNameSubtag<span style="color: #f8edf0"> = </span><span style="color: #fc7767">"linearf"</span></span>
+<span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>func</b></span><span style="color: #f8edf0"> </span>withFullNameSubtag<span style="color: #f8edf0">() -&gt; </span><span style="color: #fc69a4"><b>Self</b></span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>var</b></span> identifier = <span style="color: #cc30df">identifier</span>(.<span style="color: #cc30df">bcp47</span>)</span>
+<span style="color: #219e8a;"><span style="color: #f8edf0"><span>    </span></span><span style="color: #fc69a4"><b>if</b></span><span style="color: #f8edf0"> !identifier.</span>hasPrivateUseSubtags<span style="color: #f8edf0"> {</span></span>
+<span style="color: #f8edf0;"><span>      </span>identifier += <span style="color: #fc7767">"-x"</span></span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>if</b></span> !identifier.<span style="color: #219e8a">hasFullNameSubtag</span> {</span>
+<span style="color: #f8edf0;"><span>      </span>identifier += <span style="color: #fc7767">"-</span>\(<span style="color: #fc69a4"><b>Self</b></span>.<span style="color: #219e8a">fullNameSubtag</span>)<span style="color: #fc7767">"</span></span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>return</b></span> .<span style="color: #fc69a4"><b>init</b></span>(identifier: identifier)</span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>var</b></span><span style="color: #f8edf0"> </span>prefersFullNames<span style="color: #f8edf0">: </span><span style="color: #cd7cfe">Bool</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #219e8a;"><span style="color: #f8edf0"><span>    </span></span><span style="color: #cc30df">identifier</span><span style="color: #f8edf0">(.</span><span style="color: #cc30df">bcp47</span><span style="color: #f8edf0">).</span>hasFullNameSubtag</span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span style="color: #f8edf0;">}</span>
+<span></span>
+<span style="color: #fc69a4;"><b>private</b><span style="color: #f8edf0"> </span><b>extension</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">String</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>var</b></span><span style="color: #f8edf0"> </span>hasPrivateUseSubtags<span style="color: #f8edf0">: </span><span style="color: #cd7cfe">Bool</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #cc30df;"><span style="color: #f8edf0"><span>    </span></span><span style="color: #219e8a">subtags</span><span style="color: #f8edf0">.</span>contains<span style="color: #f8edf0">(</span><span style="color: #fc7767">"x"</span><span style="color: #f8edf0">)</span></span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>var</b></span><span style="color: #f8edf0"> </span>hasFullNameSubtag<span style="color: #f8edf0">: </span><span style="color: #cd7cfe">Bool</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>guard</b></span> <span style="color: #fc69a4"><b>let</b></span> privateUseIndex = <span style="color: #219e8a">subtags</span>.<span style="color: #cc30df">firstIndex</span>(<span style="color: #cc30df">of</span>: <span style="color: #fc7767">"x"</span>) <span style="color: #fc69a4"><b>else</b></span> {</span>
+<span style="color: #fc69a4;"><span style="color: #f8edf0"><span>      </span></span><b>return</b><span style="color: #f8edf0"> </span><b>false</b><b></b></span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span></span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>return</b></span> <span style="color: #219e8a">subtags</span>[privateUseIndex...].<span style="color: #cc30df">contains</span> {</span>
+<span style="color: #219e8a;"><span style="color: #f8edf0"><span>      </span>$0 == </span><span style="color: #cd7cfe">Locale</span><span style="color: #f8edf0">.</span>fullNameSubtag</span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span></span>
+<span style="color: #f8edf0;"><span>  </span><span style="color: #fc69a4"><b>private</b></span> <span style="color: #fc69a4"><b>var</b></span> <span style="color: #2396b3">subtags</span>: [<span style="color: #cd7cfe">Substring</span>] {</span>
+<span style="color: #cc30df;"><span style="color: #f8edf0"><span>    </span></span>lowercased<span style="color: #f8edf0">().</span>split<span style="color: #f8edf0">(</span>separator<span style="color: #f8edf0">: </span><span style="color: #fc7767">"-"</span><span style="color: #f8edf0">)</span></span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span style="color: #f8edf0;">}</span></code></pre>
+
+<p>Then I transform the <code>Locale</code> that is currently on the environment for the logged-in view hierarchy of the application:</p>
+
+<pre aria-label="Swift code"><code class="lang-swift"><span style="color: #fc69a4;"><b>public</b><span style="color: #f8edf0"> </span><b>extension</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">View</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #f8edf0;"><span>  </span><span style="color: #fc69a4"><b>func</b></span> <span style="color: #2396b3">prefersFullNames</span>(<span style="color: #2396b3">_</span> prefersFullNames: <span style="color: #cd7cfe">Bool</span> = <span style="color: #fc69a4"><b>true</b></span>) -&gt; <span style="color: #fc69a4"><b>some</b></span> <span style="color: #cd7cfe">View</span> {</span>
+<span style="color: #cc30df;"><span style="color: #f8edf0"><span>    </span></span>transformEnvironment<span style="color: #f8edf0">(\.</span>locale<span style="color: #f8edf0">) { locale </span><span style="color: #fc69a4"><b>in</b><b></b></span></span>
+<span style="color: #f8edf0;"><span>      </span><span style="color: #fc69a4"><b>if</b></span> prefersFullNames {</span>
+<span style="color: #f8edf0;"><span>        </span>locale = locale.<span style="color: #219e8a">withFullNameSubtag</span>()</span>
+<span style="color: #f8edf0;"><span>      </span>}</span>
+<span style="color: #f8edf0;"><span>    </span>}</span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span style="color: #f8edf0;">}</span></code></pre>
+
+<p>Since many SwiftUI APIs take <code>Text</code> directly, I make my life a little easier by adding two more convenience extensions on <code>Text</code> and <code>LocalizedStringKey.StringInterpolation</code>:</p>
+
+<pre aria-label="Swift code"><code class="lang-swift"><span style="color: #fc69a4;"><b>extension</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">Text</span><span style="color: #f8edf0"> {</span></span>
+<span style="color: #f8edf0;"><span>  </span><span style="color: #fc69a4"><b>init</b></span>(<span style="color: #2396b3">_</span> userName: <span style="color: #1bd4a3">UserName</span>) {</span>
+<span style="color: #f8edf0;"><span>    </span><span style="color: #fc69a4"><b>self</b></span>.<span style="color: #cc30df">init</span>(userName, <span style="color: #cc30df">format</span>: <span style="color: #1bd4a3">UserName</span>.<span style="color: #1bd4a3">FormatStyle</span>())</span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span style="color: #f8edf0;">}</span>
+<span></span>
+<span style="color: #18bef9;"><span style="color: #fc69a4"><b>public</b></span><span style="color: #f8edf0"> </span><span style="color: #fc69a4"><b>extension</b></span><span style="color: #f8edf0"> </span>LocalizedStringKey<span style="color: #f8edf0">.</span>StringInterpolation<span style="color: #f8edf0"> {</span></span>
+<span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>mutating</b></span><span style="color: #f8edf0"> </span><span style="color: #fc69a4"><b>func</b></span><span style="color: #f8edf0"> </span>appendInterpolation<span style="color: #f8edf0">(</span>_<span style="color: #f8edf0"> input: </span><span style="color: #1bd4a3">UserName</span><span style="color: #f8edf0">) {</span></span>
+<span style="color: #cc30df;"><span style="color: #f8edf0"><span>    </span></span>appendInterpolation<span style="color: #f8edf0">(input, </span>format<span style="color: #f8edf0">: </span><span style="color: #1bd4a3">UserName</span><span style="color: #f8edf0">.</span><span style="color: #1bd4a3">FormatStyle</span><span style="color: #f8edf0">())</span></span>
+<span style="color: #f8edf0;"><span>  </span>}</span>
+<span style="color: #f8edf0;">}</span></code></pre>
+
+<p>This makes <code>UserName</code> feel like a native part of the system:</p>
+
+<pre aria-label="Swift code"><code class="lang-swift"><span style="color: #f8edf0;"><span></span><span style="color: #cd7cfe">Text</span>(user.<span style="color: #219e8a">userName</span>)</span>
+<span></span>
+<span style="color: #fc7767;"><span style="color: #f8edf0"><span></span></span><span style="color: #cd7cfe">Label</span><span style="color: #f8edf0">(</span>"Assigned to <span style="color: #f8edf0">\(assignee.</span><span style="color: #219e8a">userName</span><span style="color: #f8edf0">)</span>"<span style="color: #f8edf0">, </span><span style="color: #cd7cfe">systemImage</span><span style="color: #f8edf0">: </span>"person.fill"<span style="color: #f8edf0">)</span></span>
+</code></pre>
+
+<p>Nice! Resolving the preference in the formatter rather than at the call site means there&#39;s no step to accidentally forget. A BCP 47 private subtag may be an unusual choice, but it reuses an existing propagation mechanism and matches its intended use. That said, I hope SwiftUI will eventually offer a more direct path to the same result.</p>
+</section>
+</article>
+</main>
+</body>
+</html>
