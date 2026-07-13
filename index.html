@@ -902,14 +902,6 @@ sup {
   image-rendering: pixelated;
 }
 
-section#playlists-section {
-  display: none;
-}
-
-.has-wall section#playlists-section {
-  display: grid;
-}
-
 .has-wall-only {
   display: none;
 }
@@ -918,93 +910,9 @@ section#playlists-section {
   display: unset;
 }
 
-#spotify-wall {
-  position: relative;
-  display: contents;
-}
-
-.playlist-container, #spotify-wall iframe {
-  border-radius: 20px;
-  background: color(from var(--primaryText) srgb r g b / 0.2);
-  width: 100%;
-  height: 152px;
-}
-
-.playlist-container {
-  filter: blur(5px);
-  pointer-events: none;
-  transition: filter 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#spotify-wall:not(:has(.spotify-overlay)) .playlist-container {
-  filter: unset;
-  pointer-events: unset;
-}
-
-#spotify-wall .label {
-  transition: filter 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.playlist-container.large, iframe {
-  height: 352px !important;
-}
-
-#spotify-wall iframe {
-  opacity: 0;
-  transition: opacity 1s 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#spotify-wall iframe.loaded {
-  opacity: 1;
-}
-
-#spotify-wall:has(.spotify-overlay) .label {
-  user-select: none;
-  filter: blur(5px);
-}
-
-.spotify-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-}
-
-.spotify-overlay-button {
-  background: rgba(255, 255, 255, 0.15);
-  padding: calc(var(--lineHeight) / 2) var(--lineHeight);
-
-  cursor: pointer;
-
-  border: none;
-  color: inherit;
-  font: inherit;
-  margin: 0;
-
-  border-radius: calc(var(--lineHeight) / 2)  ;
-  transition: background 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.spotify-overlay-button:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.spotify-overlay:focus-visible {
-  outline: 2px solid var(--accentColor);
-  outline-offset: 2px;
-}
-
 @media screen and (max-width: 799px) {
   section {
     gap: 0;
-  }
-
-  #spotify-wall * {
-    grid-column: start / end !important;
   }
 }
 
@@ -1080,23 +988,22 @@ section#playlists-section {
           Projects</a>
         <a data-delay style="--delay: 2.0;" href="#writing">Writing</a>
         <a data-delay style="--delay: 2.2;" href="#patents">Patents</a>
-        <span data-delay style="--delay: 2.4;"><a href="#playlists" class="has-wall-only">Playlists</a></span>
-        <a data-delay style="--delay: 2.6;" href="#education">Education</a>
-        <a data-delay style="--delay: 2.8;" href="#colophon">Colophon</a>
+        <a data-delay style="--delay: 2.4;" href="#education">Education</a>
+        <a data-delay style="--delay: 2.6;" href="#colophon">Colophon</a>
       </nav>
-      <hr data-delay style="--delay: 3.0;">
+      <hr data-delay style="--delay: 2.8;">
       <nav aria-label="Social">
-        <a data-delay style="--delay: 3.2;" href="https://links.robb.is">
+        <a data-delay style="--delay: 3.0;" href="https://links.robb.is">
           links.robb.is</a>
-        <a data-delay style="--delay: 3.4;" href="https://mastodon.social/@DLX">
+        <a data-delay style="--delay: 3.2;" href="https://mastodon.social/@DLX">
           Mastodon</a>
-        <a data-delay style="--delay: 3.6;"
+        <a data-delay style="--delay: 3.4;"
           href="https://patreon.com/swiftui_snippets">Patreon</a>
-        <a data-delay style="--delay: 3.8;"
+        <a data-delay style="--delay: 3.6;"
           href="https://bsky.app/profile/robb.is">Bluesky</a>
-        <a data-delay style="--delay: 4.0;"
+        <a data-delay style="--delay: 3.8;"
           href="https://github.com/robb">GitHub</a>
-        <a data-delay style="--delay: 4.2;"
+        <a data-delay style="--delay: 4.0;"
           href="mailto:robb@robb.is">E-Mail</a>
       </nav>
     </aside>
@@ -1110,7 +1017,6 @@ section#playlists-section {
           <a href="#side-projects">Side Projects</a>,
           <a href="#writing">Writing</a>,
           <a href="#patents">Patents</a>,
-          <span class="has-wall-only"><a href="#playlists">Monthly Playlists</a>,</span>
           <a href="#education">Education</a>,
           <a href="#colophon">Colophon</a>
         </nav>
@@ -1757,83 +1663,6 @@ section#playlists-section {
 
         </div>
       </section>
-
-      <section id="playlists-section" data-delay class="screen-only">
-        <h2 id="playlists">Monthly Playlists</h2>
-        <div id="spotify-wall">
-          <div class="spotify-overlay">
-            <button class="spotify-overlay-button"  type="button" aria-label="Load Spotify embeds">Allow Spotify embeds</button>
-          </div>
-        </div>
-      </section>
-      <script>
-        let playlistsData = null;
-
-        fetch('https://api.robb.is/playlist.min.json')
-          .then(response => response.json())
-          .then(playlists => {
-            playlistsData = playlists;
-
-            const spotifyWall = document.getElementById('spotify-wall');
-
-            playlists.forEach((playlist, index) => {
-              const label = document.createElement('div');
-              label.className = 'label';
-              label.innerHTML = `<time datetime="${playlist.name}">${playlist.name}</time>`;
-              spotifyWall.appendChild(label);
-
-              const container = document.createElement('div');
-              container.className = index === 0 ? 'playlist-container content large' : 'playlist-container content';
-              spotifyWall.appendChild(container);
-            });
-
-            document.body.classList.add('has-wall');
-          })
-          .catch(error => {
-            console.log('Failed to load Spotify playlists:', error);
-          });
-
-
-        const spotifyOverlay = document.querySelector('.spotify-overlay');
-        const spotifyOverlayButton = document.querySelector('.spotify-overlay-button');
-
-        function loadSpotifyPlaylists() {
-          if (playlistsData && playlistsData.length > 0) {
-            const containers = document.querySelectorAll('.playlist-container');
-
-            const overlay = document.querySelector('.spotify-overlay');
-            if (overlay) {
-              overlay.remove();
-            }
-
-            playlistsData.forEach((playlist, index) => {
-              if (containers[index]) {
-                const iframe = document.createElement('iframe');
-                iframe.className = index === 0 ? 'content large' : 'content';
-                iframe.style.borderRadius = '20px';
-                iframe.src = `https://open.spotify.com/embed/playlist/${playlist.id}?utm_source=generator&theme=1`;
-                iframe.frameBorder = '0';
-                iframe.allowFullscreen = '';
-                iframe.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
-
-                iframe.onload = function() {
-                  this.classList.add('loaded');
-                };
-
-                containers[index].appendChild(iframe);
-              }
-            });
-          }
-        }
-
-        spotifyOverlayButton.addEventListener('click', loadSpotifyPlaylists);
-        spotifyOverlayButton.addEventListener('keydown', function(event) {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            loadSpotifyPlaylists();
-          }
-        });
-      </script>
 
       <section data-delay>
         <h2 id="education">Education</h2>
