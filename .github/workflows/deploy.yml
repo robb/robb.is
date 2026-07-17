@@ -1,0 +1,48 @@
+name: Deploy to S3
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check config
+        run: |
+          : "${BUCKET:?missing repo variable BUCKET}"
+          : "${DISTRIBUTION_ID:?missing repo variable DISTRIBUTION_ID}"
+          : "${AWS_REGION:?missing repo variable AWS_REGION}"
+          : "${BUILD_DIR:?missing repo variable BUILD_DIR}"
+        env:
+          BUCKET: ${{ vars.BUCKET }}
+          DISTRIBUTION_ID: ${{ vars.DISTRIBUTION_ID }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          BUILD_DIR: ${{ vars.BUILD_DIR }}
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Sync hashed assets (long cache)
+        run: |
+          aws s3 sync ${{ vars.BUILD_DIR }} s3://${{ vars.BUCKET }} \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "*.html"
+
+      - name: Sync HTML (no cache)
+        run: |
+          aws s3 sync ${{ vars.BUILD_DIR }} s3://${{ vars.BUCKET }} \
+            --cache-control "public,max-age=0,must-revalidate" \
+            --exclude "*" --include "*.html"
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.DISTRIBUTION_ID }} \
+            --paths "/*"
