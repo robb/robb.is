@@ -282,7 +282,7 @@ pre > code > span::before {
 <span style="color: #2396b3;"><span style="color: #f8edf0"><span>  </span></span><span style="color: #fc69a4"><b>var</b></span><span style="color: #f8edf0"> </span>displayName<span style="color: #f8edf0">: </span><span style="color: #cd7cfe">String</span></span>
 <span style="color: #f8edf0;">}</span></code></pre>
 
-<p>Next, I define a nested <code>FormatStyle</code> that conforms to the Foundation protocol of the same name. This type has access to the users current <code>Locale</code> and can turn the <code>UserName</code> into a <code>String</code>:</p>
+<p>Next, I define a nested <code>FormatStyle</code> that conforms to the Foundation protocol of the same name. This type has access to the user&#39;s current <code>Locale</code> and can turn the <code>UserName</code> into a <code>String</code>:</p>
 
 <pre aria-label="Swift code"><code class="lang-swift"><span style="color: #fc69a4;"><b>extension</b><span style="color: #f8edf0"> </span><span style="color: #18bef9">UserName</span><span style="color: #f8edf0"> {</span></span>
 <span style="color: #f8edf0;"><span>  </span><span style="color: #fc69a4"><b>public</b></span> <span style="color: #fc69a4"><b>struct</b></span> <span style="color: #18bef9">FormatStyle</span>: Foundation.<span style="color: #1bd4a3">FormatStyle</span> {</span>
@@ -316,7 +316,7 @@ pre > code > span::before {
 <h2 id="a-locale-of-our-own">A locale of our own</h2>
 
 <p>
-  Luckily, Locales in Foundation can be defined in terms of the BCP 47 identifier. For example, <code>fr-CA</code> identifies Canadian French wheres <code>fr-CH</code> identifies French as it&#39;s spoken in Switzerland. BCP 47 identifiers can encode a variety of locale preferences including different scripts, but they can also encode <a href="https://www.rfc-editor.org/info/rfc5646/#section-2.2.7">Private Use Subtags</a> that can be used within a private context (like the Linear app!).</p>
+  Luckily, Locales in Foundation can be defined in terms of the BCP 47 identifier. For example, <code>fr-CA</code> identifies Canadian French whereas <code>fr-CH</code> identifies French as it&#39;s spoken in Switzerland. BCP 47 identifiers can encode a variety of locale preferences including different scripts, but they can also encode <a href="https://www.rfc-editor.org/info/rfc5646/#section-2.2.7">Private Use Subtags</a> that can be used within a private context (like the Linear app!).</p>
 <p>Using the private <code>x-linearf</code> subtag, I can encode the user&#39;s preference for full names over display names. All I need to do is to transform the system locale by adding the private subtag if necessary.</p>
 <p>First I define the necessary methods to update the <code>Locale</code>:</p>
 
