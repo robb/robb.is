@@ -6,6 +6,8 @@
 
     <link rel="icon" href="/img/favicon.png" type="image/png">
 
+    <script type="module" src="/js/microlighter/micro-lighter-element.min.js"></script>
+
     <title>SwiftUI Text Selection Still Isn’t Good Enough – Robb Böhnke</title>
     <meta content="Robb Böhnke" property="og:site_name">
     <meta content="iOS 27 finally makes SwiftUI’s textSelection modifier feel native, but it still can’t select text across multiple Text views — a dealbreaker for apps like Linear that render rich documents as trees of nested Text views." name="description">
@@ -215,51 +217,72 @@ a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):ho
   color: var(--accentColor);
 }
 
-pre {
-  position: relative;
-  font-size: calc(var(--fontSize) * 0.92);
-  background: #1A2733;
-  border: var(--hairlineThickness) solid color-mix(in oklch, #1A2733, white 20%);
-  border-radius: var(--lineHeight);
-
-  padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
-  padding-left: calc(var(--lineHeight) * 1 - var(--hairlineThickness) + 3ch);
-  overflow-x: scroll;
+micro-lighter {
   margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
 }
 
 pre {
-  counter-reset: line;
+  position: relative;
+  font-size: calc(var(--fontSize) * 0.92);
+  background: #102738;
+  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+  border-radius: var(--lineHeight);
+
+  padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
+  overflow-x: scroll;
+  margin: 0;
 }
 
-pre > code::before {
-  content: "";
+micro-lighter::part(line-numbers) {
+  box-sizing: border-box;
+  background-color: color-mix(in oklch, #102738, white 10%);
+  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+  border-inline-end: none;
+  border-start-start-radius: var(--lineHeight);
+  border-end-start-radius: var(--lineHeight);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
 
-  position: absolute;
-  width: 4.5ch;
-  left: 0;
-  top: 0;
-  bottom: 0;
-
-  background-color: color-mix(in oklch, #1A2733, white 10%);
-}
-
-pre > code > span {
-  counter-increment: line;
-}
-
-pre > code > span::before {
-  position: absolute;
-  left: 1.5ch;
-
-  content: counter(line) / "";
-  display: block;
-  width: 2ch;
-  margin-right: calc(var(--lineHeight) * 0.5);
-  color: color-mix(in oklch, #1A2733, white 50%);
+  font-family: ui-monospace, monospace;
+  font-size: calc(var(--fontSize) * 0.92);
   font-weight: 300;
-  text-align: right;
-  user-select: none;
+  color: color-mix(in oklch, #102738, white 50%);
+
+  padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
+  padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));
+}
+
+::highlight(comment) {
+  color: #acb3cb;
+}
+
+::highlight(keyword),
+::highlight(storage) {
+  color: #ef89b2;
+  font-weight: 600;
+}
+
+::highlight(string) {
+  color: #f0937f;
+}
+
+::highlight(numeric),
+::highlight(boolean),
+::highlight(constant) {
+  color: #e1ab3a;
+}
+
+::highlight(function) {
+  color: #c85bdf;
+}
+
+::highlight(type),
+::highlight(support) {
+  color: #ce99f8;
+}
+
+::highlight(property) {
+  color: #52a4be;
 }
   </style>
 </head>
@@ -289,22 +312,22 @@ pre > code > span::before {
   <p>
     In the iOS app, we implement document viewing by parsing a <a href="https://prosemirror.net">ProseMirror</a> document and building a view tree roughly like so:
   </p>
-  <pre><code class="lang-swift"><span style="color: #f8edf0;"><span style="color: #fc69a4"><b>switch</b></span> node.<span style="color: #219e8a">nodeType</span> {</span>
-<span style="color: #f8edf0;"><span style="color: #fc69a4"><b>case</b></span> <span style="color: #fc69a4"><b>let</b></span> .<span style="color: #219e8a">blockQuote</span>(content):</span>
-<span style="color: #f8edf0;">  <span style="color: #1bd4a3">NodeView</span>(content)</span>
-<span style="color: #cc30df;"><span style="color: #f8edf0">    .</span>padding<span style="color: #f8edf0">(.</span>leading<span style="color: #f8edf0">, </span><span style="color: #e59908">8</span><span style="color: #f8edf0">)</span></span>
-<span style="color: #cc30df;"><span style="color: #f8edf0">    .</span>overlay<span style="color: #f8edf0">(</span>alignment<span style="color: #f8edf0">: .</span>leading<span style="color: #f8edf0">) {</span></span>
-<span style="color: #cc30df;"><span style="color: #f8edf0"><span>      </span></span><span style="color: #cd7cfe">Capsule</span><span style="color: #f8edf0">().</span>fill<span style="color: #f8edf0">(.</span>secondary<span style="color: #f8edf0">).</span>frame<span style="color: #f8edf0">(</span>width<span style="color: #f8edf0">: </span><span style="color: #e59908">4</span><span style="color: #f8edf0">)</span></span>
-<span style="color: #f8edf0;">    }</span>
-<span style="color: #f8edf0;"></span>
-<span style="color: #f8edf0;"><span style="color: #fc69a4"><b>case</b></span> <span style="color: #fc69a4"><b>let</b></span> .<span style="color: #219e8a">paragraph</span>(content):</span>
-<span style="color: #f8edf0;">  <span style="color: #cd7cfe">Text</span>(content)</span>
-<span style="color: #f8edf0;"></span>
-<span style="color: #f8edf0;"><span style="color: #fc69a4"><b>case</b></span> <span style="color: #fc69a4"><b>let</b></span> .<span style="color: #219e8a">image</span>(url):</span>
-<span style="color: #cd7cfe;"><span style="color: #f8edf0">  </span>AsyncImage<span style="color: #f8edf0">(</span>url<span style="color: #f8edf0">: url)</span></span>
-<span style="color: #f8edf0;"></span>
-<span style="color: #9aa3c2;"><span style="color: #f8edf0">  </span>// many, many more node types</span>
-<span style="color: #f8edf0;">}</span></code></pre>
+  <micro-lighter language="swift" line-numbers><pre><code>switch node.nodeType {
+case let .blockQuote(content):
+  NodeView(content)
+    .padding(.leading, 8)
+    .overlay(alignment: .leading) {
+      Capsule().fill(.secondary).frame(width: 4)
+    }
+
+case let .paragraph(content):
+  Text(content)
+
+case let .image(url):
+  AsyncImage(url: url)
+
+  // many, many more node types
+}</code></pre></micro-lighter>
   <p>
     A ProseMirror node can get resolved to one of many different SwiftUI views, some of which recursively contain the resolved views of the original node’s child nodes.
     Since views need to be decorated and laid out in various ways, we end up with a view hierarchy that contains roughly one <code>Text</code> view per paragraph at various levels of nesting.
@@ -312,10 +335,10 @@ pre > code > span::before {
   <p>
     Unfortunately, SwiftUI’s new text selection does not actually support selecting across <code>Text</code> views. Even in the most basic example, users will only be able to select within one of these text views, even though they look like one unit:
   </p>
-  <pre><code class="lang-swift"><span style="color: #cd7cfe;">VStack<span style="color: #f8edf0">(</span>alignment<span style="color: #f8edf0">: .</span><span style="color: #cc30df">leading</span><span style="color: #f8edf0">) {</span></span>
-<span style="color: #fc7767;"><span style="color: #f8edf0">  </span><span style="color: #cd7cfe">Text</span><span style="color: #f8edf0">(</span>"Hello, world!"<span style="color: #f8edf0">)</span></span>
-<span style="color: #fc7767;"><span style="color: #f8edf0">  </span><span style="color: #cd7cfe">Text</span><span style="color: #f8edf0">(</span>"How are you?"<span style="color: #f8edf0">)</span></span>
-<span style="color: #f8edf0;">}</span></code></pre>
+  <micro-lighter language="swift" line-numbers><pre><code>VStack(alignment: .leading) {
+  Text("Hello, world!")
+  Text("How are you?")
+}</code></pre></micro-lighter>
   <p>
     I’ll spare you the screen recording here since it doesn’t capture the frustration of the experience – everything looks like it should work but the selection <em>just won’t expand</em>. Being able to freely select text across the screen is something we had since <a href="https://daringfireball.net/2009/06/copy_and_paste">iPhone OS 3.0</a> – prehistoric times!
   </p>
