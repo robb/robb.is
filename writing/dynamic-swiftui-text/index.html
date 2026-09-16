@@ -284,6 +284,10 @@ micro-lighter::part(line-numbers) {
 ::highlight(property) {
   color: #52a4be;
 }
+
+::highlight(variable) {
+  color: var(--secondaryText);
+}
   </style>
 </head>
 <body>
@@ -418,8 +422,7 @@ public extension LocalizedStringKey.StringInterpolation {
 
 <micro-lighter language="swift" line-numbers><pre aria-label="Swift code"><code>Text(user.userName)
 
-Label("Assigned to \(assignee.userName)", systemImage: "person.fill")
-</code></pre></micro-lighter>
+Label("Assigned to \(assignee.userName)", systemImage: "person.fill")</code></pre></micro-lighter>
 
 <p>Nice! Resolving the preference in the formatter rather than at the call site means there&#39;s no step to accidentally forget. A BCP 47 private subtag may be an unusual choice, but it reuses an existing propagation mechanism and matches its intended use. That said, I hope SwiftUI will eventually offer a more direct path to the same result.</p>
 </section>
