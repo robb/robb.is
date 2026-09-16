@@ -223,7 +223,8 @@ micro-lighter {
 
 pre {
   position: relative;
-  font-size: calc(var(--fontSize) * 0.92);
+  font-size: calc(var(--fontSize) * 0.86);
+  line-height: calc(var(--lineHeight) * 0.9);
   background: #102738;
   border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
   border-radius: var(--lineHeight);
@@ -244,9 +245,12 @@ micro-lighter::part(line-numbers) {
   border-end-end-radius: 0;
 
   font-family: ui-monospace, monospace;
-  font-size: calc(var(--fontSize) * 0.92);
+  font-size: calc(var(--fontSize) * 0.68);
   font-weight: 300;
   color: color-mix(in oklch, #102738, white 50%);
+
+  user-select: none;
+  -webkit-user-select: none;
 
   padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
   padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));

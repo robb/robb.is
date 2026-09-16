@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link rel="icon" href="/img/favicon.png" type="image/png">
+
+    <script type="module" src="/js/microlighter/micro-lighter-element.min.js"></script>
+
+    <title>SwiftUI Snippet: Orbit Animation – Robb Böhnke</title>
+    <meta content="Robb Böhnke" property="og:site_name">
+    <meta content="Recreating the iCloud onboarding orbit animation in SwiftUI using a physics simulation, manually-evaluated keyframes, and a quadtree for spatial lookups." name="description">
+    <meta content="article" property="og:type">
+    <meta content="Orbit Animation" property="og:title">
+    <meta content="Recreating the iCloud onboarding orbit animation in SwiftUI using a physics simulation, manually-evaluated keyframes, and a quadtree for spatial lookups." property="og:description">
+    <meta content="https://robb.is/writing/orbit-animation/" property="og:url">
+    <meta name="author" content="Robb Böhnke"/>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@DLX">
+    <meta name="twitter:title" content="Orbit Animation">
+    <meta name="twitter:description" content="Recreating the iCloud onboarding orbit animation in SwiftUI using a physics simulation, manually-evaluated keyframes, and a quadtree for spatial lookups.">
+    <meta property="article:published_time" content="2025-07-21">
+    <meta property="article:author" content="Robb Böhnke">
+
+    <link rel="canonical" href="https://robb.is/writing/orbit-animation/"/>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "SwiftUI Snippet: Orbit Animation",
+      "description": "Recreating the iCloud onboarding orbit animation in SwiftUI using a physics simulation, manually-evaluated keyframes, and a quadtree for spatial lookups.",
+      "url": "https://robb.is/writing/orbit-animation/",
+      "mainEntityOfPage": "https://robb.is/writing/orbit-animation/",
+      "datePublished": "2025-07-21",
+      "author": {
+        "@type": "Person",
+        "name": "Robb Böhnke",
+        "url": "https://robb.is/"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Robb Böhnke",
+        "url": "https://robb.is/"
+      },
+      "keywords": ["SwiftUI", "Swift", "iOS", "Animation", "Physics Simulation", "Quadtree"]
+    }
+    </script>
+  </head>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --fontSize: 19px;
+  --secondaryFontSize: 16px;
+  --lineHeight: 26.5px;
+  --hairlineThickness: 1px;
+}
+
+@media screen and (min-resolution: 2x) {
+  :root {
+    --hairlineThickness: 0.5px;
+  }
+}
+
+:root {
+--backgroundColor: #232634;
+--secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
+
+--primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
+--secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
+--tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
+
+--accentColor: rgb(224, 44, 146);
+--selectionOpacity: 0.5;
+}
+
+::selection {
+  background-color: var(--accentColor);
+  background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
+}
+
+@media (prefers-contrast: more) {
+  :root {
+  --primaryText: #FFF;
+  --secondaryText: #CCC;
+  --tertiaryText: #AAA;
+
+  --hairlineThickness: 1px;
+
+  --selectionOpacity: 0.9;
+  }
+}
+
+html {
+  overflow-x: hidden !important;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: var(--fontSize);
+  line-height: var(--lineHeight);
+  color: var(--secondaryText);
+
+  accent-color: var(--accentColor);
+  background-color: var(--backgroundColor);
+
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+p, li {
+  text-wrap-style: pretty;
+  hyphens: auto;
+}
+
+ol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lineHeight);
+
+  padding-inline-start: 0;
+  list-style: none;
+  counter-reset: orbit-step;
+}
+
+li {
+  padding-inline-start: 1.4em;
+  counter-increment: orbit-step;
+}
+
+li::before {
+  content: counter(orbit-step) ".";
+  float: inline-start;
+  width: 1.4em;
+  margin-inline-start: -1.4em;
+  color: var(--secondaryText);
+  font-variant-numeric: tabular-nums;
+}
+
+code, pre, tt, kbd, samp {
+  font-family: ui-monospace, monospace;
+  font-size-adjust: 0.505;
+}
+
+em {
+  font: inherit;
+  font-style: oblique 5deg;
+}
+
+h1, h2, h3, h4 {
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-wrap: pretty;
+}
+
+h1, h2 {
+  color: var(--primaryText);
+}
+
+h1 {
+  font-size: calc(var(--fontSize) * 2);
+  line-height: calc(var(--lineHeight) * 2);
+  font-weight: 650;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    font-weight: 450;
+  }
+}
+
+article {
+  width: 56ch;
+  max-width: 100vw;
+
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--lineHeight));
+
+  header, footer, section {
+    display: contents;
+  }
+
+  header time {
+    color: var(--tertiaryText);
+  }
+
+  padding: calc(var(--lineHeight) * 1);
+  padding-bottom: calc(var(--lineHeight) * 3);
+
+  margin-block: calc(4 * var(--lineHeight));
+}
+
+a, footer summary {
+  color: var(--primaryText);
+  text-decoration: underline;
+  text-decoration-skip: objects;
+  text-decoration-skip-ink: objects;
+  text-decoration-thickness: var(--hairlineThickness);
+  text-underline-offset: 2px;
+  text-decoration-color: var(--accentColor);
+  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus {
+    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+    }
+  }
+}
+
+a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
+  color: var(--accentColor);
+}
+
+button.like {
+  font: inherit;
+  color: var(--primaryText);
+  background: none;
+  border: none;
+  padding: 0;
+
+  text-decoration: underline;
+  text-decoration-thickness: var(--hairlineThickness);
+  text-underline-offset: 2px;
+  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+
+  cursor: pointer;
+
+  &:focus, &:hover {
+    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+  }
+
+  &[disabled] {
+    color: var(--tertiaryText);
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
+video {
+  display: block;
+  width: 100%;
+  border-radius: var(--lineHeight);
+  aspect-ratio: 1206 / 1216;
+}
+
+micro-lighter {
+  margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
+}
+
+micro-lighter.wide {
+  align-self: center;
+  width: 88ch;
+  max-width: 90vw;
+  margin-block: calc(-0.25 * var(--lineHeight));
+  margin-inline: 0;
+}
+
+pre {
+  position: relative;
+  font-size: calc(var(--fontSize) * 0.86);
+  line-height: calc(var(--lineHeight) * 0.9);
+  background: #102738;
+  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+  border-radius: var(--lineHeight);
+
+  padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
+  overflow-x: scroll;
+  margin: 0;
+}
+
+micro-lighter::part(line-numbers) {
+  box-sizing: border-box;
+  background-color: color-mix(in oklch, #102738, white 10%);
+  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+  border-inline-end: none;
+  border-start-start-radius: var(--lineHeight);
+  border-end-start-radius: var(--lineHeight);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+
+  font-family: ui-monospace, monospace;
+  font-size: calc(var(--fontSize) * 0.68);
+  font-weight: 300;
+  color: color-mix(in oklch, #102738, white 50%);
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
+  padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));
+}
+
+::highlight(comment) {
+  color: #acb3cb;
+}
+
+::highlight(keyword),
+::highlight(storage) {
+  color: #ef89b2;
+  font-weight: 600;
+}
+
+::highlight(string) {
+  color: #f0937f;
+}
+
+::highlight(numeric),
+::highlight(boolean),
+::highlight(constant) {
+  color: #e1ab3a;
+}
+
+::highlight(function) {
+  color: #c85bdf;
+}
+
+::highlight(type),
+::highlight(support) {
+  color: #ce99f8;
+}
+
+::highlight(property) {
+  color: #52a4be;
+}
+  </style>
+</head>
+<body>
+<main>
+<article>
+<header>
+  <h1 id="orbit-animation">SwiftUI Snippet: Orbit Animation</h1>
+  <p>
+    <time datetime="2025-07-21">Monday, July 21 2025</time>
+    – <a href="/" rel="author">Robb Böhnke</a>
+  </p>
+</header>
+<section>
+  <video autoplay muted loop playsinline poster="/video/orbit.jpg">
+    <source src="/video/orbit.mp4" type="video/mp4">
+  </video>
+  <p>
+    This Snippet recreates an animation that is used as part of the <a href="https://youtu.be/bRHDYVmZva0">iCloud onboarding flow</a>. I believe the original uses baked-in values but for my version, I decided to combine three different approaches of animation:
+  </p>
+  <ol>
+    <li>
+      For the bubbles pushing each other aside, I am using a simple physics simulation. It handles both collision as well as a force that pins bubbles in place, to make sure they eventually return to their original position.
+    </li>
+    <li>
+      The scaling of the bubbles is driven by a manually resolved <code>Keyframe&shy;Timeline</code> which is then bridged with the physics simulation on every tick.
+    </li>
+    <li>
+      Since the overall rotation does not actually interact with the simulation, it can be derived directly from the elapsed time and is applied independently. For simplicity, I'm rotating all bubbles simultaneously by applying a transform to the <code>Graphics&shy;Context</code>.
+    </li>
+  </ol>
+  <p>
+    To speed up the look-up of bubbles in a certain neighborhood, I implemented a <a href="https://en.wikipedia.org/wiki/Quadtree">Quadtree</a>. That also gave me an opportunity to play around with the new <a href="https://developer.apple.com/documentation/swift/inlinearray"><code>Inline&shy;Array</code></a> type.
+  </p>
+  <p>
+    By using a simulation, this animation can easily be made interactive – something I might revisit in a future snippet.
+  </p>
+  <p><code>Orbit.swift</code></p>
+  <micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import simd
+import SwiftUI
+
+// A view that renders an iCloud-style Orbit animation.
+//
+// It consists of many colorful bubbles orbiting a central icon. Over time,
+// some of them scale up and reveal one of multiple symbols. As they scale up,
+// other bubbles are pushed aside.
+//
+// This view uses three different animation techniques simultaneously:
+//
+// 1. A simple physics simulation is used to calculate the position of the
+//    individual bubbles as they push each other out of the way.
+// 2. Manually-evaluated keyframe animations are used to describe how
+//    individual circles scale up and down and transition their contents.
+// 3. The rotation of the circles is calculated directly from the rotational
+//    speed and the elapsed time.
+struct OrbitView: View {
+  // The animated properties of the orbit.
+  struct Track {
+    // The scale of the orbit.
+    var scale: Double = 1
+
+    // The speed at which the animation rotates.
+    var speed: Angle = .degrees(30)
+  }
+
+  // Set up a simulation.
+  @State var simulation = {
+    let nodes = Simulation.Node.concentricPattern
+
+    return Simulation(
+      nodes: nodes,
+      forces: [
+        Collision(),
+        // Weakly pin every node to its initial position.
+        Pin(pins: nodes.enumerated().map { i, node in
+          .init(i, to: node.position, strength: 0.05)
+        }),
+      ])
+  }()
+
+  // The time at which the animation started.
+  @State var startDate = Date.now
+
+  // Scale up the orbit and increase its velocity over the course of 3s.
+  let orbitTimeline = KeyframeTimeline(initialValue: Track()) {
+    KeyframeTrack(\.scale) {
+      MoveKeyframe(0.3)
+      LinearKeyframe(1, duration: 3, timingCurve: .easeInOut)
+    }
+
+    KeyframeTrack(\.speed) {
+      MoveKeyframe(.degrees(0))
+      LinearKeyframe(.degrees(55), duration: 3, timingCurve: .easeInOut)
+    }
+  }
+
+  // Define the bubbles that will scale up during the animation. They are
+  // offset by 1/3 of their animation duration.
+  static let bubbles: [Bubble] = {
+    // Randomly offset the base-indices for some variety.
+    let offset = Int.random(in: -20 ..&lt; 30)
+
+    return [
+      Bubble(index: 37 + offset, image: Image(systemName: "swift"), offset: 0.0 * Bubble.timeline.duration),
+      Bubble(index: 48 + offset, image: Image(systemName: "iphone"), offset: 0.333 * Bubble.timeline.duration),
+      Bubble(index: 56 + offset, image: Image(systemName: "apple.terminal"), offset: 0.666 * Bubble.timeline.duration),
+    ]
+  }()
+
+  var body: some View {
+    // Run the simulation every time the `TimelineView` updates.
+    TimelineView(.animation) { animationContext in
+      // The relative time since the appearance of the view.
+      let t = animationContext.date.timeIntervalSince(startDate)
+
+      // Delay any bubble animations by 6s.
+      let offsetTime = max(0, t - 6)
+
+      // Delay the orbit timeline by 2s and resolve it.
+      let orbitValues = orbitTimeline.value(time: t - 2)
+
+      // The rotation of the orbit can be calculated directly.
+      let angle = Angle.degrees(orbitValues.speed.degrees * t)
+
+      Canvas { context, size in
+        let scale = 0.9 * (min(size.width, size.height) / 2)
+        // Center the drawing context on the midpoint of the canvas.
+        context.translateBy(x: size.width / 2, y: size.height / 2)
+        context.scaleBy(x: scale, y: scale)
+
+        context.rotate(by: angle)
+        context.scaleBy(x: orbitValues.scale, y: orbitValues.scale)
+
+        // Draw every node.
+        for (i, node) in simulation.nodes.enumerated() {
+          var bubbleContext = context
+          // Counter-rotate around the center of the bubble to have
+          // the icons remain upright.
+          bubbleContext.translateBy(x: node.frame.midX, y: node.frame.midY)
+          bubbleContext.rotate(by: -angle)
+          bubbleContext.translateBy(x: -node.frame.midX, y: -node.frame.midY)
+
+          // Calculate the base color of the bubble based on its 2d
+          // position in the (unrotated) orbit.
+          //
+          // 336pts refers to the maximum diameter (2 * 168) used in
+          // `concentricPattern`.
+          let bubbleColor = Bubble.color(at: UnitPoint(node.position))
+
+          // If the current node refers to a bubble, use its timeline
+          // to interpolate the base color – otherwise use 0.
+          let bubble = Self.bubbles.first { $0.index == i }
+
+          if let bubble {
+            let bubbleValues = bubble.values(at: offsetTime)
+
+            // Fade the color towards blue as the bubble expands.
+            bubbleContext.fill(
+              Path(ellipseIn: node.frame.inset(by: 0.02)),
+              with: .style(bubbleColor.mix(with: .darkBlue, by: bubbleValues.colorBlend))
+            )
+
+            // Draw the icons, blur and fade them.
+            var t = context.resolve(bubble.image)
+            t.shading = .style(.white)
+
+            let scale = 0.6 * node.frame.height / max(t.size.width, t.size.height)
+
+            bubbleContext.opacity = bubbleValues.opacity
+            bubbleContext.addFilter(.blur(radius: bubbleValues.blurRadius))
+            bubbleContext.draw(t, in: CGRect(center: node.location, size: t.size.scaled(by: scale)))
+          } else {
+            bubbleContext.fill(
+              Path(ellipseIn: node.frame.inset(by: 0.02)),
+              with: .color(bubbleColor)
+            )
+          }
+        }
+      }
+      .onChange(of: animationContext.date) { a, b in
+        // Update the scale of each of the bubbles on every tick.
+        // This bridges the keyframe animation and the physics
+        // simulation.
+        for bubble in Self.bubbles {
+          simulation.nodes[bubble.index].scale = bubble.values(at: offsetTime).scale
+        }
+
+        // Advance the animation every frame.
+        //
+        // TODO: Take the time since the last update into account.
+        simulation.tick()
+      }
+    }
+    .onAppear {
+      startDate = Date.now
+    }
+    .overlay {
+      let t = Transaction(animation: .default)
+      AsyncImage(url: URL(string: "https://github.com/robb.png"), transaction: t) { result in
+        result.image?
+          .resizable()
+          .aspectRatio(contentMode: .fit)
+      }
+      .containerRelativeFrame([.horizontal, .vertical]) { length, _ in length / 3 }
+      .background(.purple.mix(with: .black, by: 0.4))
+      .clipShape(.circle)
+    }
+  }
+}
+
+struct Bubble {
+  // The animated properties of the bubble.
+  struct Track {
+    // The blur radius of the bubble's icon.
+    var blurRadius: CGFloat = 8
+
+    // The opacity of the bubble's icon.
+    var opacity: Double = 0
+
+    // The scale of the bubble.
+    var scale: Double = 1
+
+    // The amount by which the bubble's base color is mixed with blue.
+    var colorBlend: Double = 0
+  }
+
+  static var timeline = KeyframeTimeline(initialValue: Track()) {
+    KeyframeTrack(\.opacity) {
+      CubicKeyframe(1, duration: 0.31)
+      LinearKeyframe(1, duration: 2)
+      CubicKeyframe(0, duration: 1.5)
+    }
+
+    KeyframeTrack(\.colorBlend) {
+      CubicKeyframe(1, duration: 0.31)
+      LinearKeyframe(1, duration: 2)
+      SpringKeyframe(0, duration: 0.5)
+      LinearKeyframe(0, duration: 3.3)
+    }
+
+    KeyframeTrack(\.blurRadius) {
+      CubicKeyframe(0, duration: 0.31)
+      LinearKeyframe(0, duration: 2)
+      CubicKeyframe(8, duration: 1.5)
+    }
+
+    KeyframeTrack(\.scale) {
+      CubicKeyframe(4, duration: 0.4)
+      LinearKeyframe(4, duration: 2)
+      SpringKeyframe(1)
+    }
+  }
+
+  static func color(at position: UnitPoint) -&gt; Color {
+    let x = Color.orange.mix(with: .blue, by: position.x + 0.5)
+    let y = Color.pink.mix(with: .mint, by: position.y + 0.5)
+    return x.mix(with: y, by: 0.5)
+  }
+
+  // The index of the node this bubble represents.
+  var index: Int
+
+  // The icon drawn inside the bubble.
+  var image: Image
+
+  // The relative time offset at which this bubble animates. Used to stagger
+  // the bubbles.
+  var offset: TimeInterval
+
+  // Resolve the timeline, taking the bubble's offset into account.
+  func values(at time: TimeInterval) -&gt; Track {
+    guard time &gt;= 0 else { return Track() }
+
+    return Self.timeline.value(wrappingTime: time - offset)
+  }
+}
+
+// A simple semi-implicit Euler integrator.
+struct Simulation {
+  // A node in the physics simulation is a circle of a given radius.
+  struct Node {
+    var position: SIMD2&lt;Double&gt;
+
+    var velocity: SIMD2&lt;Double&gt;
+
+    var initialRadius: Double
+
+    // We want to animate the bubbles scaling up later, so we add a
+    // dedicated scale parameter here.
+    var scale: Double = 1
+
+    // The scaled radius, this value is considered for collision detection
+    // and drawing.
+    var radius: Double {
+      initialRadius * scale
+    }
+
+    var frame: CGRect {
+      let r = radius
+
+      return CGRect(center: CGPoint(x: position.x, y: position.y), size: CGSize(width: r * 2, height: r * 2))
+    }
+
+    init(position: CGPoint, radius: Double = 5) {
+      self.init(x: position.x, y: position.y, radius: radius)
+    }
+
+    init(x: Double, y: Double, radius: Double = 5) {
+      self.position = [x, y]
+      self.velocity = [0, 0]
+      self.initialRadius = radius
+    }
+  }
+
+  var nodes: [Node]
+
+  var forces: [any Force]
+
+  // Velocities decay by (1 - this) every tick.
+  var decay: Double = 0.6
+
+  // Advances the simulation by one step.
+  //
+  // TODO: Take the time since the previous tick into account to make the simulation more resilient.
+  //
+  // Search for Verlet Integration for more info on how to write a more stable simulation.
+  mutating func tick() {
+    for i in forces.indices {
+      forces[i].apply(to: &amp;nodes)
+    }
+
+    for i in nodes.indices {
+      nodes[i].position += nodes[i].velocity
+      nodes[i].velocity *= decay
+    }
+  }
+}
+
+protocol Force {
+  // Applies a force to a list of nodes by updating their velocities.
+  mutating func apply(to nodes: inout [Simulation.Node])
+}
+
+// Moves a node by adding a velocity that points towards a fixed point.
+//
+// This is used so nodes return to their original position.
+struct Pin: Force {
+  struct Constant {
+    // The index of the node.
+    var index: Int
+
+    // The target position.
+    var position: SIMD2&lt;Double&gt;
+
+    // The strength of the movement – if 1, the node with move to `position`
+    // on the next tick.
+    var strength: Double
+
+    init(_ index: Int, to position: SIMD2&lt;Double&gt;, strength: Double) {
+      self.index = index
+      self.position = position
+      self.strength = strength
+    }
+  }
+
+  var pins: [Constant]
+
+  func apply(to nodes: inout [Simulation.Node]) {
+    for pin in pins {
+      let d = pin.position - nodes[pin.index].position
+      nodes[pin.index].velocity += d * pin.strength
+    }
+  }
+}
+
+// Moves nodes apart that touch each other.
+struct Collision: Force {
+  func apply(to nodes: inout [Simulation.Node]) {
+    // Add all nodes to a quad tree to quickly find their neighbors.
+    let quadTree = QuadTree(contentsOf: nodes)
+
+    for (i, node) in nodes.enumerated() {
+      let r = node.radius + 0.2
+      let neighborhood = node.frame.insetBy(dx: -r, dy: -r)
+
+      // Apply a force to all neighbors with a center within ±30pts, the
+      // quad tree makes this lookup efficient.
+      for j in quadTree.indices(in: neighborhood) {
+        // Only consider the case of i being of higher index to avoid
+        // doing the work twice.
+        guard i &gt; j else { continue }
+
+        let node = nodes[i]
+        let other = nodes[j]
+
+        let delta = node.position - other.position
+        // Calculate the distance between centers.
+        let distance = length(delta)
+        // Calculate the sum of the radii.
+        let combinedRadii = node.radius + other.radius
+
+        // If the distance is less then the sum of radii, the nodes
+        // overlap.
+        if distance &lt;= combinedRadii {
+          // Calculate the amount of overlap and the normalized
+          // direction vector.
+          let overlap = combinedRadii - distance
+          let direction = delta / distance
+
+          // Weight the velocity based on the area of the nodes. This
+          // moves bigger nodes less, implying a higher mass.
+          let weight = pow(other.radius, 2) / pow(combinedRadii, 2)
+
+          // Apply two opposing velocities, weighted by their mass.
+          nodes[i].velocity += direction * overlap * weight
+          nodes[j].velocity -= direction * overlap * (1 - weight)
+        }
+      }
+    }
+  }
+}
+
+extension Simulation.Node {
+  // A pattern of 4 x 24 nodes, arranged in concentric rings.
+  //
+  // The outermost ring represents the unit circle.
+  static var concentricPattern: [Self] {
+    let indices = (0 ..&lt; 24).map(Double.init)
+    let offset = Angle.degrees(360 / (2 * 24))
+    let step = Angle.degrees(360 / 24)
+
+    var nodes: [Self] = []
+    nodes.append(contentsOf: indices.map { i in
+      Self(position: CGPoint(theta: step * i, radius: 0.65), radius: 0.04)
+    })
+    nodes.append(contentsOf: indices.map { i in
+      Self(position: CGPoint(theta: step * i + offset, radius: 0.78), radius: 0.05)
+    })
+    nodes.append(contentsOf: indices.map { i in
+      Self(position: CGPoint(theta: step * i, radius: 0.9), radius: 0.045)
+    })
+    nodes.append(contentsOf: indices.map { i in
+      Self(position: CGPoint(theta: step * i + offset, radius: 1), radius: 0.055)
+    })
+    return nodes
+  }
+}
+
+#Preview {
+  OrbitView()
+}
+
+#Preview("Quad Tree") {
+  @Previewable @State var quadTree = QuadTree&lt;CGPoint&gt;(bounds: CGRect(x: 0, y: 0, width: 350, height: 350))
+
+  VStack {
+    Canvas { context, size in
+      let subrect = CGRect(x: 240, y: 50, width: 80, height: 200)
+      context.stroke(Path(subrect), with: .color(.red))
+
+      var copy = context
+      copy.opacity = 0.3
+      copy.drawLayer { context in
+        for node in quadTree.nodes {
+          context.stroke(Path(node.bounds), with: .color(.purple))
+        }
+      }
+
+      for point in quadTree.elements {
+        let frame = CGRect(origin: point.offset(x: -2.5, y: -2.5), size: CGSize(width: 5, height: 5))
+        context.fill(Path(ellipseIn: frame), with: .color(.blue))
+      }
+
+      for point in quadTree.elements(in: subrect) {
+        let frame = CGRect(origin: point.offset(x: -4, y: -4), size: CGSize(width: 8, height: 8))
+        context.stroke(Path(ellipseIn: frame), with: .color(.red))
+      }
+    }
+    .frame(width: 350, height: 350)
+
+    HStack {
+      let insert = {
+        quadTree.append(
+          CGPoint(
+            theta: Angle.degrees(.random(in: -180 ... 180)),
+            radius: CGFloat.random(in: 120 ... 140)
+          )
+          .offset(x: 175, y: 175)
+        )
+      }
+
+      Button("Insert Point") {
+        insert()
+      }
+
+      Button("Insert 10 Points") {
+        for _ in 0 ..&lt; 10 { insert() }
+      }
+    }
+    .buttonStyle(.borderedProminent)
+  }
+  .padding()
+}
+
+extension Simulation.Node: QuadTreeElement {
+  var location: CGPoint {
+    CGPoint(x: position.x, y: position.y)
+  }
+}
+
+extension CGRect {
+  init(center: CGPoint, size: CGSize) {
+    self.init(x: center.x - size.width / 2, y: center.y - size.height / 2, width: size.width, height: size.height)
+  }
+
+  var center: CGPoint {
+    .init(x: midX, y: midY)
+  }
+
+  func inset(by fraction: CGFloat) -&gt; Self {
+    insetBy(dx: width * fraction , dy: height * fraction)
+  }
+}
+
+extension CGSize {
+  func scaled(by multiplier: Double) -&gt; CGSize {
+    .init(width: width * multiplier, height: height * multiplier)
+  }
+}
+
+extension CGPoint {
+  init(theta: Angle, radius: CGFloat) {
+    self.init()
+    x = radius * cos(theta.radians)
+    y = radius * sin(theta.radians)
+  }
+}
+
+extension UnitPoint {
+  init(_ point: SIMD2&lt;Double&gt;) {
+    self.init(x: point.x, y: point.y)
+  }
+}
+
+extension KeyframeTimeline {
+  public func value(wrappingTime time: TimeInterval) -&gt; Value {
+    value(time: fmod(time, duration))
+  }
+}
+
+extension Color {
+  static var darkBlue: Self { Color.blue.mix(with: .black, by: 0.1) }
+}</code></pre></micro-lighter>
+  <p><code>QuadTree.swift</code></p>
+  <micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import SwiftUI
+
+public protocol QuadTreeElement {
+  var location: CGPoint { get }
+}
+
+public struct QuadTree&lt;Element: QuadTreeElement&gt; {
+  public typealias Index = Int
+
+  public struct Node {
+    enum Storage {
+      indirect case children(InlineArray&lt;4, Node&gt;)
+      case elements(ContiguousArray&lt;(Array&lt;Element&gt;.Index, CGPoint)&gt;)
+    }
+
+    public var bounds: CGRect
+
+    var storage: Storage = .elements([])
+
+    public var elements: (some RandomAccessCollection&lt;(Index, CGPoint)&gt;)? {
+      if case let .elements(elements) = storage {
+        elements
+      } else {
+        nil
+      }
+    }
+
+    @discardableResult
+    mutating func insert(_ element: Array&lt;Element&gt;.Index, at location: CGPoint) -&gt; Bool {
+      guard bounds.contains(location) else { return false }
+
+      switch storage {
+      case .children(var children):
+        defer { self.storage = .children(children) }
+
+        return children.indices.contains { children[$0].insert(element, at: location) }
+      case .elements(var elements):
+        elements.append((element, location))
+
+        self.storage = .elements(elements)
+
+        subdivideIfNeeded()
+
+        return true
+      }
+    }
+
+    private mutating func subdivideIfNeeded() {
+      guard case let .elements(elements) = storage else { return }
+
+      guard elements.count &gt; 4 else { return }
+
+      let q = bounds.quadrants
+
+      var children: InlineArray&lt;4, Node&gt; = [
+        Node(bounds: q[0]), Node(bounds: q[1]),
+        Node(bounds: q[2]), Node(bounds: q[3]),
+      ]
+
+      for (element, location) in elements {
+        let _ = children.indices.contains { children[$0].insert(element, at: location) }
+      }
+
+      self.storage = .children(children)
+    }
+
+    func elements(in rect: CGRect, accumulator: inout [Array&lt;Element&gt;.Index]) {
+      guard rect.intersects(bounds) else { return }
+
+      switch storage {
+      case .children(let children):
+        for i in children.indices {
+          children[i].elements(in: rect, accumulator: &amp;accumulator)
+        }
+      case .elements(let elements):
+        for (element, location) in elements where rect.contains(location) {
+          accumulator.append(element)
+        }
+      }
+    }
+  }
+
+  struct NodeSequence: Sequence {
+    struct Iterator: IteratorProtocol {
+      var nodes: [QuadTree.Node]
+
+      mutating func next() -&gt; QuadTree.Node? {
+        guard !nodes.isEmpty else { return nil }
+
+        let next = nodes.removeFirst()
+
+        if case let .children(children) = next.storage {
+          nodes.append(contentsOf: children.indices.map { children[$0] })
+        }
+
+        return next
+      }
+    }
+
+    var tree: QuadTree
+
+    func makeIterator() -&gt; Iterator {
+      Iterator(nodes: [tree.root])
+    }
+  }
+
+  var root: Node
+
+  var elements: [Element] = []
+
+  public var nodes: some Sequence&lt;Node&gt; {
+    NodeSequence(tree: self)
+  }
+
+  public init(bounds: CGRect) {
+    self.root = Node(bounds: bounds)
+  }
+
+  public init(contentsOf array: [Element]) {
+    self.elements = array
+
+    let x = array.map(\.location.x)
+    let y = array.map(\.location.y)
+
+    let minX = x.min() ?? 0
+    let minY = y.min() ?? 0
+    let maxX = x.max() ?? 0
+    let maxY = y.max() ?? 0
+
+    self.root = .init(bounds: CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY))
+
+    for (i, element) in zip(elements.indices, elements) {
+      root.insert(i, at: element.location)
+    }
+  }
+
+  public mutating func append(_ element: Element) {
+    elements.append(element)
+    root.insert(elements.endIndex - 1, at: element.location)
+  }
+
+  public func indices(in rect: CGRect) -&gt; [Index] {
+    var indices: [Index] = []
+    root.elements(in: rect, accumulator: &amp;indices)
+
+    return indices
+  }
+
+  public func elements(in rect: CGRect) -&gt; [Element] {
+    indices(in: rect).map { elements[$0] }
+  }
+}
+
+extension CGRect {
+  var quadrants: InlineArray&lt;4, CGRect&gt; {
+    let q = CGSize(width: width / 2, height: height / 2)
+
+    return [
+      CGRect(origin: origin, size: q),
+      CGRect(origin: origin.offset(x: q.width), size: q),
+      CGRect(origin: origin.offset(x: q.width, y: q.height), size: q),
+      CGRect(origin: origin.offset(y: q.height), size: q),
+    ]
+  }
+}
+
+extension CGPoint {
+  func offset(x: CGFloat = 0, y: CGFloat = 0) -&gt; CGPoint {
+    CGPoint(x: self.x + x, y: self.y + y)
+  }
+}
+
+extension CGPoint: QuadTreeElement {
+  public var location: CGPoint { self }
+}</code></pre></micro-lighter>
+  <p>
+    Thanks to <a href="https://mastodon.social/@joshpyles">Josh</a> and <a href="https://social.axiixc.com/@axiixc">James</a> for their feedback on this snippet. Thank you as always for being a Patron – it means a lot to me.
+  </p>
+  <p>
+    Robb
+  </p>
+  <p>
+    <button type="button" class="like" hidden>Like?</button>
+  </p>
+</section>
+</article>
+</main>
+<script>
+  (() => {
+    const button = document.querySelector("button.like");
+    const endpoint = "https://likes.robb.systems/robb.is/3lugoo4hk2222";
+    const key = "liked:/writing/orbit-animation/";
+
+    const setLiked = () => {
+      button.textContent = "Liked!";
+      button.disabled = true;
+    };
+
+    let liked = false;
+    try { liked = localStorage.getItem(key) === "true"; } catch {}
+
+    if (liked) {
+      setLiked();
+    } else {
+      let busy = false;
+
+      button.addEventListener("click", async () => {
+        if (busy) return;
+        busy = true;
+
+        try {
+          const response = await fetch(endpoint, { method: "POST", body: "❤️" });
+          if (!response.ok) throw new Error(response.statusText);
+
+          try { localStorage.setItem(key, "true"); } catch {}
+          setLiked();
+        } catch {
+          // Leave the link as "Like?" so it can be retried.
+        } finally {
+          busy = false;
+        }
+      });
+    }
+
+    button.hidden = false;
+  })();
+</script>
+</body>
+</html>
