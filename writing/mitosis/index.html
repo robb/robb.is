@@ -341,7 +341,7 @@ micro-lighter::part(line-numbers) {
     While this effect is frequently approximated with a combination of a blur and an <code>alphaThreshold</code> filter, I've found an approach like that very hard to tune to achieve the effect that I want or to make sure shapes don't grow beyond their initial bounds.
   </p>
   <p>
-    Instead, we rely on Signed Distance Fields (<a href="https://www.patreon.com/posts/91666663">again</a>). I've only used a single <code>Capsule</code> Shape here but you could pass an enum value per element to the Shader and select a different SDF.
+    Instead, we rely on Signed Distance Fields (<a href="/writing/shapestyles/">again</a>). I've only used a single <code>Capsule</code> Shape here but you could pass an enum value per element to the Shader and select a different SDF.
   </p>
   <p><code>Mitosis.swift</code></p>
   <micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import Charts

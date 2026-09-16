@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link rel="icon" href="/img/favicon.png" type="image/png">
+
+    <script type="module" src="/js/microlighter/micro-lighter-element.min.js"></script>
+
+    <title>SwiftUI Snippet: Custom ShapeStyles with Shaders – Robb Böhnke</title>
+    <meta content="Robb Böhnke" property="og:site_name">
+    <meta content="Building custom ShapeStyles in SwiftUI backed by Metal shaders and Signed Distance Fields, from a half-tone dot pattern to composable drawing primitives." name="description">
+    <meta content="article" property="og:type">
+    <meta content="SwiftUI Snippet: Custom ShapeStyles with Shaders" property="og:title">
+    <meta content="Building custom ShapeStyles in SwiftUI backed by Metal shaders and Signed Distance Fields, from a half-tone dot pattern to composable drawing primitives." property="og:description">
+    <meta content="https://robb.is/writing/shapestyles/" property="og:url">
+    <meta name="author" content="Robb Böhnke"/>
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@DLX">
+    <meta name="twitter:title" content="SwiftUI Snippet: Custom ShapeStyles with Shaders">
+    <meta name="twitter:description" content="Building custom ShapeStyles in SwiftUI backed by Metal shaders and Signed Distance Fields, from a half-tone dot pattern to composable drawing primitives.">
+    <meta property="article:published_time" content="2023-10-29">
+    <meta property="article:author" content="Robb Böhnke">
+
+    <link rel="canonical" href="https://robb.is/writing/shapestyles/"/>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "SwiftUI Snippet: Custom ShapeStyles with Shaders",
+      "description": "Building custom ShapeStyles in SwiftUI backed by Metal shaders and Signed Distance Fields, from a half-tone dot pattern to composable drawing primitives.",
+      "url": "https://robb.is/writing/shapestyles/",
+      "mainEntityOfPage": "https://robb.is/writing/shapestyles/",
+      "datePublished": "2023-10-29",
+      "author": {
+        "@type": "Person",
+        "name": "Robb Böhnke",
+        "url": "https://robb.is/"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Robb Böhnke",
+        "url": "https://robb.is/"
+      },
+      "keywords": ["SwiftUI", "Swift", "Metal", "Shaders", "ShapeStyle", "Signed Distance Fields"]
+    }
+    </script>
+  </head>
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --fontSize: 19px;
+  --secondaryFontSize: 16px;
+  --lineHeight: 26.5px;
+  --hairlineThickness: 1px;
+}
+
+@media screen and (min-resolution: 2x) {
+  :root {
+    --hairlineThickness: 0.5px;
+  }
+}
+
+:root {
+--backgroundColor: #232634;
+--secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
+
+--primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
+--secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
+--tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
+
+--accentColor: rgb(224, 44, 146);
+--selectionOpacity: 0.5;
+}
+
+::selection {
+  background-color: var(--accentColor);
+  background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
+}
+
+@media (prefers-contrast: more) {
+  :root {
+  --primaryText: #FFF;
+  --secondaryText: #CCC;
+  --tertiaryText: #AAA;
+
+  --hairlineThickness: 1px;
+
+  --selectionOpacity: 0.9;
+  }
+}
+
+html {
+  overflow-x: hidden !important;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: var(--fontSize);
+  line-height: var(--lineHeight);
+  color: var(--secondaryText);
+
+  accent-color: var(--accentColor);
+  background-color: var(--backgroundColor);
+
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+p {
+  text-wrap-style: pretty;
+  hyphens: auto;
+}
+
+code, pre, tt, kbd, samp {
+  font-family: ui-monospace, monospace;
+  font-size-adjust: 0.505;
+}
+
+em {
+  font: inherit;
+  font-style: oblique 5deg;
+}
+
+h1, h2, h3, h4 {
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-wrap: pretty;
+}
+
+h1, h2 {
+  color: var(--primaryText);
+}
+
+h1 {
+  font-size: calc(var(--fontSize) * 2);
+  line-height: calc(var(--lineHeight) * 2);
+  font-weight: 650;
+}
+
+h2 {
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    font-weight: 450;
+  }
+}
+
+article {
+  width: 56ch;
+  max-width: 100vw;
+
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--lineHeight));
+
+  header, footer, section {
+    display: contents;
+  }
+
+  header time {
+    color: var(--tertiaryText);
+  }
+
+  padding: calc(var(--lineHeight) * 1);
+  padding-bottom: calc(var(--lineHeight) * 3);
+
+  margin-block: calc(4 * var(--lineHeight));
+}
+
+a, footer summary {
+  color: var(--primaryText);
+  text-decoration: underline;
+  text-decoration-skip: objects;
+  text-decoration-skip-ink: objects;
+  text-decoration-thickness: var(--hairlineThickness);
+  text-underline-offset: 2px;
+  text-decoration-color: var(--accentColor);
+  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus {
+    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+    }
+  }
+}
+
+a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
+  color: var(--accentColor);
+}
+
+button.like {
+  font: inherit;
+  color: var(--primaryText);
+  background: none;
+  border: none;
+  padding: 0;
+
+  text-decoration: underline;
+  text-decoration-thickness: var(--hairlineThickness);
+  text-underline-offset: 2px;
+  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+
+  cursor: pointer;
+
+  &:focus, &:hover {
+    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+  }
+
+  &[disabled] {
+    color: var(--tertiaryText);
+    text-decoration: none;
+    cursor: default;
+  }
+}
+
+blockquote {
+  padding-inline-start: 1.4em;
+  border-inline-start: calc(var(--hairlineThickness) * 3) solid color-mix(in oklab, var(--primaryText), transparent 70%);
+
+  p {
+    font-family: ui-monospace, monospace;
+    font-size: calc(var(--fontSize) * 0.86);
+  }
+}
+
+micro-lighter {
+  margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
+}
+
+micro-lighter.wide {
+  align-self: center;
+  width: 88ch;
+  max-width: 90vw;
+  margin-block: calc(-0.25 * var(--lineHeight));
+  margin-inline: 0;
+}
+
+pre {
+  position: relative;
+  font-size: calc(var(--fontSize) * 0.86);
+  line-height: calc(var(--lineHeight) * 0.9);
+  background: #102738;
+  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+  border-radius: var(--lineHeight);
+
+  padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
+  overflow-x: scroll;
+  margin: 0;
+}
+
+micro-lighter::part(line-numbers) {
+  box-sizing: border-box;
+  background-color: color-mix(in oklch, #102738, white 10%);
+  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+  border-inline-end: none;
+  border-start-start-radius: var(--lineHeight);
+  border-end-start-radius: var(--lineHeight);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+
+  font-family: ui-monospace, monospace;
+  font-size: calc(var(--fontSize) * 0.68);
+  font-weight: 300;
+  color: color-mix(in oklch, #102738, white 50%);
+
+  user-select: none;
+  -webkit-user-select: none;
+
+  padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
+  padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));
+}
+
+::highlight(comment) {
+  color: #acb3cb;
+}
+
+::highlight(keyword),
+::highlight(storage) {
+  color: #ef89b2;
+  font-weight: 600;
+}
+
+::highlight(string) {
+  color: #f0937f;
+}
+
+::highlight(numeric),
+::highlight(boolean),
+::highlight(constant) {
+  color: #e1ab3a;
+}
+
+::highlight(function) {
+  color: #c85bdf;
+}
+
+::highlight(type),
+::highlight(support) {
+  color: #ce99f8;
+}
+
+::highlight(property) {
+  color: #52a4be;
+}
+  </style>
+</head>
+<body>
+<main>
+<article>
+<header>
+  <h1 id="custom-shapestyles-with-shaders">SwiftUI Snippet: Custom ShapeStyles with Shaders</h1>
+  <p>
+    <time datetime="2023-10-29">Sunday, October 29 2023</time>
+    – <a href="/" rel="author">Robb Böhnke</a>
+  </p>
+</header>
+<section>
+  <p>
+    Since <code>Shader</code> implements <code>Shape&shy;Style</code>, it can be used directly to fill or stroke a <code>Shape</code>.
+  </p>
+  <p>
+    In this Snippet, I've experimented with how simple drawing operations can be composed to form more complicated patterns. Often, it's enough to modulate a single parameter – like the radius in the <code>halfToneDots</code> pattern – to produce new and interesting results.
+  </p>
+  <p><code>Pattern.swift</code></p>
+  <micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import SwiftUI
+
+#Preview {
+  Grid {
+    GridRow {
+      Rectangle()
+        .fill(.halfToneDots(
+          foregroundColor: .blue,
+          backgroundColor: .orange,
+          radius: 5,
+          startPoint: .topLeading,
+          endPoint: .bottomTrailing
+        ))
+
+      Rectangle()
+        .fill(.polkaDots(
+          foregroundColor: .blue,
+          backgroundColor: .red,
+          angle: .degrees(-7),
+          patternSize: CGSize(width: 30, height: 50)
+        ))
+    }
+
+    Rectangle()
+      .fill(.fishScale(
+        foregroundColor: .white,
+        backgroundColor: .blue.opacity(0.3),
+        radius: 26,
+        thickness: 1.5,
+        angle: .degrees(12)
+      ))
+
+    GridRow {
+      Rectangle()
+        .fill(.waves(
+          colors: [.mint, .blue, .pink, .blue],
+          angle: .degrees(90)
+        ))
+
+      Rectangle()
+        .fill(.lines(
+          colors: [.red, .white, .yellow, .white],
+          width: 15,
+          angle: .degrees(45)
+        ))
+    }
+  }
+  .edgesIgnoringSafeArea(.all)
+}
+
+struct HalfToneDots: @preconcurrency ShapeStyle {
+  var foregroundColor: Color = .primary
+
+  var backgroundColor: Color = .accentColor
+
+  var radius: Double = 4
+
+  var patternSize: CGSize? = nil
+
+  var startPoint: UnitPoint = .leading
+
+  var endPoint: UnitPoint = .trailing
+
+  func resolve(in environment: EnvironmentValues) -&gt; some ShapeStyle {
+    let d = radius * 2
+    let size = patternSize ?? CGSize(width: d, height: d);
+
+    return ShaderLibrary.default.halfToneDots(
+      .boundingRect,
+      .float(radius),
+      .float2(startPoint.x, startPoint.y),
+      .float2(endPoint.x, endPoint.y),
+      .float2(size),
+      .color(foregroundColor),
+      .color(backgroundColor)
+    )
+  }
+}
+
+extension ShapeStyle where Self == HalfToneDots {
+  static func halfToneDots(foregroundColor: Color = .primary, backgroundColor: Color = .accentColor, radius: Double = 4, patternSize: CGSize? = nil, startPoint: UnitPoint = .leading, endPoint: UnitPoint = .trailing) -&gt; Self {
+    HalfToneDots(foregroundColor: foregroundColor, backgroundColor: backgroundColor, radius: radius, patternSize: patternSize, startPoint: startPoint, endPoint: endPoint)
+  }
+}
+
+struct PolkaDots: @preconcurrency ShapeStyle {
+  var foregroundColor: Color = .primary
+
+  var backgroundColor: Color = .accentColor
+
+  var radius: Double = 8
+
+  var angle: Angle = .zero
+
+  var offset: CGSize = .zero
+
+  var patternSize: CGSize? = nil
+
+  func resolve(in environment: EnvironmentValues) -&gt; some ShapeStyle {
+    let d = radius * 3 * sqrt(2)
+    let size = patternSize ?? CGSize(width: d, height: d)
+
+    return ShaderLibrary.default.polkaDots(
+      .boundingRect,
+      .float(radius),
+      .float(angle.radians),
+      .float2(offset),
+      .float2(size),
+      .color(foregroundColor),
+      .color(backgroundColor)
+    )
+  }
+}
+
+extension ShapeStyle where Self == PolkaDots {
+  static func polkaDots(foregroundColor: Color = .primary, backgroundColor: Color = .accentColor, radius: Double = 8, angle: Angle = .zero, offset: CGSize = .zero, patternSize: CGSize? = nil) -&gt; Self {
+    PolkaDots(foregroundColor: foregroundColor, backgroundColor: backgroundColor, radius: radius, angle: angle, offset: offset, patternSize: patternSize)
+  }
+}
+
+struct FishScale: @preconcurrency ShapeStyle {
+  var foregroundColor: Color = .primary
+
+  var backgroundColor: Color = .accentColor
+
+  var radius: Double = 20
+
+  var thickness: Double = 2
+
+  var angle: Angle = .zero
+
+  var offset: CGSize = .zero
+
+  func resolve(in environment: EnvironmentValues) -&gt; some ShapeStyle {
+    ShaderLibrary.default.fishScale(
+      .boundingRect,
+      .float(radius),
+      .float(thickness),
+      .float(angle.radians),
+      .float2(offset),
+      .color(foregroundColor),
+      .color(backgroundColor)
+    )
+  }
+}
+
+extension ShapeStyle where Self == FishScale {
+  static func fishScale(foregroundColor: Color = .primary, backgroundColor: Color = .accentColor, radius: Double = 20, thickness: Double = 2, angle: Angle = .zero, offset: CGSize = .zero) -&gt; Self {
+    FishScale(foregroundColor: foregroundColor, backgroundColor: backgroundColor, radius: radius, thickness: thickness, angle: angle, offset: offset)
+  }
+}
+
+struct Lines: @preconcurrency ShapeStyle {
+  var colors: [Color]
+
+  var width: CGFloat = 10
+
+  var angle: Angle = .zero
+
+  var offset: CGSize = .zero
+
+  func resolve(in environment: EnvironmentValues) -&gt; some ShapeStyle {
+    ShaderLibrary.default.lines(
+      .boundingRect,
+      .float(width),
+      .float(angle.radians),
+      .float2(offset),
+      .colorArray(colors)
+    )
+  }
+}
+
+extension ShapeStyle where Self == Lines {
+  static func lines(colors: [Color], width: CGFloat = 10, angle: Angle = .zero, offset: CGSize = .zero) -&gt; Self {
+    Lines(colors: colors, width: width, angle: angle, offset: offset)
+  }
+}
+
+struct Waves: @preconcurrency ShapeStyle {
+  var colors: [Color]
+
+  var width: CGFloat = 10
+
+  var angle: Angle = .zero
+
+  var offset: CGSize = .zero
+
+  var patternSize: CGSize? = nil
+
+  func resolve(in environment: EnvironmentValues) -&gt; some ShapeStyle {
+    ShaderLibrary.default.waves(
+      .boundingRect,
+      .float(width),
+      .float(angle.radians),
+      .float2(offset),
+      .float2(patternSize ?? CGSize(width: width * 10, height: 4 * width)),
+      .colorArray(colors)
+    )
+  }
+}
+
+extension ShapeStyle where Self == Waves {
+  static func waves(colors: [Color], width: CGFloat = 10, angle: Angle = .zero, offset: CGSize = .zero, patternSize: CGSize? = nil) -&gt; Self {
+    Waves(colors: colors, width: width, angle: angle, offset: offset, patternSize: patternSize)
+  }
+}</code></pre></micro-lighter>
+  <p><code>Pattern.metal</code></p>
+  <micro-lighter class="wide" language="cpp" line-numbers><pre aria-label="Metal shader code"><code>#include &lt;metal_stdlib&gt;
+
+using namespace metal;
+
+/// Calculates the Signed Distance Field of a circle.
+///
+/// Effectively, how far is the `position` from the perimeter of a circle at
+/// `center` with a radius of `r`.
+///
+/// If the result is positive, `position` lies outside the circle.
+/// If the result is zero, `position` lies on the permeter of the circle.
+/// If the result is negative, `position` lies inside the circle.
+///
+/// SDFs are a powerful tool when drawing with shaders.
+///
+/// Inigo Quilez has written extensively on the topic, check out
+/// https://iquilezles.org/articles/distfunctions2d/ for more formulas for 2D
+/// shapes you can explore.
+static float sdfCircle(float2 position, float2 center, float r) {
+  return length(position - center) - r;
+}
+
+/// Wraps `position` within a box of `size`.
+static float2 wrap(float2 position, float2 size) {
+  return fmod(fmod(position, size) + size, size);
+}
+
+/// Rotates `position` around `(0, 0)` by angle (in radians).
+static float2 rotate(float2 position, float angle) {
+  float s = sin(angle);
+  float c = cos(angle);
+
+  return float2(c * position.x - s * position.y, s * position.x + c * position.y);
+}
+
+/// Returns a fill color based on the distance of an SDF.
+static half4 fill(half4 c1, half4 c2, float distance) {
+  if (distance &lt;= 0) {
+    return c1;
+  } else if (distance &lt;= 0.5) {
+    // If we're within 0.5 px outside the SDF, quickly blend between `c1`
+    // and `c2`
+    return mix(c1, c2, 2 * fract(distance));
+  } else {
+    return c2;
+  }
+}
+
+/// Calculates a repeating pattern of dots of two colors.
+///
+/// The pattern consists of five dots, on at each corner of a box of `size` with
+/// one additional dot in the center.
+static half4 dotPattern(float2 position, float radius, float2 size, half4 c1, half4 c2) {
+  // Wrap position within `size.
+  position = wrap(position, size);
+
+  // Place a dot at every corner, then calcate the SDF.
+  float d1 = sdfCircle(position, size * float2(0.0, 0.0), radius);
+  float d2 = sdfCircle(position, size * float2(1.0, 0.0), radius);
+  float d3 = sdfCircle(position, size * float2(0.0, 1.0), radius);
+  float d4 = sdfCircle(position, size * float2(1.0, 1.0), radius);
+  float d5 = sdfCircle(position, size * float2(0.5, 0.5), radius);
+
+  // The minimum of all five distances is the distance to the closes point.
+  //
+  // You can think of this as forming a union of the five circles.
+  float d = min(d1, min(d2, min(d3, min(d4, d5))));
+
+  return fill(c1, c2, d);
+}
+
+/// A simple polka dot pattern.
+[[ stitchable ]] half4 polkaDots(float2 position, float4 bounds, float radius, float angle, float2 offset, float2 size, half4 c1, half4 c2) {
+  // Center the pattern around the center of `bounds`.
+  // This makes resizing a shape filled with this pattern less busy.
+  position -= bounds.zw / 2;
+
+  // Offset the pattern and rotate it if necessary.
+  position += offset;
+  position = rotate(position, angle);
+
+  return dotPattern(position, radius, size, c1, c2);
+}
+
+/// A half-tone dot pattern.
+[[ stitchable ]] half4 halfToneDots(float2 position, float4 bounds, float radius, float2 start, float2 end, float2 size, half4 c1, half4 c2) {
+  // Convert `position` to unit coordinates.
+  float2 uv = position / bounds.zw;
+
+  // Calculate how far `uv` is along the linear gradient from `start` to
+  // `end`.
+  float2 a = uv - end;
+  float2 b = start - end;
+
+  float fraction = dot(a, b) / dot(b, b);
+
+  // Modulate the radius by the progress of the gradient, resulting in the
+  // half-tone pattern.
+  return dotPattern(position, radius * fraction, size, c1, c2);
+}
+
+/// A pattern of alternating stripes.
+[[ stitchable ]] half4 lines(float2 position, float4 bounds, float thickness, float angle, float2 offset, device const half4 *ptr, int count) {
+  // Calculate the total width of the pattern.
+  float totalWidth = float(count) * thickness;
+
+  // Center &amp; rotate. Compensate for `totalWidth`.
+  position -= bounds.zw / 2;
+  position += offset;
+  position += totalWidth / 2;
+  position = rotate(position, angle);
+
+  position = wrap(position, float2(totalWidth));
+
+  int i = int(floor(position.y / thickness));
+
+  return ptr[i % count];
+}
+
+/// A pattern of alternating waves.
+///
+/// You could also express `lines` through `waves` with an amplitude of 0.
+[[ stitchable ]] half4 waves(float2 position, float4 bounds, float thickness, float angle, float2 offset, float2 size, device const half4 *ptr, int count) {
+  float totalWidth = float(count) * thickness;
+
+  // Center &amp; rotate. Compensate for `totalWidth`.
+  position -= bounds.zw / 2;
+  position += offset;
+  position += totalWidth / 2;
+  position = rotate(position, angle);
+
+  // Apply a cosine function scaled to fit within `size`.
+  position.y += (size.y / 2 - thickness) * cos((position.x / size.x) * 2 * M_PI_F);
+
+  position = wrap(position, float2(totalWidth));
+
+  int i = int(floor(position.y / thickness));
+
+  return ptr[i % count];
+}
+
+/// A fish-scale pattern.
+[[ stitchable ]] half4 fishScale(float2 position, float4 bounds, float r, float thickness, float angle, float2 offset, half4 c1, half4 c2) {
+  // Center &amp; rotate.
+  position -= bounds.zw / 2;
+  position += offset;
+  position = rotate(position, angle);
+
+  // Split the image in rows of height `radius`. Every row is shifted by one
+  // radius to the right based on its distance to the center.
+  position.x += 1 * r * floor(position.y / r);
+
+  // Wrap position with (2 * r, r).
+  position = wrap(position, float2(2 * r, r));
+
+  float d = sdfCircle(position, float2(1 * r,  r), r - thickness / 2);
+
+  // To form a ring, we need to form the absolute of distance, then subtract
+  // the thickness.
+  d  = abs(d);
+  d -= thickness / 2;
+
+  return fill(c1, c2, d);
+}</code></pre></micro-lighter>
+  <p>
+    I've only used a single circular Signed Distance Field here to keep things simple but I'd definitely encourage to try plugging in your own. <a href="https://iquilezles.org/">Inigo Quilzes</a> has written about SDFs <a href="https://iquilezles.org/articles/">at length</a> and they've been an incredibly versatile tool for me. You may also enjoy <a href="https://www.mayerowitz.io/blog/a-journey-into-shaders">this recent article by Antoine Mayerowitz</a>.
+  </p>
+  <p>
+    Another observation here is that since <code>Shape&shy;Style</code> does not vend any API that would allow us to rotate or offset a pattern, we end up duplicating a lot of that functionality across the different shader functions. Here's hoping we might see something like
+  </p>
+  <blockquote>
+    <p>
+      Rectangle()
+      <br>
+      &nbsp;.fill(someShapeStyle.rotate(.degrees(20)))
+    </p>
+  </blockquote>
+  <p>
+    Thank you for your continuing support everyone!
+  </p>
+  <p>
+    Robb
+  </p>
+  <p>
+    <button type="button" class="like" hidden>Like?</button>
+  </p>
+</section>
+</article>
+</main>
+<script>
+  (() => {
+    const button = document.querySelector("button.like");
+    const endpoint = "https://likes.robb.systems/robb.is/3kctyh6mc2222";
+    const key = "liked:/writing/shapestyles/";
+
+    const setLiked = () => {
+      button.textContent = "Liked!";
+      button.disabled = true;
+    };
+
+    let liked = false;
+    try { liked = localStorage.getItem(key) === "true"; } catch {}
+
+    if (liked) {
+      setLiked();
+    } else {
+      let busy = false;
+
+      button.addEventListener("click", async () => {
+        if (busy) return;
+        busy = true;
+
+        try {
+          const response = await fetch(endpoint, { method: "POST", body: "❤️" });
+          if (!response.ok) throw new Error(response.statusText);
+
+          try { localStorage.setItem(key, "true"); } catch {}
+          setLiked();
+        } catch {
+          // Leave the link as "Like?" so it can be retried.
+        } finally {
+          busy = false;
+        }
+      });
+    }
+
+    button.hidden = false;
+  })();
+</script>
+</body>
+</html>
