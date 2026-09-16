@@ -242,6 +242,15 @@ button.like {
   }
 }
 
+img {
+  display: block;
+  align-self: center;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 600px;
+}
+
 blockquote {
   padding-inline-start: 1.4em;
   border-inline-start: calc(var(--hairlineThickness) * 3) solid color-mix(in oklab, var(--primaryText), transparent 70%);
@@ -250,6 +259,12 @@ blockquote {
     font-family: ui-monospace, monospace;
     font-size: calc(var(--fontSize) * 0.86);
   }
+}
+
+.patreon-note {
+  padding-inline-start: 0.7em;
+  border-inline-start: var(--hairlineThickness) solid color-mix(in oklab, var(--primaryText), transparent 70%);
+  color: var(--tertiaryText);
 }
 
 micro-lighter {
@@ -344,9 +359,13 @@ micro-lighter::part(line-numbers) {
   </p>
 </header>
 <section>
+  <aside class="patreon-note">
+    <p>This post was originally written for my SwiftUI Snippets Patreon with that audience in mind. It's hosted here for archival purposes.</p>
+  </aside>
   <p>
     Since <code>Shader</code> implements <code>Shape&shy;Style</code>, it can be used directly to fill or stroke a <code>Shape</code>.
   </p>
+  <img src="/img/patterns.png" alt="An iPhone mockup showing five ShapeStyle patterns: half-tone dots, polka dots, fish scales, wavy lines, and diagonal stripes." width="1350" height="2760">
   <p>
     In this Snippet, I've experimented with how simple drawing operations can be composed to form more complicated patterns. Often, it's enough to modulate a single parameter – like the radius in the <code>halfToneDots</code> pattern – to produce new and interesting results.
   </p>

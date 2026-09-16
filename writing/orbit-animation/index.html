@@ -273,6 +273,12 @@ video {
   aspect-ratio: 1206 / 1216;
 }
 
+.patreon-note {
+  padding-inline-start: 0.7em;
+  border-inline-start: var(--hairlineThickness) solid color-mix(in oklab, var(--primaryText), transparent 70%);
+  color: var(--tertiaryText);
+}
+
 micro-lighter {
   margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
 }
@@ -365,6 +371,9 @@ micro-lighter::part(line-numbers) {
   </p>
 </header>
 <section>
+  <aside class="patreon-note">
+    <p>This post was originally written for my SwiftUI Snippets Patreon with that audience in mind. It's hosted here for archival purposes.</p>
+  </aside>
   <video autoplay muted loop playsinline poster="/video/orbit.jpg">
     <source src="/video/orbit.mp4" type="video/mp4">
   </video>
