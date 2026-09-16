@@ -1,371 +1,370 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta content="text/html; charset=utf-8" http-equiv="content-type">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <link rel="icon" href="/img/favicon.png" type="image/png">
+		<link rel="icon" href="/img/favicon.png" type="image/png">
 
-    <script type="module" src="/js/microlighter/micro-lighter-element.min.js"></script>
+		<script type="module" src="/js/microlighter/micro-lighter-element.min.js"></script>
 
-    <title>SwiftUI Snippet: Curtain Effect – Robb Böhnke</title>
-    <meta content="Robb Böhnke" property="og:site_name">
-    <meta content="An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting." name="description">
-    <meta content="article" property="og:type">
-    <meta content="SwiftUI Snippet: Curtain Effect" property="og:title">
-    <meta content="An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting." property="og:description">
-    <meta content="https://robb.is/writing/curtain-effect/" property="og:url">
-    <meta name="author" content="Robb Böhnke"/>
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@DLX">
-    <meta name="twitter:title" content="SwiftUI Snippet: Curtain Effect">
-    <meta name="twitter:description" content="An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting.">
-    <meta property="article:published_time" content="2023-10-22">
-    <meta property="article:author" content="Robb Böhnke">
+		<title>SwiftUI Snippet: Curtain Effect – Robb Böhnke</title>
+		<meta content="Robb Böhnke" property="og:site_name">
+		<meta content="An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting." name="description">
+		<meta content="article" property="og:type">
+		<meta content="SwiftUI Snippet: Curtain Effect" property="og:title">
+		<meta content="An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting." property="og:description">
+		<meta content="https://robb.is/writing/curtain-effect/" property="og:url">
+		<meta name="author" content="Robb Böhnke">
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:site" content="@DLX">
+		<meta name="twitter:title" content="SwiftUI Snippet: Curtain Effect">
+		<meta name="twitter:description" content="An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting.">
+		<meta property="article:published_time" content="2023-10-22">
+		<meta property="article:author" content="Robb Böhnke">
 
-    <link rel="canonical" href="https://robb.is/writing/curtain-effect/"/>
+		<link rel="canonical" href="https://robb.is/writing/curtain-effect/">
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "headline": "SwiftUI Snippet: Curtain Effect",
-      "description": "An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting.",
-      "url": "https://robb.is/writing/curtain-effect/",
-      "mainEntityOfPage": "https://robb.is/writing/curtain-effect/",
-      "datePublished": "2023-10-22",
-      "author": {
-        "@type": "Person",
-        "name": "Robb Böhnke",
-        "url": "https://robb.is/"
-      },
-      "publisher": {
-        "@type": "Person",
-        "name": "Robb Böhnke",
-        "url": "https://robb.is/"
-      },
-      "keywords": ["SwiftUI", "Swift", "Metal", "Shaders", "Gestures"]
-    }
-    </script>
-  </head>
-  <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "BlogPosting",
+				"headline": "SwiftUI Snippet: Curtain Effect",
+				"description": "An interactive Curtain Effect built with SwiftUI Shaders, using a drag gesture to deform the view without relying on snapshotting.",
+				"url": "https://robb.is/writing/curtain-effect/",
+				"mainEntityOfPage": "https://robb.is/writing/curtain-effect/",
+				"datePublished": "2023-10-22",
+				"author": {
+					"@type": "Person",
+					"name": "Robb Böhnke",
+					"url": "https://robb.is/"
+					},
+					"publisher": {
+						"@type": "Person",
+						"name": "Robb Böhnke",
+						"url": "https://robb.is/"
+						},
+						"keywords": ["SwiftUI", "Swift", "Metal", "Shaders", "Gestures"]
+					}
+		</script>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
 
-:root {
-  --fontSize: 19px;
-  --secondaryFontSize: 16px;
-  --lineHeight: 26.5px;
-  --hairlineThickness: 1px;
-}
+			:root {
+				--fontSize: 19px;
+				--secondaryFontSize: 16px;
+				--lineHeight: 26.5px;
+				--hairlineThickness: 1px;
+			}
 
-@media screen and (min-resolution: 2x) {
-  :root {
-    --hairlineThickness: 0.5px;
-  }
-}
+			@media screen and (min-resolution: 2x) {
+				:root {
+					--hairlineThickness: 0.5px;
+				}
+			}
 
-:root {
---backgroundColor: #232634;
---secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
+			:root {
+				--backgroundColor: #232634;
+				--secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
 
---primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
---secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
---tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
+				--primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
+				--secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
+				--tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
 
---accentColor: rgb(224, 44, 146);
---selectionOpacity: 0.5;
-}
+				--accentColor: rgb(224, 44, 146);
+				--selectionOpacity: 0.5;
+			}
 
-::selection {
-  background-color: var(--accentColor);
-  background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
-}
+			::selection {
+				background-color: var(--accentColor);
+				background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
+			}
 
-@media (prefers-contrast: more) {
-  :root {
-  --primaryText: #FFF;
-  --secondaryText: #CCC;
-  --tertiaryText: #AAA;
+			@media (prefers-contrast: more) {
+				:root {
+					--primaryText: #FFF;
+					--secondaryText: #CCC;
+					--tertiaryText: #AAA;
 
-  --hairlineThickness: 1px;
+					--hairlineThickness: 1px;
 
-  --selectionOpacity: 0.9;
-  }
-}
+					--selectionOpacity: 0.9;
+				}
+			}
 
-html {
-  overflow-x: hidden !important;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
-}
+			html {
+				overflow-x: hidden !important;
+				overflow-y: scroll;
+				scroll-behavior: smooth;
+			}
 
-body {
-  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: var(--fontSize);
-  line-height: var(--lineHeight);
-  color: var(--secondaryText);
+			body {
+				font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+				font-size: var(--fontSize);
+				line-height: var(--lineHeight);
+				color: var(--secondaryText);
 
-  accent-color: var(--accentColor);
-  background-color: var(--backgroundColor);
+				accent-color: var(--accentColor);
+				background-color: var(--backgroundColor);
 
-  -webkit-text-size-adjust: none;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
+				-webkit-text-size-adjust: none;
+				-webkit-tap-highlight-color: rgba(0,0,0,0);
+				-webkit-font-smoothing: antialiased;
+				text-rendering: optimizeLegibility;
+				-moz-osx-font-smoothing: grayscale;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
 
-}
+			}
 
-p {
-  text-wrap-style: pretty;
-  hyphens: auto;
-}
+			p {
+				text-wrap-style: pretty;
+				hyphens: auto;
+			}
 
-code, pre, tt, kbd, samp {
-  font-family: ui-monospace, monospace;
-  font-size-adjust: 0.505;
-}
+			code, pre, tt, kbd, samp {
+				font-family: ui-monospace, monospace;
+				font-size-adjust: 0.505;
+			}
 
-em {
-  font: inherit;
-  font-style: oblique 5deg;
-}
+			em {
+				font: inherit;
+				font-style: oblique 5deg;
+			}
 
-h1, h2, h3, h4 {
-  line-height: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  text-wrap: pretty;
-}
+			h1, h2, h3, h4 {
+				line-height: inherit;
+				font-size: inherit;
+				font-weight: inherit;
+				text-wrap: pretty;
+			}
 
-h1, h2 {
-  color: var(--primaryText);
-}
+			h1, h2 {
+				color: var(--primaryText);
+			}
 
-h1 {
-  font-size: calc(var(--fontSize) * 2);
-  line-height: calc(var(--lineHeight) * 2);
-  font-weight: 650;
-}
+			h1 {
+				font-size: calc(var(--fontSize) * 2);
+				line-height: calc(var(--lineHeight) * 2);
+				font-weight: 650;
+			}
 
-h2 {
-  font-weight: 600;
-}
+			h2 {
+				font-weight: 600;
+			}
 
-@media (prefers-color-scheme: light) {
-  body {
-    font-weight: 450;
-  }
-}
+			@media (prefers-color-scheme: light) {
+				body {
+					font-weight: 450;
+				}
+			}
 
-article {
-  width: 56ch;
-  max-width: 100vw;
+			article {
+				width: 56ch;
+				max-width: 100vw;
 
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--lineHeight));
+				display: flex;
+				flex-direction: column;
+				gap: calc(var(--lineHeight));
 
-  header, footer, section {
-    display: contents;
-  }
+				header, footer, section {
+					display: contents;
+				}
 
-  header time {
-    color: var(--tertiaryText);
-  }
+				header time {
+					color: var(--tertiaryText);
+				}
 
-  padding: calc(var(--lineHeight) * 1);
-  padding-bottom: calc(var(--lineHeight) * 3);
+				padding: calc(var(--lineHeight) * 1);
+				padding-bottom: calc(var(--lineHeight) * 3);
 
-  margin-block: calc(4 * var(--lineHeight));
-}
+				margin-block: calc(4 * var(--lineHeight));
+			}
 
-a, footer summary {
-  color: var(--primaryText);
-  text-decoration: underline;
-  text-decoration-skip: objects;
-  text-decoration-skip-ink: objects;
-  text-decoration-thickness: var(--hairlineThickness);
-  text-underline-offset: 2px;
-  text-decoration-color: var(--accentColor);
-  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+			a, footer summary {
+				color: var(--primaryText);
+				text-decoration: underline;
+				text-decoration-skip: objects;
+				text-decoration-skip-ink: objects;
+				text-decoration-thickness: var(--hairlineThickness);
+				text-underline-offset: 2px;
+				text-decoration-color: var(--accentColor);
+				text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
 
-  white-space: nowrap;
-  cursor: pointer;
+				white-space: nowrap;
+				cursor: pointer;
 
-  &:focus {
-    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
-  }
+				&:focus {
+					text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+				}
 
-  @media (hover: hover) {
-    &:hover {
-      text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
-    }
-  }
-}
+				@media (hover: hover) {
+					&:hover {
+						text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+					}
+				}
+			}
 
-a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
-  color: var(--accentColor);
-}
+			a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
+				color: var(--accentColor);
+			}
 
-button.like {
-  font: inherit;
-  color: var(--primaryText);
-  background: none;
-  border: none;
-  padding: 0;
+			button.like {
+				font: inherit;
+				color: var(--primaryText);
+				background: none;
+				border: none;
+				padding: 0;
 
-  text-decoration: underline;
-  text-decoration-thickness: var(--hairlineThickness);
-  text-underline-offset: 2px;
-  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+				text-decoration: underline;
+				text-decoration-thickness: var(--hairlineThickness);
+				text-underline-offset: 2px;
+				text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
 
-  cursor: pointer;
+				cursor: pointer;
 
-  &:focus, &:hover {
-    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
-  }
+				&:focus, &:hover {
+					text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+				}
 
-  &[disabled] {
-    color: var(--tertiaryText);
-    text-decoration: none;
-    cursor: default;
-  }
-}
+				&[disabled] {
+					color: var(--tertiaryText);
+					text-decoration: none;
+					cursor: default;
+				}
+			}
 
-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: var(--lineHeight);
-  aspect-ratio: 820 / 613;
-}
+			img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border-radius: var(--lineHeight);
+				aspect-ratio: 820 / 613;
+			}
 
-.patreon-note {
-  padding-inline-start: 0.7em;
-  border-inline-start: var(--hairlineThickness) solid color-mix(in oklab, var(--primaryText), transparent 70%);
-  color: var(--tertiaryText);
-}
+			.patreon-note {
+				padding-inline-start: 0.7em;
+				border-inline-start: var(--hairlineThickness) solid color-mix(in oklab, var(--primaryText), transparent 70%);
+				color: var(--tertiaryText);
+			}
 
-micro-lighter {
-  margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
-}
+			micro-lighter {
+				margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
+			}
 
-micro-lighter.wide {
-  align-self: center;
-  width: 88ch;
-  max-width: 90vw;
-  margin-block: calc(-0.25 * var(--lineHeight));
-  margin-inline: 0;
-}
+			micro-lighter.wide {
+				align-self: center;
+				width: 88ch;
+				max-width: 90vw;
+				margin-block: calc(-0.25 * var(--lineHeight));
+				margin-inline: 0;
+			}
 
-pre {
-  position: relative;
-  font-size: calc(var(--fontSize) * 0.86);
-  line-height: calc(var(--lineHeight) * 0.9);
-  background: #102738;
-  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
-  border-radius: var(--lineHeight);
+			pre {
+				position: relative;
+				font-size: calc(var(--fontSize) * 0.86);
+				line-height: calc(var(--lineHeight) * 0.9);
+				background: #102738;
+				border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+				border-radius: var(--lineHeight);
 
-  padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
-  overflow-x: scroll;
-  margin: 0;
-}
+				padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
+				overflow-x: scroll;
+				margin: 0;
+			}
 
-micro-lighter::part(line-numbers) {
-  box-sizing: border-box;
-  background-color: color-mix(in oklch, #102738, white 10%);
-  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
-  border-inline-end: none;
-  border-start-start-radius: var(--lineHeight);
-  border-end-start-radius: var(--lineHeight);
-  border-start-end-radius: 0;
-  border-end-end-radius: 0;
+			micro-lighter::part(line-numbers) {
+				box-sizing: border-box;
+				background-color: color-mix(in oklch, #102738, white 10%);
+				border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+				border-inline-end: none;
+				border-start-start-radius: var(--lineHeight);
+				border-end-start-radius: var(--lineHeight);
+				border-start-end-radius: 0;
+				border-end-end-radius: 0;
 
-  font-family: ui-monospace, monospace;
-  font-size: calc(var(--fontSize) * 0.68);
-  font-weight: 300;
-  color: color-mix(in oklch, #102738, white 50%);
+				font-family: ui-monospace, monospace;
+				font-size: calc(var(--fontSize) * 0.68);
+				font-weight: 300;
+				color: color-mix(in oklch, #102738, white 50%);
 
-  user-select: none;
-  -webkit-user-select: none;
+				user-select: none;
+				-webkit-user-select: none;
 
-  padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
-  padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));
-}
+				padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
+				padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));
+			}
 
-::highlight(comment) {
-  color: #acb3cb;
-}
+			::highlight(comment) {
+				color: #acb3cb;
+			}
 
-::highlight(keyword),
-::highlight(storage) {
-  color: #ef89b2;
-  font-weight: 600;
-}
+			::highlight(keyword),
+			::highlight(storage) {
+				color: #ef89b2;
+				font-weight: 600;
+			}
 
-::highlight(string) {
-  color: #f0937f;
-}
+			::highlight(string) {
+				color: #f0937f;
+			}
 
-::highlight(numeric),
-::highlight(boolean),
-::highlight(constant) {
-  color: #e1ab3a;
-}
+			::highlight(numeric),
+			::highlight(boolean),
+			::highlight(constant) {
+				color: #e1ab3a;
+			}
 
-::highlight(function) {
-  color: #c85bdf;
-}
+			::highlight(function) {
+				color: #c85bdf;
+			}
 
-::highlight(type),
-::highlight(support) {
-  color: #ce99f8;
-}
+			::highlight(type),
+			::highlight(support) {
+				color: #ce99f8;
+			}
 
-::highlight(property) {
-  color: #52a4be;
-}
+			::highlight(property) {
+				color: #52a4be;
+			}
 
-::highlight(variable) {
-  color: var(--secondaryText);
-}
-  </style>
-</head>
-<body>
-<main>
-<article>
-<header>
-  <h1 id="curtain-effect">SwiftUI Snippet: Curtain Effect</h1>
-  <p>
-    <time datetime="2023-10-22">Sunday, October 22 2023</time>
-    – <a href="/" rel="author">Robb Böhnke</a>
-  </p>
-</header>
-<section>
-  <aside class="patreon-note">
-    <p>This post was originally written for my SwiftUI Snippets Patreon with that audience in mind. It's hosted here for archival purposes.</p>
-  </aside>
-  <img src="/img/curtain-effect.png" alt="A screenshot of the Curtain Effect demo, showing a curtain of folded content being dragged aside to reveal what's underneath." width="820" height="613">
-  <p>An interactive Curtain Effect built with SwiftUI Shaders</p>
-  <p>
-    I think this effect highlights the opportunities SwiftUI Shaders offer as well as the limitations we still have to deal with when using them.
-  </p>
-  <p>
-    Most importantly, the way they interact with UIKit-backed Views prevents Lists or ScrollViews from appearing on the top layer, but I think you could still use this effect for individual swipe actions or an onboarding flow.
-  </p>
-  
-  <p><code>Curtain.swift</code></p>
-  <micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import SwiftUI
+			::highlight(variable) {
+				color: var(--secondaryText);
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<article>
+				<header>
+					<h1 id="curtain-effect">SwiftUI Snippet: Curtain Effect</h1>
+					<p>
+						<time datetime="2023-10-22">Sunday, October 22 2023</time>
+						– <a href="/" rel="author">Robb Böhnke</a>
+					</p>
+				</header>
+				<section>
+					<aside class="patreon-note">
+						<p>This post was originally written for my SwiftUI Snippets Patreon with that audience in mind. It's hosted here for archival purposes.</p>
+					</aside>
+					<img src="/img/curtain-effect.png" alt="A screenshot of the Curtain Effect demo, showing a curtain of folded content being dragged aside to reveal what's underneath." width="820" height="613">
+					<p>An interactive Curtain Effect built with SwiftUI Shaders</p>
+					<p>
+						I think this effect highlights the opportunities SwiftUI Shaders offer as well as the limitations we still have to deal with when using them.
+					</p>
+					<p>
+						Most importantly, the way they interact with UIKit-backed Views prevents Lists or ScrollViews from appearing on the top layer, but I think you could still use this effect for individual swipe actions or an onboarding flow.
+					</p>
+
+					<p><code>Curtain.swift</code></p>
+					<micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import SwiftUI
 
 struct CurtainStack&lt;Foreground: View, Background: View&gt;: View, Animatable {
   /// The position of the current drag operation, or `nil`.
@@ -408,7 +407,7 @@ struct CurtainStack&lt;Foreground: View, Background: View&gt;: View, Animatable 
         .onEnded { v in
           if v.predictedEndLocation.x &lt; 100 {
             isRevealed = true
-            
+
             withAnimation {
               dragPosition?.x = 44
             }
@@ -535,7 +534,7 @@ struct CurtainExample: View {
 
         HStack(alignment: .firstTextBaseline) {
           Image(systemName: "hand.point.up.left").imageScale(.large)
-          
+
           Text("Try swiping from the right!")
             .fontWeight(.semibold)
         }
@@ -599,8 +598,8 @@ extension Shader.Argument {
     self.float2(unitPoint.x, unitPoint.y)
   }
 }</code></pre></micro-lighter>
-  <p><code>Curtain.metal</code></p>
-  <micro-lighter class="wide" language="cpp" line-numbers><pre aria-label="Metal shader code"><code>#include &lt;metal_stdlib&gt;
+					<p><code>Curtain.metal</code></p>
+					<micro-lighter class="wide" language="cpp" line-numbers><pre aria-label="Metal shader code"><code>#include &lt;metal_stdlib&gt;
 #include &lt;SwiftUI/SwiftUI.h&gt;
 
 using namespace metal;
@@ -668,7 +667,7 @@ using namespace metal;
   //
   // To do this, we model the surface of the scaled material using a wave-like
   // function and calculate its derivative.
-  
+
   // The period of the waves, `1 / p` is the number of folds we'll see.
   float p = 1.0 / foldCount;
 
@@ -726,51 +725,51 @@ using namespace metal;
   // Mix, then add highlight.
   return mix(color, blurred, 1.1 * pow(compression, 1.4)) + highlight;
 }</code></pre></micro-lighter>
-  <p>
-    <button type="button" class="like" hidden>Like?</button>
-  </p>
-</section>
-</article>
-</main>
-<script>
-  (() => {
-    const button = document.querySelector("button.like");
-    const endpoint = "https://likes.robb.systems/robb.is/3kccf6qf22222";
-    const key = "liked:/writing/curtain-effect/";
+					<p>
+						<button type="button" class="like" hidden>Like?</button>
+					</p>
+				</section>
+			</article>
+		</main>
+		<script>
+			(() => {
+				const button = document.querySelector("button.like");
+				const endpoint = "https://likes.robb.systems/robb.is/3kccf6qf22222";
+				const key = "liked:/writing/curtain-effect/";
 
-    const setLiked = () => {
-      button.textContent = "Liked!";
-      button.disabled = true;
-    };
+				const setLiked = () => {
+					button.textContent = "Liked!";
+					button.disabled = true;
+					};
 
-    let liked = false;
-    try { liked = localStorage.getItem(key) === "true"; } catch {}
+					let liked = false;
+					try { liked = localStorage.getItem(key) === "true"; } catch {}
 
-    if (liked) {
-      setLiked();
-    } else {
-      let busy = false;
+					if (liked) {
+						setLiked();
+						} else {
+							let busy = false;
 
-      button.addEventListener("click", async () => {
-        if (busy) return;
-        busy = true;
+							button.addEventListener("click", async () => {
+								if (busy) return;
+								busy = true;
 
-        try {
-          const response = await fetch(endpoint, { method: "POST", body: "❤️" });
-          if (!response.ok) throw new Error(response.statusText);
+								try {
+									const response = await fetch(endpoint, { method: "POST", body: "❤️" });
+									if (!response.ok) throw new Error(response.statusText);
 
-          try { localStorage.setItem(key, "true"); } catch {}
-          setLiked();
-        } catch {
-          // Leave the link as "Like?" so it can be retried.
-        } finally {
-          busy = false;
-        }
-      });
-    }
+									try { localStorage.setItem(key, "true"); } catch {}
+									setLiked();
+									} catch {
+										// Leave the link as "Like?" so it can be retried.
+										} finally {
+											busy = false;
+										}
+										});
+									}
 
-    button.hidden = false;
-  })();
-</script>
-</body>
+									button.hidden = false;
+									})();
+		</script>
+	</body>
 </html>

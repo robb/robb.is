@@ -1,363 +1,364 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta content="text/html; charset=utf-8" http-equiv="content-type">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="content-type">
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <link rel="icon" href="/img/favicon.png" type="image/png">
+		<link rel="icon" href="/img/favicon.png" type="image/png">
 
-    <script type="module" src="/js/microlighter/micro-lighter-element.min.js"></script>
+		<script type="module" src="/js/microlighter/micro-lighter-element.min.js"></script>
 
-    <title>SwiftUI Snippet: Mitosis – Robb Böhnke</title>
-    <meta content="Robb Böhnke" property="og:site_name">
-    <meta content="Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader." name="description">
-    <meta content="article" property="og:type">
-    <meta content="SwiftUI Snippet: Mitosis" property="og:title">
-    <meta content="Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader." property="og:description">
-    <meta content="https://robb.is/writing/mitosis/" property="og:url">
-    <meta name="author" content="Robb Böhnke"/>
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@DLX">
-    <meta name="twitter:title" content="SwiftUI Snippet: Mitosis">
-    <meta name="twitter:description" content="Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader.">
-    <meta property="article:published_time" content="2025-06-26">
-    <meta property="article:author" content="Robb Böhnke">
+		<title>SwiftUI Snippet: Mitosis – Robb Böhnke</title>
+		<meta content="Robb Böhnke" property="og:site_name">
+		<meta content="Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader." name="description">
+		<meta content="article" property="og:type">
+		<meta content="SwiftUI Snippet: Mitosis" property="og:title">
+		<meta content="Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader." property="og:description">
+		<meta content="https://robb.is/writing/mitosis/" property="og:url">
+		<meta name="author" content="Robb Böhnke">
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:site" content="@DLX">
+		<meta name="twitter:title" content="SwiftUI Snippet: Mitosis">
+		<meta name="twitter:description" content="Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader.">
+		<meta property="article:published_time" content="2025-06-26">
+		<meta property="article:author" content="Robb Böhnke">
 
-    <link rel="canonical" href="https://robb.is/writing/mitosis/"/>
+		<link rel="canonical" href="https://robb.is/writing/mitosis/">
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "headline": "SwiftUI Snippet: Mitosis",
-      "description": "Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader.",
-      "url": "https://robb.is/writing/mitosis/",
-      "mainEntityOfPage": "https://robb.is/writing/mitosis/",
-      "datePublished": "2025-06-26",
-      "author": {
-        "@type": "Person",
-        "name": "Robb Böhnke",
-        "url": "https://robb.is/"
-      },
-      "publisher": {
-        "@type": "Person",
-        "name": "Robb Böhnke",
-        "url": "https://robb.is/"
-      },
-      "keywords": ["SwiftUI", "Swift", "Metal", "Shaders", "Signed Distance Fields", "Liquid Glass"]
-    }
-    </script>
-  </head>
-  <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "BlogPosting",
+				"headline": "SwiftUI Snippet: Mitosis",
+				"description": "Recreating a Mitosis-style blob effect in SwiftUI using signed distance fields, a smooth minimum blend, and a custom Metal shader.",
+				"url": "https://robb.is/writing/mitosis/",
+				"mainEntityOfPage": "https://robb.is/writing/mitosis/",
+				"datePublished": "2025-06-26",
+				"author": {
+					"@type": "Person",
+					"name": "Robb Böhnke",
+					"url": "https://robb.is/"
+					},
+					"publisher": {
+						"@type": "Person",
+						"name": "Robb Böhnke",
+						"url": "https://robb.is/"
+						},
+						"keywords": ["SwiftUI", "Swift", "Metal", "Shaders", "Signed Distance Fields", "Liquid Glass"]
+					}
+		</script>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
 
-:root {
-  --fontSize: 19px;
-  --secondaryFontSize: 16px;
-  --lineHeight: 26.5px;
-  --hairlineThickness: 1px;
-}
+			:root {
+				--fontSize: 19px;
+				--secondaryFontSize: 16px;
+				--lineHeight: 26.5px;
+				--hairlineThickness: 1px;
+			}
 
-@media screen and (min-resolution: 2x) {
-  :root {
-    --hairlineThickness: 0.5px;
-  }
-}
+			@media screen and (min-resolution: 2x) {
+				:root {
+					--hairlineThickness: 0.5px;
+				}
+			}
 
-:root {
---backgroundColor: #232634;
---secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
+			:root {
+				--backgroundColor: #232634;
+				--secondaryBackgroundColor: oklab(from var(--backgroundColor) calc(l * 0.8) calc(a * 0.9) b);
 
---primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
---secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
---tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
+				--primaryText: color-mix(in oklab, var(--backgroundColor), white 95%);
+				--secondaryText: color-mix(in oklab, var(--backgroundColor), white 80%);
+				--tertiaryText: color-mix(in oklab, var(--backgroundColor), white 60%);
 
---accentColor: rgb(224, 44, 146);
---selectionOpacity: 0.5;
-}
+				--accentColor: rgb(224, 44, 146);
+				--selectionOpacity: 0.5;
+			}
 
-::selection {
-  background-color: var(--accentColor);
-  background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
-}
+			::selection {
+				background-color: var(--accentColor);
+				background-color: color(from var(--accentColor) srgb r g b / var(--selectionOpacity));
+			}
 
-@media (prefers-contrast: more) {
-  :root {
-  --primaryText: #FFF;
-  --secondaryText: #CCC;
-  --tertiaryText: #AAA;
+			@media (prefers-contrast: more) {
+				:root {
+					--primaryText: #FFF;
+					--secondaryText: #CCC;
+					--tertiaryText: #AAA;
 
-  --hairlineThickness: 1px;
+					--hairlineThickness: 1px;
 
-  --selectionOpacity: 0.9;
-  }
-}
+					--selectionOpacity: 0.9;
+				}
+			}
 
-html {
-  overflow-x: hidden !important;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
-}
+			html {
+				overflow-x: hidden !important;
+				overflow-y: scroll;
+				scroll-behavior: smooth;
+			}
 
-body {
-  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: var(--fontSize);
-  line-height: var(--lineHeight);
-  color: var(--secondaryText);
+			body {
+				font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+				font-size: var(--fontSize);
+				line-height: var(--lineHeight);
+				color: var(--secondaryText);
 
-  accent-color: var(--accentColor);
-  background-color: var(--backgroundColor);
+				accent-color: var(--accentColor);
+				background-color: var(--backgroundColor);
 
-  -webkit-text-size-adjust: none;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
+				-webkit-text-size-adjust: none;
+				-webkit-tap-highlight-color: rgba(0,0,0,0);
+				-webkit-font-smoothing: antialiased;
+				text-rendering: optimizeLegibility;
+				-moz-osx-font-smoothing: grayscale;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
 
-}
+			}
 
-p {
-  text-wrap-style: pretty;
-  hyphens: auto;
-}
+			p {
+				text-wrap-style: pretty;
+				hyphens: auto;
+			}
 
-code, pre, tt, kbd, samp {
-  font-family: ui-monospace, monospace;
-  font-size-adjust: 0.505;
-}
+			code, pre, tt, kbd, samp {
+				font-family: ui-monospace, monospace;
+				font-size-adjust: 0.505;
+			}
 
-em {
-  font: inherit;
-  font-style: oblique 5deg;
-}
+			em {
+				font: inherit;
+				font-style: oblique 5deg;
+			}
 
-h1, h2, h3, h4 {
-  line-height: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  text-wrap: pretty;
-}
+			h1, h2, h3, h4 {
+				line-height: inherit;
+				font-size: inherit;
+				font-weight: inherit;
+				text-wrap: pretty;
+			}
 
-h1, h2 {
-  color: var(--primaryText);
-}
+			h1, h2 {
+				color: var(--primaryText);
+			}
 
-h1 {
-  font-size: calc(var(--fontSize) * 2);
-  line-height: calc(var(--lineHeight) * 2);
-  font-weight: 650;
-}
+			h1 {
+				font-size: calc(var(--fontSize) * 2);
+				line-height: calc(var(--lineHeight) * 2);
+				font-weight: 650;
+			}
 
-h2 {
-  font-weight: 600;
-}
+			h2 {
+				font-weight: 600;
+			}
 
-@media (prefers-color-scheme: light) {
-  body {
-    font-weight: 450;
-  }
-}
+			@media (prefers-color-scheme: light) {
+				body {
+					font-weight: 450;
+				}
+			}
 
-article {
-  width: 56ch;
-  max-width: 100vw;
+			article {
+				width: 56ch;
+				max-width: 100vw;
 
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--lineHeight));
+				display: flex;
+				flex-direction: column;
+				gap: calc(var(--lineHeight));
 
-  header, footer, section {
-    display: contents;
-  }
+				header, footer, section {
+					display: contents;
+				}
 
-  header time {
-    color: var(--tertiaryText);
-  }
+				header time {
+					color: var(--tertiaryText);
+				}
 
-  padding: calc(var(--lineHeight) * 1);
-  padding-bottom: calc(var(--lineHeight) * 3);
+				padding: calc(var(--lineHeight) * 1);
+				padding-bottom: calc(var(--lineHeight) * 3);
 
-  margin-block: calc(4 * var(--lineHeight));
-}
+				margin-block: calc(4 * var(--lineHeight));
+			}
 
-a, footer summary {
-  color: var(--primaryText);
-  text-decoration: underline;
-  text-decoration-skip: objects;
-  text-decoration-skip-ink: objects;
-  text-decoration-thickness: var(--hairlineThickness);
-  text-underline-offset: 2px;
-  text-decoration-color: var(--accentColor);
-  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+			a, footer summary {
+				color: var(--primaryText);
+				text-decoration: underline;
+				text-decoration-skip: objects;
+				text-decoration-skip-ink: objects;
+				text-decoration-thickness: var(--hairlineThickness);
+				text-underline-offset: 2px;
+				text-decoration-color: var(--accentColor);
+				text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
 
-  white-space: nowrap;
-  cursor: pointer;
+				white-space: nowrap;
+				cursor: pointer;
 
-  &:focus {
-    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
-  }
+				&:focus {
+					text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+				}
 
-  @media (hover: hover) {
-    &:hover {
-      text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
-    }
-  }
-}
+				@media (hover: hover) {
+					&:hover {
+						text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+					}
+				}
+			}
 
-a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
-  color: var(--accentColor);
-}
+			a[href^="http"]:not(:has(img)):hover::after, a[href^="mailto"]:not(:has(img)):hover::after {
+				color: var(--accentColor);
+			}
 
-button.like {
-  font: inherit;
-  color: var(--primaryText);
-  background: none;
-  border: none;
-  padding: 0;
+			button.like {
+				font: inherit;
+				color: var(--primaryText);
+				background: none;
+				border: none;
+				padding: 0;
 
-  text-decoration: underline;
-  text-decoration-thickness: var(--hairlineThickness);
-  text-underline-offset: 2px;
-  text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
+				text-decoration: underline;
+				text-decoration-thickness: var(--hairlineThickness);
+				text-underline-offset: 2px;
+				text-decoration-color: color(from var(--primaryText) srgb r g b / 0.5);
 
-  cursor: pointer;
+				cursor: pointer;
 
-  &:focus, &:hover {
-    text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
-  }
+				&:focus, &:hover {
+					text-decoration-color: color(from var(--accentColor) srgb r g b / 1);
+				}
 
-  &[disabled] {
-    color: var(--tertiaryText);
-    text-decoration: none;
-    cursor: default;
-  }
-}
+				&[disabled] {
+					color: var(--tertiaryText);
+					text-decoration: none;
+					cursor: default;
+				}
+			}
 
-.patreon-note {
-  padding-inline-start: 0.7em;
-  border-inline-start: var(--hairlineThickness) solid color-mix(in oklab, var(--primaryText), transparent 70%);
-  color: var(--tertiaryText);
-}
+			.patreon-note {
+				padding-inline-start: 0.7em;
+				border-inline-start: var(--hairlineThickness) solid color-mix(in oklab, var(--primaryText), transparent 70%);
+				color: var(--tertiaryText);
+			}
 
-micro-lighter {
-  margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
-}
+			micro-lighter {
+				margin: calc(-0.25 * var(--lineHeight)) calc(-0.75 * var(--lineHeight));
+			}
 
-micro-lighter.wide {
-  align-self: center;
-  width: 88ch;
-  max-width: 90vw;
-  margin-block: calc(-0.25 * var(--lineHeight));
-  margin-inline: 0;
-}
+			micro-lighter.wide {
+				align-self: center;
+				width: 88ch;
+				max-width: 90vw;
+				margin-block: calc(-0.25 * var(--lineHeight));
+				margin-inline: 0;
+			}
 
-pre {
-  position: relative;
-  font-size: calc(var(--fontSize) * 0.86);
-  line-height: calc(var(--lineHeight) * 0.9);
-  background: #102738;
-  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
-  border-radius: var(--lineHeight);
+			pre {
+				position: relative;
+				font-size: calc(var(--fontSize) * 0.86);
+				line-height: calc(var(--lineHeight) * 0.9);
+				background: #102738;
+				border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+				border-radius: var(--lineHeight);
 
-  padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
-  overflow-x: scroll;
-  margin: 0;
-}
+				padding: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness)) calc(var(--lineHeight) - var(--hairlineThickness));
+				overflow-x: scroll;
+				margin: 0;
+			}
 
-micro-lighter::part(line-numbers) {
-  box-sizing: border-box;
-  background-color: color-mix(in oklch, #102738, white 10%);
-  border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
-  border-inline-end: none;
-  border-start-start-radius: var(--lineHeight);
-  border-end-start-radius: var(--lineHeight);
-  border-start-end-radius: 0;
-  border-end-end-radius: 0;
+			micro-lighter::part(line-numbers) {
+				box-sizing: border-box;
+				background-color: color-mix(in oklch, #102738, white 10%);
+				border: var(--hairlineThickness) solid color-mix(in oklch, #102738, white 20%);
+				border-inline-end: none;
+				border-start-start-radius: var(--lineHeight);
+				border-end-start-radius: var(--lineHeight);
+				border-start-end-radius: 0;
+				border-end-end-radius: 0;
 
-  font-family: ui-monospace, monospace;
-  font-size: calc(var(--fontSize) * 0.68);
-  font-weight: 300;
-  color: color-mix(in oklch, #102738, white 50%);
+				font-family: ui-monospace, monospace;
+				font-size: calc(var(--fontSize) * 0.68);
+				font-weight: 300;
+				color: color-mix(in oklch, #102738, white 50%);
 
-  user-select: none;
-  -webkit-user-select: none;
+				user-select: none;
+				-webkit-user-select: none;
 
-  padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
-  padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));
-}
+				padding-inline: 1.5ch calc(var(--lineHeight) * 0.5);
+				padding-block-end: calc(var(--lineHeight) * 0.75 - var(--hairlineThickness));
+			}
 
-::highlight(comment) {
-  color: #acb3cb;
-}
+			::highlight(comment) {
+				color: #acb3cb;
+			}
 
-::highlight(keyword),
-::highlight(storage) {
-  color: #ef89b2;
-  font-weight: 600;
-}
+			::highlight(keyword),
+			::highlight(storage) {
+				color: #ef89b2;
+				font-weight: 600;
+			}
 
-::highlight(string) {
-  color: #f0937f;
-}
+			::highlight(string) {
+				color: #f0937f;
+			}
 
-::highlight(numeric),
-::highlight(boolean),
-::highlight(constant) {
-  color: #e1ab3a;
-}
+			::highlight(numeric),
+			::highlight(boolean),
+			::highlight(constant) {
+				color: #e1ab3a;
+			}
 
-::highlight(function) {
-  color: #c85bdf;
-}
+			::highlight(function) {
+				color: #c85bdf;
+			}
 
-::highlight(type),
-::highlight(support) {
-  color: #ce99f8;
-}
+			::highlight(type),
+			::highlight(support) {
+				color: #ce99f8;
+			}
 
-::highlight(property) {
-  color: #52a4be;
-}
+			::highlight(property) {
+				color: #52a4be;
+			}
 
-::highlight(variable) {
-  color: var(--secondaryText);
-}
-  </style>
-</head>
-<body>
-<main>
-<article>
-<header>
-  <h1 id="mitosis">SwiftUI Snippet: Mitosis</h1>
-  <p>
-    <time datetime="2025-06-26">Thursday, June 26 2025</time>
-    – <a href="/" rel="author">Robb Böhnke</a>
-  </p>
-</header>
-<section>
-  <aside class="patreon-note">
-    <p>This post was originally written for my SwiftUI Snippets Patreon with that audience in mind. It's hosted here for archival purposes.</p>
-  </aside>
-  <p>
-    This Snippet illustrates how you can implement a basic Mitosis effect, as seen on the Dynamic Island or throughout the new Liquid Glass design language.
-  </p>
-  <p>
-    While this effect is frequently approximated with a combination of a blur and an <code>alphaThreshold</code> filter, I've found an approach like that very hard to tune to achieve the effect that I want or to make sure shapes don't grow beyond their initial bounds.
-  </p>
-  <p>
-    Instead, we rely on Signed Distance Fields (<a href="/writing/shapestyles/">again</a>). I've only used a single <code>Capsule</code> Shape here but you could pass an enum value per element to the Shader and select a different SDF.
-  </p>
-  <p><code>Mitosis.swift</code></p>
-  <micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import Charts
+			::highlight(variable) {
+				color: var(--secondaryText);
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<article>
+				<header>
+					<h1 id="mitosis">SwiftUI Snippet: Mitosis</h1>
+					<p>
+						<time datetime="2025-06-26">Thursday, June 26 2025</time>
+						– <a href="/" rel="author">Robb Böhnke</a>
+					</p>
+				</header>
+				<section>
+					<aside class="patreon-note">
+						<p>This post was originally written for my SwiftUI Snippets Patreon with that audience in mind. It's hosted here for archival purposes.</p>
+					</aside>
+					<p>
+						This Snippet illustrates how you can implement a basic Mitosis effect, as seen on the Dynamic Island or throughout the new Liquid Glass design language.
+					</p>
+					<p>
+						While this effect is frequently approximated with a combination of a blur and an <code>alphaThreshold</code>
+						filter, I've found an approach like that very hard to tune to achieve the effect that I want or to make sure shapes don't grow beyond their initial bounds.
+					</p>
+					<p>
+						Instead, we rely on Signed Distance Fields (<a href="/writing/shapestyles/">again</a>). I've only used a single <code>Capsule</code>
+						Shape here but you could pass an enum value per element to the Shader and select a different SDF.
+					</p>
+					<p><code>Mitosis.swift</code></p>
+					<micro-lighter class="wide" language="swift" line-numbers><pre aria-label="Swift code"><code>import Charts
 import simd
 import SwiftUI
 
@@ -638,7 +639,7 @@ struct MitosisButton&lt;Content: View&gt;: View {
         .padding(.bottom)
 
       Text("""
-      Mitosis is an effect that resembles the division of cells or the separation of viscous liquid droplets. You can observe it in the animations that drive the Dynamic Island or through the new Liquid Glass design language on iOS 26. 
+      Mitosis is an effect that resembles the division of cells or the separation of viscous liquid droplets. You can observe it in the animations that drive the Dynamic Island or through the new Liquid Glass design language on iOS 26.
       """)
 
       KeyframeAnimator(initialValue: 0, repeating: true) { spacing in
@@ -882,8 +883,8 @@ struct MitosisButton&lt;Content: View&gt;: View {
   }
   .safeAreaPadding()
 }</code></pre></micro-lighter>
-  <p><code>Mitosis.metal</code></p>
-  <micro-lighter class="wide" language="cpp" line-numbers><pre aria-label="Metal shader code"><code>#include &lt;metal_stdlib&gt;
+					<p><code>Mitosis.metal</code></p>
+					<micro-lighter class="wide" language="cpp" line-numbers><pre aria-label="Metal shader code"><code>#include &lt;metal_stdlib&gt;
 using namespace metal;
 
 typedef struct {
@@ -951,69 +952,73 @@ half4 Mitosis(float2 position, float spacing, half4 color, device const void *el
 
   return 0;
 }</code></pre></micro-lighter>
-  <p>
-    To smoothly blend the different distance fields, I use a <a href="https://iquilezles.org/articles/smin/">smooth minimum function</a> – another technique that <a href="https://www.patreon.com/c/inigoquilez/home">Inigo Quilzes</a> has written about (do consider subscribing to his Patreon if you haven't already).
-  </p>
-  <p>
-    The k value that controls the ramp between the two values is scaled by the dot product of the two shapes' gradients&nbsp;– this creates more pleasing transitions between capsules as the flat sides that are axis-aligned now blob together more readily than the curves parts that face away from each other – check out the <em>Mitosis Contact Patch</em> Xcode Preview for examples.
-  </p>
-  <p>
-    I encourage you to play around with the effect&nbsp;– I've found a lot of fun can be had by modulating the k value in interesting ways, such as using a second SDF that models individual strings of material between the shapes – Liquid Cheese anyone?
-  </p>
-  <p>
-    (Note that this Snippet requires a recent Xcode beta only for its exemplary use of the <code>GlassEffectContainer</code> – the shader code shown here runs on iOS 17 and above&nbsp;– that's 9 iOSes ago!)
-  </p>
-  <p>
-    Thank you for your continuing support and for sticking with me through the extended hiatus.
-  </p>
-  <p>
-    Robb
-  </p>
-  <p>
-    <button type="button" class="like" hidden>Like?</button>
-  </p>
-</section>
-</article>
-</main>
-<script>
-  (() => {
-    const button = document.querySelector("button.like");
-    const endpoint = "https://likes.robb.systems/robb.is/3lshsz3ws2222";
-    const key = "liked:/writing/mitosis/";
+					<p>
+						To smoothly blend the different distance fields, I use a <a href="https://iquilezles.org/articles/smin/">smooth minimum function</a>
+						– another technique that <a href="https://www.patreon.com/c/inigoquilez/home">Inigo Quilzes</a>
+						has written about (do consider subscribing to his Patreon if you haven't already).
+					</p>
+					<p>
+						The k value that controls the ramp between the two values is scaled by the dot product of the two shapes' gradients&nbsp;– this creates more pleasing transitions between capsules as the flat sides that are axis-aligned now blob together more readily than the curves parts that face away from each other – check out the <em>Mitosis Contact Patch</em>
+						Xcode Preview for examples.
+					</p>
+					<p>
+						I encourage you to play around with the effect&nbsp;– I've found a lot of fun can be had by modulating the k value in interesting ways, such as using a second SDF that models individual strings of material between the shapes – Liquid Cheese anyone?
+					</p>
+					<p>
+						(Note that this Snippet requires a recent Xcode beta only for its exemplary use of the <code>GlassEffectContainer</code>
+						– the shader code shown here runs on iOS 17 and above&nbsp;– that's 9 iOSes ago!)
+					</p>
+					<p>
+						Thank you for your continuing support and for sticking with me through the extended hiatus.
+					</p>
+					<p>
+						Robb
+					</p>
+					<p>
+						<button type="button" class="like" hidden>Like?</button>
+					</p>
+				</section>
+			</article>
+		</main>
+		<script>
+			(() => {
+				const button = document.querySelector("button.like");
+				const endpoint = "https://likes.robb.systems/robb.is/3lshsz3ws2222";
+				const key = "liked:/writing/mitosis/";
 
-    const setLiked = () => {
-      button.textContent = "Liked!";
-      button.disabled = true;
-    };
+				const setLiked = () => {
+					button.textContent = "Liked!";
+					button.disabled = true;
+					};
 
-    let liked = false;
-    try { liked = localStorage.getItem(key) === "true"; } catch {}
+					let liked = false;
+					try { liked = localStorage.getItem(key) === "true"; } catch {}
 
-    if (liked) {
-      setLiked();
-    } else {
-      let busy = false;
+					if (liked) {
+						setLiked();
+						} else {
+							let busy = false;
 
-      button.addEventListener("click", async () => {
-        if (busy) return;
-        busy = true;
+							button.addEventListener("click", async () => {
+								if (busy) return;
+								busy = true;
 
-        try {
-          const response = await fetch(endpoint, { method: "POST", body: "❤️" });
-          if (!response.ok) throw new Error(response.statusText);
+								try {
+									const response = await fetch(endpoint, { method: "POST", body: "❤️" });
+									if (!response.ok) throw new Error(response.statusText);
 
-          try { localStorage.setItem(key, "true"); } catch {}
-          setLiked();
-        } catch {
-          // Leave the link as "Like?" so it can be retried.
-        } finally {
-          busy = false;
-        }
-      });
-    }
+									try { localStorage.setItem(key, "true"); } catch {}
+									setLiked();
+									} catch {
+										// Leave the link as "Like?" so it can be retried.
+										} finally {
+											busy = false;
+										}
+										});
+									}
 
-    button.hidden = false;
-  })();
-</script>
-</body>
+									button.hidden = false;
+									})();
+		</script>
+	</body>
 </html>
